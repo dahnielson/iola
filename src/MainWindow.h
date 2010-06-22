@@ -1,3 +1,6 @@
+#ifndef IOLA_MAINWINDOW_H
+#define IOLA_MAINWINDOW_H
+
 // :: melies iola
 // Copyright (c) 2002-2010, Anders Dahnielson
 //
@@ -19,23 +22,35 @@
 
 // FLTK
 #include "fltk.h"
-#include "theme.h"
 
 // MLT
 #include <mlt++/Mlt.h>
 
 // IOLA
-#include "MainWindow.h"
+class Monitor;
 
-int main(int argc, char **argv)
+class MainWindow :
+	public Fl_Double_Window
 {
-	Mlt::Factory::init(NULL);
+public:
+	MainWindow();
+	~MainWindow();
 
-	Fl::visual(FL_DOUBLE|FL_RGB);
-	melies::theme();
+	Mlt::Profile& get_profile();
 
-	MainWindow* window = new MainWindow();
-	window->show();
+private:
+	Fl_Menu_Bar* m_pkMenuBar;
+	Monitor* m_pkSourceMonitor;
+	Monitor* m_pkProgramMonitor;
 
-	return Fl::run();
-}
+	Mlt::Playlist* m_pkPlaylist;
+	Mlt::Profile m_Profile;
+
+	static void quit(Fl_Widget*, void* v) { reinterpret_cast<MainWindow*>(v)->quit(); }
+	static void show_bin(Fl_Widget*, void* v) { reinterpret_cast<MainWindow*>(v)->show_bin(); }
+
+	void quit();
+	void show_bin();
+};
+
+#endif // IOLA_MAINWINDOW_H

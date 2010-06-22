@@ -1,0 +1,31 @@
+
+Keyboard shortcuts
+------------------
+
+ J	play backward
+ K  	stop
+ L  	play forward
+
+ I  	set mark in
+ O  	set mark out
+
+ D	remove mark in
+ F	remove mark out
+ G	remove mark in and out
+
+ V	splice-in / insert
+ B	overwrite
+
+
+Splice-in / insert
+------------------
+
+When you edit a clip into a sequence using insert edit, all sequence clips in all unlocked tracks are cut at the In point of your edit and pushed forward in the edited sequence by the duration of your source clip.
+
+Overwrite
+---------
+
+When you edit a clip into a sequence using overwrite edit, any portions of clips that are already in the destination tracks are replaced by the source clip.
+
+
+

@@ -1,0 +1,50 @@
+Mlt::Producer
+-------------
+
+int seek(int position)	
+Seek to a specified position. Parameter position set the "play head" position of the producer 
+
+int position()	       	
+Get the current position (relative to in point). Returns the position of the "play head" relative to its beginning.
+
+int frame()
+Get the current position (relative to start of producer). Returns the position of the "play head" regardless of the in point.
+
+int set_speed(double speed)
+Set the playing speed. Parameter speed 	the new speed as a relative factor (1.0 = normal).
+
+double get_speed()
+Get the playing speed. Returns the speed as a relative factor (1.0 = normal).
+
+double get_fps()
+Get the frames per second. This is determined by the producer's profile. Returns the video refresh rate.
+
+int set_in_and_out(int in, int out)
+Set the in and out points. The in point is where play out should start relative to the natural start of the underlying file. The out point is where play out should end, also relative to the start of the underlying file. If the underlying resource is a live stream, then the in point is an offset relative to first usable sample. Parameter in set the relative starting time; a negative value is the same as 0, and parameter out the relative ending time; a negative value is the same as length - 1 
+
+int get_in()
+Get the in point. Returns the in point.
+
+    int get_out()
+Get the out point. Returns the out point.
+
+int get_length()
+Get the total, unedited length of the producer. The value returned by a live streaming producer is unknown. Returns the duration of the producer regardless of in and out points.
+
+int get_playtime()
+Get the total play time. Returns the playable (based on in and out points) duration.
+
+Producer *cut(int in = 0, int out = -1)
+Create a cut of this producer. A "cut" is a portion of another (parent) producer. Parameters in the beginning and out the end. Returns the new producer.
+
+bool is_cut()
+Determine if producer is a cut. Returns true if this is a "cut" producer.
+
+bool is_blank()
+Determine if the producer is a blank. Blank producers should only appear as an item in a playlist. Returns true if this is a "blank" producer.
+
+void optimise()
+Optimise for overlapping cuts from the same clip. 
+
+int clear();
+Physically reduce the producer (typically a cut) to a 0 length. Essentially, all 0 length cuts should be immediately removed by containers.
