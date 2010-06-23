@@ -75,7 +75,6 @@ ProgramMonitor::ProgramMonitor(MainWindow* parent, int x, int y, int w, int h, c
 	// Main Group
 	Fl_Group *pkMainGroup = new Fl_Group(x, y+20, w, h-25, "Program");
 	pkMainGroup->labelsize(11);
-	pkMainGroup->color(FL_DARK1);
 	m_pkDisplay = new Fl_Window(x+4, y+30, w-8, h-82);
 	m_pkDisplay->color(FL_BLACK);
 	m_pkDisplay->box(FL_FLAT_BOX);
@@ -87,12 +86,14 @@ ProgramMonitor::ProgramMonitor(MainWindow* parent, int x, int y, int w, int h, c
 	
 	// Tabs Group
 	Fl_Tabs* pkTabsGroup = new Fl_Tabs(x, y, w, h);
+	pkTabsGroup->box(FL_THIN_UP_FRAME);
 	pkTabsGroup->add(pkMainGroup);
 	pkTabsGroup->resizable(pkMainGroup);
 	pkTabsGroup->end();
 	
 	resizable(pkTabsGroup);
 	box(FL_FLAT_BOX);
+	color(FL_BACKGROUND_COLOR);
 	end();
 
 	// Consumer
@@ -119,6 +120,28 @@ ProgramMonitor::~ProgramMonitor()
 	if (m_pkConsumer)
 		m_pkConsumer->stop();
 	delete m_pkConsumer;
+}
+
+int ProgramMonitor::handle(int event)
+{
+	switch(event)
+	{
+	case FL_PUSH:
+		color(FL_DARK1);
+		redraw();
+		Fl::focus(this);
+		return Fl_Group::handle(event);
+	case FL_FOCUS:
+		color(FL_DARK1); 
+		redraw();
+		return 1;
+	case FL_UNFOCUS:
+		color(FL_BACKGROUND_COLOR); 
+		redraw();
+		return 1;
+	default:
+		return Fl_Group::handle(event);
+	}
 }
 
 void ProgramMonitor::on_program_load()

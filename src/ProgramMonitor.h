@@ -36,6 +36,8 @@ public:
 	ProgramMonitor(MainWindow* parent, int x, int y, int w, int h, const char *label = 0);
 	~ProgramMonitor();
 
+	int handle(int event);
+
 private:
 	MainWindow* m_pkParent;
 	Mlt::Consumer* m_pkConsumer;

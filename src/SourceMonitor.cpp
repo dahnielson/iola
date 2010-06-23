@@ -78,7 +78,6 @@ SourceMonitor::SourceMonitor(MainWindow* parent, int x, int y, int w, int h, con
 	// Main Group
 	Fl_Group *pkMainGroup = new Fl_Group(x, y+20, w, h-25, "Source");
 	pkMainGroup->labelsize(11);
-	pkMainGroup->color(FL_DARK1);
 	m_pkDisplay = new Fl_Window(x+4, y+30, w-8, h-82);
 	m_pkDisplay->color(FL_BLACK);
 	m_pkDisplay->box(FL_FLAT_BOX);
@@ -92,7 +91,7 @@ SourceMonitor::SourceMonitor(MainWindow* parent, int x, int y, int w, int h, con
 	Fl_Group* pkBinGroup = new Fl_Group(x, y+20, w, h-25, "Bin");
 	pkBinGroup->labelsize(11);
 	m_pkBrowser = new Fl_Hold_Browser(x+4, y+30, w-8, h-35);
-	m_pkBrowser->color(FL_BACKGROUND_COLOR);
+	m_pkBrowser->box(FL_THIN_DOWN_FRAME);
 	m_pkBrowser->textsize(12);
 	browser_load();
 	m_pkBrowser->callback((Fl_Callback *)browser_callback, this);
@@ -101,6 +100,7 @@ SourceMonitor::SourceMonitor(MainWindow* parent, int x, int y, int w, int h, con
 
 	// Tabs Group
 	Fl_Tabs* pkTabsGroup = new Fl_Tabs(x, y, w, h);
+	pkTabsGroup->box(FL_THIN_UP_FRAME);
 	pkTabsGroup->add(pkMainGroup);
 	pkTabsGroup->add(pkBinGroup);
 	pkTabsGroup->resizable(pkMainGroup);
@@ -108,6 +108,7 @@ SourceMonitor::SourceMonitor(MainWindow* parent, int x, int y, int w, int h, con
 	
 	resizable(pkTabsGroup);
 	box(FL_FLAT_BOX);
+	color(FL_BACKGROUND_COLOR);
 	end();
 
 	// Consumer
@@ -134,6 +135,28 @@ SourceMonitor::~SourceMonitor()
 	if (m_pkConsumer)
 		m_pkConsumer->stop();
 	delete m_pkConsumer;
+}
+
+int SourceMonitor::handle(int event)
+{
+	switch(event)
+	{
+	case FL_PUSH:
+		color(FL_DARK1); 
+		redraw();
+		Fl::focus(this);
+		return Fl_Group::handle(event);
+	case FL_FOCUS:
+		color(FL_DARK1); 
+		redraw();
+		return 1;
+	case FL_UNFOCUS:
+		color(FL_BACKGROUND_COLOR); 
+		redraw();
+		return 1;
+	default:
+		return Fl_Group::handle(event);
+	}
 }
 
 void SourceMonitor::on_source_load()
