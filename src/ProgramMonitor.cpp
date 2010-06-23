@@ -32,42 +32,31 @@ ProgramMonitor::ProgramMonitor(MainWindow* parent, int x, int y, int w, int h, c
 	// Transport Slider
 	Fl_Slider *pkSlider = new Fl_Slider(x+4, y+h-50, w-8, 19);
 	pkSlider->type(FL_HOR_SLIDER);
-	pkSlider->labelcolor(FL_FOREGROUND_COLOR);
 //	pkSlider->color(FL_BACKGROUND_COLOR);
 	
 	// Transport Buttons
 	Fl_Button *pkMarkIn = new Fl_Button(0, 0, 25, 25, "[");
 	pkMarkIn->type(FL_NORMAL_BUTTON);
-	pkMarkIn->labelcolor(FL_BLACK);
-//	pkMarkIn->color(FL_BACKGROUND_COLOR);
 	pkMarkIn->shortcut('i');
 	pkMarkIn->callback((Fl_Callback *)mark_in, this);
 
 	Fl_Button *pkPlayBackward = new Fl_Button(0, 0, 25, 25, "@<|");
 	pkPlayBackward->type(FL_NORMAL_BUTTON);
-	pkPlayBackward->labelcolor(FL_BLACK);
-//	pkPlayBackward->color(FL_BACKGROUND_COLOR);
 	pkPlayBackward->shortcut('j');
 	pkPlayBackward->callback((Fl_Callback *)play_backward, this);
 
 	Fl_Button *pkStop = new Fl_Button(0, 0, 25, 25, "@||");
 	pkStop->type(FL_NORMAL_BUTTON);
-	pkStop->labelcolor(FL_BLACK);
-//	pkStop->color(FL_BACKGROUND_COLOR);
 	pkStop->shortcut('k');
 	pkStop->callback((Fl_Callback *)stop, this);
 
 	Fl_Button *pkPlayForward = new Fl_Button(0, 0, 25, 25, "@|>");
 	pkPlayForward->type(FL_NORMAL_BUTTON);
-	pkPlayForward->labelcolor(FL_BLACK);
-//	pkPlayForward->color(FL_BACKGROUND_COLOR);
 	pkPlayForward->shortcut('l');
 	pkPlayForward->callback((Fl_Callback *)play_forward, this);
 
 	Fl_Button *pkMarkOut = new Fl_Button(0, 0, 25, 25, "]");
 	pkMarkOut->type(FL_NORMAL_BUTTON);
-	pkMarkOut->labelcolor(FL_BLACK);
-//	pkMarkOut->color(FL_BACKGROUND_COLOR);
 	pkMarkOut->shortcut('o');
 	pkMarkOut->callback((Fl_Callback *)mark_out, this);
 	
