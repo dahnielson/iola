@@ -1,5 +1,5 @@
-#ifndef IOLA_MONITOR_H
-#define IOLA_MONITOR_H
+#ifndef IOLA_PROGRAMMONITOR_H
+#define IOLA_PROGRAMMONITOR_H
 
 // Iola NLE
 // Copyright (c) 2010, Anders Dahnielson
@@ -29,28 +29,30 @@
 // IOLA
 #include "MainWindow.h"
 
-class Monitor :
+class ProgramMonitor :
 	public Fl_Group
 {
 public:
-	Monitor(MainWindow* parent, int x, int y, int w, int h, const char *label = 0);
-	~Monitor();
-
-	void load(Mlt::Producer &producer);
+	ProgramMonitor(MainWindow* parent, int x, int y, int w, int h, const char *label = 0);
+	~ProgramMonitor();
 
 private:
-	pthread_mutex_t mutex;
 	MainWindow* m_pkParent;
+	Mlt::Consumer* m_pkConsumer;
 
 	Fl_Window* m_pkDisplay;
-	Mlt::Consumer* m_pkConsumer;
-	Mlt::Producer* m_pkProducer;
 
-	static void mark_in(Fl_Widget*, void* v) { reinterpret_cast<Monitor*>(v)->mark_in(); }
-	static void mark_out(Fl_Widget*, void* v) { reinterpret_cast<Monitor*>(v)->mark_out(); }
-	static void play_backward(Fl_Widget*, void* v) { reinterpret_cast<Monitor*>(v)->play_backward(); }
-	static void play_forward(Fl_Widget*, void* v) { reinterpret_cast<Monitor*>(v)->play_forward(); }
-	static void stop(Fl_Widget*, void* v) { reinterpret_cast<Monitor*>(v)->stop(); }
+	void on_program_load();
+	void on_program_playback();
+
+	boost::signals2::connection on_program_load_connection;
+	boost::signals2::connection on_program_playback_connection;
+
+	static void mark_in(Fl_Widget*, void* v) { reinterpret_cast<ProgramMonitor*>(v)->mark_in(); }
+	static void mark_out(Fl_Widget*, void* v) { reinterpret_cast<ProgramMonitor*>(v)->mark_out(); }
+	static void play_backward(Fl_Widget*, void* v) { reinterpret_cast<ProgramMonitor*>(v)->play_backward(); }
+	static void play_forward(Fl_Widget*, void* v) { reinterpret_cast<ProgramMonitor*>(v)->play_forward(); }
+	static void stop(Fl_Widget*, void* v) { reinterpret_cast<ProgramMonitor*>(v)->stop(); }
 
 	void mark_in();
 	void mark_out();
@@ -64,8 +66,6 @@ private:
 	Window xid();
         bool restart();
 	void refresh();
-	void set_speed(double speed);
-	void seek(int pos);
 };
 
-#endif // IOLA_MONITOR_H
+#endif // IOLA_PROGRAMMONITOR_H

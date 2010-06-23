@@ -21,22 +21,22 @@
 #include <cstdlib>
 #include <iostream>
 
-// IOLA
-#include "Monitor.h"
+// BOOST
+#include <boost/filesystem.hpp>
 
-Monitor::Monitor(MainWindow* parent, int x, int y, int w, int h, const char *label) :
+// IOLA
+#include "SourceMonitor.h"
+
+SourceMonitor::SourceMonitor(MainWindow* parent, int x, int y, int w, int h, const char *label) :
 	Fl_Group(x, y, w, h, label),
 	m_pkParent(parent),
-	m_pkConsumer(0),
-	m_pkProducer(0)
+	m_pkConsumer(0)
 {
-	pthread_mutex_init(&mutex, NULL);
-
 	// Transport Slider
-	Fl_Slider *pkSlider = new Fl_Slider(0, 0, w, 20);
+	Fl_Slider *pkSlider = new Fl_Slider(x+4, y+h-50, w-8, 19);
 	pkSlider->type(FL_HOR_SLIDER);
 	pkSlider->labelcolor(FL_FOREGROUND_COLOR);
-//	pkSlider->color(FL_BACKGROUND_COLOR);
+	pkSlider->color(FL_BLUE);
 	
 	// Transport Buttons
 	Fl_Button *pkMarkIn = new Fl_Button(0, 0, 25, 25, "[");
@@ -75,7 +75,7 @@ Monitor::Monitor(MainWindow* parent, int x, int y, int w, int h, const char *lab
 	pkMarkOut->callback((Fl_Callback *)mark_out, this);
 	
 	// Transport Button Group
-	Fl_Pack *pkTransportGroup = new Fl_Pack(0, 0, w, 25);
+	Fl_Pack *pkTransportGroup = new Fl_Pack(x+w/2-62, y+h-28, 125, 25);
 	pkTransportGroup->box(FL_NO_BOX);
 	pkTransportGroup->type(Fl_Pack::HORIZONTAL);
 //	pkTransportGroup->spacing(2);
@@ -87,8 +87,10 @@ Monitor::Monitor(MainWindow* parent, int x, int y, int w, int h, const char *lab
 	pkTransportGroup->end();
 
 	// Main Group
-	Fl_Pack *pkMainGroup = new Fl_Pack(x+2, y+2, w-4, h-4);
-	m_pkDisplay = new Fl_Window(x, y, w, h-45-4);
+	Fl_Group *pkMainGroup = new Fl_Group(x, y+20, w, h-25, "Source");
+	pkMainGroup->labelsize(11);
+	pkMainGroup->color(FL_DARK1);
+	m_pkDisplay = new Fl_Window(x+4, y+30, w-8, h-82);
 	m_pkDisplay->color(FL_BLACK);
 	m_pkDisplay->box(FL_FLAT_BOX);
 	pkMainGroup->add(m_pkDisplay);
@@ -96,87 +98,151 @@ Monitor::Monitor(MainWindow* parent, int x, int y, int w, int h, const char *lab
 	pkMainGroup->add(pkTransportGroup);
 	pkMainGroup->resizable(m_pkDisplay);
 	pkMainGroup->end();
+
+	// Bin Group
+	Fl_Group* pkBinGroup = new Fl_Group(x, y+20, w, h-25, "Bin");
+	pkBinGroup->labelsize(11);
+	m_pkBrowser = new Fl_Hold_Browser(x+4, y+30, w-8, h-35);
+	m_pkBrowser->color(FL_BACKGROUND_COLOR);
+	m_pkBrowser->textsize(12);
+	browser_load();
+	m_pkBrowser->callback((Fl_Callback *)browser_callback, this);
+	pkBinGroup->resizable(m_pkBrowser);
+	pkBinGroup->end();
+
+	// Tabs Group
+	Fl_Tabs* pkTabsGroup = new Fl_Tabs(x, y, w, h);
+	pkTabsGroup->add(pkMainGroup);
+	pkTabsGroup->add(pkBinGroup);
+	pkTabsGroup->resizable(pkMainGroup);
+	pkTabsGroup->end();
 	
-	resizable(pkMainGroup);
-	box(FL_THIN_UP_BOX);
+	resizable(pkTabsGroup);
+	box(FL_FLAT_BOX);
 	end();
 
+	// Consumer
 	m_pkConsumer = new Mlt::Consumer(m_pkParent->get_profile(), "sdl");
 	m_pkConsumer->set("app_locked", 1);
 	m_pkConsumer->set("app_lock", (void *)Fl::lock, 0);
 	m_pkConsumer->set("app_unlock", (void *)Fl::unlock, 0);
 
+	// Connect signals
+	on_source_load_connection = m_pkParent->on_source_load_signal.connect(
+		boost::bind(&SourceMonitor::on_source_load, this)
+		);
+	on_source_playback_connection = m_pkParent->on_source_playback_signal.connect(
+		boost::bind(&SourceMonitor::on_source_playback, this)
+		);
+
 	restart();
 }
 
-Monitor::~Monitor()
+SourceMonitor::~SourceMonitor()
 {
+	on_source_load_connection.disconnect();
+	on_source_playback_connection.disconnect();
 	if (m_pkConsumer)
 		m_pkConsumer->stop();
 	delete m_pkConsumer;
-	delete m_pkProducer;
-	pthread_mutex_destroy(&mutex);
 }
 
-void Monitor::load(Mlt::Producer &producer)
+void SourceMonitor::on_source_load()
 {
-	pthread_mutex_lock(&mutex);
-	m_pkProducer = new Mlt::Producer(producer);
-	m_pkProducer->set_speed(0);
 	m_pkConsumer->lock();
-	m_pkConsumer->connect(*m_pkProducer);
+	m_pkConsumer->connect(m_pkParent->get_source());
 	m_pkConsumer->unlock();
 	restart();
-	pthread_mutex_unlock(&mutex);
 }
 
-void Monitor::mark_in()
+void SourceMonitor::on_source_playback()
 {
-	if (m_pkProducer)
-		m_pkProducer->set("meta.iola.mark_in", m_pkProducer->frame());
+	refresh();
 }
 
-void Monitor::mark_out()
+void SourceMonitor::browser_load()
 {
-	if (m_pkProducer)
-		m_pkProducer->set("meta.iola.mark_out", m_pkProducer->frame());
+	m_pkBrowser->clear();
+	m_pkBrowser->add(".");
+	m_pkBrowser->add("..");
+	boost::filesystem::path dir_path = boost::filesystem::current_path();
+	boost::filesystem::directory_iterator end_itr;
+	for (boost::filesystem::directory_iterator itr(dir_path); itr != end_itr; ++itr)
+	{
+		if (boost::filesystem::is_directory(itr->path()) || 
+		    boost::filesystem::extension(itr->path()) == ".avi")
+			m_pkBrowser->add(itr->path().filename().c_str());
+	}
 }
 
-void Monitor::mark_in_clear()
+void SourceMonitor::browser_callback()
 {
-	if (m_pkProducer)
-		m_pkProducer->set("meta.iola.mark_in", -1);
+	int selected = m_pkBrowser->value();
+	if (selected)
+	{
+		boost::filesystem::path selected_path(m_pkBrowser->text(selected));
+		if (boost::filesystem::is_directory(selected_path))
+		{
+			chdir(selected_path.filename().c_str());
+			browser_load();
+		}
+		else if(Fl::event_clicks())
+		{
+			m_pkParent->source_load(selected_path.filename().c_str());
+		}
+	}
 }
 
-void Monitor::mark_out_clear()
+void SourceMonitor::mark_in()
 {
-	if (m_pkProducer)
-		m_pkProducer->set("meta.iola.mark_out", -1);
+	if (m_pkParent)
+		m_pkParent->source_set_mark_in();
 }
 
-void Monitor::play_backward()
+void SourceMonitor::mark_out()
 {
-	set_speed(-1);
+	if (m_pkParent)
+		m_pkParent->source_set_mark_out();
 }
 
-void Monitor::play_forward()
+void SourceMonitor::mark_in_clear()
 {
-	set_speed(1);
+	if (m_pkParent)
+		m_pkParent->source_clear_mark_in();
 }
 
-void Monitor::stop()
+void SourceMonitor::mark_out_clear()
 {
-	set_speed(0);
+	if (m_pkParent)
+		m_pkParent->source_clear_mark_out();
 }
 
-Window Monitor::xid()
+void SourceMonitor::play_backward()
 {
-	return m_pkDisplay->shown() && m_pkDisplay->visible() ? fl_xid(m_pkDisplay) : 0;
+	if (m_pkParent)
+		m_pkParent->source_play_reverse();
 }
 
-bool Monitor::restart()
+void SourceMonitor::play_forward()
 {
-	bool ret = m_pkConsumer->is_stopped() && m_pkDisplay->shown() && xid() != 0;
+	if (m_pkParent)
+		m_pkParent->source_play_forward();
+}
+
+void SourceMonitor::stop()
+{
+	if (m_pkParent)
+		m_pkParent->source_pause();
+}
+
+Window SourceMonitor::xid()
+{
+	return m_pkDisplay->shown() ? fl_xid(m_pkDisplay) : 0;
+}
+
+bool SourceMonitor::restart()
+{
+	bool ret = m_pkConsumer->is_stopped() && xid() != 0;
 	if (ret)
 	{
 		char temp[132];
@@ -189,38 +255,9 @@ bool Monitor::restart()
 	return ret;
 }
 
-void Monitor::refresh()
+void SourceMonitor::refresh()
 {
 	m_pkConsumer->lock();
 	m_pkConsumer->set("refresh", 1);
 	m_pkConsumer->unlock();
 }
-
-void Monitor::set_speed(double speed)
-{
-	pthread_mutex_lock(&mutex);
-	if (m_pkProducer && m_pkProducer->get_speed() != speed)
-	{
-		m_pkProducer->lock();
-//		position += 2 * ( int )m_pkProducer->get_speed();
-//		m_pkProducer->seek(position);
-		m_pkProducer->set_speed(speed);
-//		speed = m_pkProducer->get_speed();
-		m_pkProducer->unlock();
-	}
-
-	refresh();
-	pthread_mutex_unlock(&mutex);
-}
-
-void Monitor::seek(int pos)
-{
-	if (m_pkProducer)
-	{
-		m_pkProducer->lock();
-		m_pkProducer->seek(pos < 0 ? 0 : pos > m_pkProducer->get_out() ? m_pkProducer->get_out() : pos);
-		m_pkProducer->unlock();
-	}
-	refresh();
-}
-

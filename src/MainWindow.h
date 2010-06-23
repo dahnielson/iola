@@ -1,8 +1,8 @@
 #ifndef IOLA_MAINWINDOW_H
 #define IOLA_MAINWINDOW_H
 
-// :: melies iola
-// Copyright (c) 2002-2010, Anders Dahnielson
+// Iola NLE
+// Copyright (c) 2010, Anders Dahnielson
 //
 // Contact: anders@dahnielson.com
 //
@@ -20,6 +20,9 @@
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+// BOOST
+#include <boost/signals2.hpp>
+
 // FLTK
 #include "fltk.h"
 
@@ -27,7 +30,8 @@
 #include <mlt++/Mlt.h>
 
 // IOLA
-class Monitor;
+class ProgramMonitor;
+class SourceMonitor;
 
 class MainWindow :
 	public Fl_Double_Window
@@ -37,20 +41,58 @@ public:
 	~MainWindow();
 
 	Mlt::Profile& get_profile();
+	Mlt::Producer& get_source();
+	Mlt::Producer& get_program();
+
+	void quit_application();
+
+	void source_load(const char* clip);
+	void source_set_speed(double speed);
+	void source_seek(int position);
+
+	void source_play_forward();
+	void source_play_reverse();
+	void source_pause();
+	void source_set_mark_in();
+	void source_set_mark_out();
+	void source_clear_mark_in();
+	void source_clear_mark_out();
+
+	void program_set_speed(double speed);
+	void program_seek(int position);
+
+	void program_play_forward();
+	void program_play_reverse();
+	void program_pause();
+	void program_set_mark_in();
+	void program_set_mark_out();
+	void program_clear_mark_in();
+	void program_clear_mark_out();	
+	void program_insert();
+	void program_overwrite();
+
+	typedef boost::signals2::signal<void ()> signal_t;
+
+	signal_t on_source_load_signal;
+	signal_t on_source_playback_signal;
+	signal_t on_source_seek_signal;
+
+	signal_t on_program_load_signal;
+	signal_t on_program_playback_signal;
+	signal_t on_program_seek_signal;
 
 private:
-	Fl_Menu_Bar* m_pkMenuBar;
-	Monitor* m_pkSourceMonitor;
-	Monitor* m_pkProgramMonitor;
+	pthread_mutex_t mutex;
 
-	Mlt::Playlist* m_pkPlaylist;
+	// The "model"
+	Mlt::Producer* m_pkSource;
+	Mlt::Playlist* m_pkProgram;
 	Mlt::Profile m_Profile;
 
-	static void quit(Fl_Widget*, void* v) { reinterpret_cast<MainWindow*>(v)->quit(); }
-	static void show_bin(Fl_Widget*, void* v) { reinterpret_cast<MainWindow*>(v)->show_bin(); }
+	SourceMonitor* m_pkSourceMonitor;
+	ProgramMonitor* m_pkProgramMonitor;
 
-	void quit();
-	void show_bin();
+	static void quit_application(Fl_Widget*, void* v) { reinterpret_cast<MainWindow*>(v)->quit_application(); }
 };
 
 #endif // IOLA_MAINWINDOW_H

@@ -1,5 +1,5 @@
-// :: melies iola
-// Copyright (c) 2002-2010, Anders Dahnielson
+// Iola NLE
+// Copyright (c) 2010, Anders Dahnielson
 //
 // Contact: anders@dahnielson.com
 //
@@ -31,6 +31,7 @@ int main(int argc, char **argv)
 {
 	Mlt::Factory::init(NULL);
 
+	Fl::visible_focus(0);
 	Fl::visual(FL_DOUBLE|FL_RGB);
 	melies::theme();
 

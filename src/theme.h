@@ -1,8 +1,8 @@
 #ifndef IOLA_THEME_H
 #define IOLA_THEME_H
 
-// :: melies iola
-// Copyright (c) 2002-2003, Anders Dahnielson
+// Iola NLE
+// Copyright (c) 2010, Anders Dahnielson
 //
 // Contact: anders@dahnielson.com
 //
