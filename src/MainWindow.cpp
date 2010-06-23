@@ -17,6 +17,9 @@
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+// STD
+#include <iostream>
+
 // IOLA
 #include "MainWindow.h"
 #include "ProgramMonitor.h"
@@ -145,12 +148,32 @@ void MainWindow::source_seek(int position)
 
 void MainWindow::source_play_forward()
 {
-	source_set_speed(1);
+	if (!m_pkSource)
+		return;
+
+	double speed = m_pkSource->get_speed();
+	if (speed == 0 || speed + 1 == 0)
+		speed = 1;
+	else if (speed < 0)
+		speed /= 2;
+	else if (speed < 8)
+		speed *= 2;
+	source_set_speed(speed);
 }
 
 void MainWindow::source_play_reverse()
 {
-	source_set_speed(-1);
+	if (!m_pkSource)
+		return;
+
+	double speed = m_pkSource->get_speed();
+	if (speed == 0 || speed - 1 == 0)
+		speed = -1;
+	else if (speed > 0)
+		speed /= 2;
+	else if (speed > -8)
+		speed *= 2;
+	source_set_speed(speed);
 }
 
 void MainWindow::source_pause()
@@ -227,12 +250,32 @@ void MainWindow::program_seek(int position)
 
 void MainWindow::program_play_forward()
 {
-	program_set_speed(1);
+	if (!m_pkProgram)
+		return;
+
+	double speed = m_pkProgram->get_speed();
+	if (speed == 0 || speed + 1 == 0)
+		speed = 1;
+	else if (speed < 0)
+		speed /= 2;
+	else if (speed < 8)
+		speed *= 2;
+	program_set_speed(speed);
 }
 
 void MainWindow::program_play_reverse()
 {
-	program_set_speed(-1);
+	if (!m_pkProgram)
+		return;
+
+	double speed = m_pkProgram->get_speed();
+	if (speed == 0 || speed - 1 == 0)
+		speed = -1;
+	else if (speed > 0)
+		speed /= 2;
+	else if (speed > -8)
+		speed *= 2;
+	program_set_speed(speed);
 }
 
 void MainWindow::program_pause()
