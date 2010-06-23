@@ -146,6 +146,26 @@ void MainWindow::source_seek(int position)
 	on_source_seek_signal();
 }
 
+void MainWindow::source_step_forward()
+{
+	if (!m_pkSource)
+		return;
+
+	source_set_speed(0);
+	int position = m_pkSource->frame();
+	source_seek(++position);
+}
+
+void MainWindow::source_step_backward()
+{
+	if (!m_pkSource)
+		return;
+
+	source_set_speed(0);
+	int position = m_pkSource->frame();
+	source_seek(--position);
+}
+
 void MainWindow::source_play_forward()
 {
 	if (!m_pkSource)
@@ -246,6 +266,26 @@ void MainWindow::program_seek(int position)
 		m_pkProgram->unlock();
 	}
 	on_program_seek_signal();
+}
+
+void MainWindow::program_step_forward()
+{
+	if (!m_pkProgram)
+		return;
+
+	program_set_speed(0);
+	int position = m_pkProgram->frame();
+	program_seek(++position);
+}
+
+void MainWindow::program_step_backward()
+{
+	if (!m_pkProgram)
+		return;
+
+	program_set_speed(0);
+	int position = m_pkProgram->frame();
+	program_seek(--position);
 }
 
 void MainWindow::program_play_forward()

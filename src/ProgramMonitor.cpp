@@ -37,27 +37,22 @@ ProgramMonitor::ProgramMonitor(MainWindow* parent, int x, int y, int w, int h, c
 	// Transport Buttons
 	Fl_Button *pkMarkIn = new Fl_Button(0, 0, 25, 25, "[");
 	pkMarkIn->type(FL_NORMAL_BUTTON);
-	pkMarkIn->shortcut('i');
 	pkMarkIn->callback((Fl_Callback *)mark_in, this);
 
 	Fl_Button *pkPlayBackward = new Fl_Button(0, 0, 25, 25, "@<|");
 	pkPlayBackward->type(FL_NORMAL_BUTTON);
-	pkPlayBackward->shortcut('j');
 	pkPlayBackward->callback((Fl_Callback *)play_backward, this);
 
 	Fl_Button *pkStop = new Fl_Button(0, 0, 25, 25, "@||");
 	pkStop->type(FL_NORMAL_BUTTON);
-	pkStop->shortcut('k');
 	pkStop->callback((Fl_Callback *)stop, this);
 
 	Fl_Button *pkPlayForward = new Fl_Button(0, 0, 25, 25, "@|>");
 	pkPlayForward->type(FL_NORMAL_BUTTON);
-	pkPlayForward->shortcut('l');
 	pkPlayForward->callback((Fl_Callback *)play_forward, this);
 
 	Fl_Button *pkMarkOut = new Fl_Button(0, 0, 25, 25, "]");
 	pkMarkOut->type(FL_NORMAL_BUTTON);
-	pkMarkOut->shortcut('o');
 	pkMarkOut->callback((Fl_Callback *)mark_out, this);
 	
 	// Transport Button Group
@@ -139,6 +134,39 @@ int ProgramMonitor::handle(int event)
 		color(FL_BACKGROUND_COLOR); 
 		redraw();
 		return 1;
+	case FL_KEYUP:
+		if (Fl::event_key() == 'i')
+		{
+			mark_in();
+			return 1;
+		}
+		else if (Fl::event_key() == 'o')
+		{
+			mark_out();
+			return 1;
+		}
+		else if (Fl::event_key() == 'j')
+		{
+			if (Fl::event_key('k'))
+				step_backward();
+			else
+				play_backward();
+			return 1;
+		}
+		else if (Fl::event_key() == 'k')
+		{
+			stop();
+			return 1;
+		}
+		else if (Fl::event_key() == 'l')
+		{
+			if (Fl::event_key('k'))
+				step_forward();
+			else
+				play_forward();
+			return 1;
+		}
+		return 0;
 	default:
 		return Fl_Group::handle(event);
 	}
@@ -179,6 +207,18 @@ void ProgramMonitor::mark_out_clear()
 {
 	if (m_pkParent)
 		m_pkParent->program_clear_mark_out();
+}
+
+void ProgramMonitor::step_backward()
+{
+	if (m_pkParent)
+		m_pkParent->program_step_backward();
+}
+
+void ProgramMonitor::step_forward()
+{
+	if (m_pkParent)
+		m_pkParent->program_step_forward();
 }
 
 void ProgramMonitor::play_backward()

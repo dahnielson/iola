@@ -61,6 +61,8 @@ private:
 	void mark_in_clear();
 	void mark_out_clear();
 
+	void step_backward();
+	void step_forward();
 	void play_backward();
 	void play_forward();
 	void stop();

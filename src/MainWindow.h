@@ -50,6 +50,8 @@ public:
 	void source_set_speed(double speed);
 	void source_seek(int position);
 
+	void source_step_forward();
+	void source_step_backward();
 	void source_play_forward();
 	void source_play_reverse();
 	void source_pause();
@@ -61,6 +63,8 @@ public:
 	void program_set_speed(double speed);
 	void program_seek(int position);
 
+	void program_step_forward();
+	void program_step_backward();
 	void program_play_forward();
 	void program_play_reverse();
 	void program_pause();
