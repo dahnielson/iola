@@ -17,6 +17,12 @@
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+// RLOG
+#include <rlog/rlog.h>
+#include <rlog/rloginit.h>
+#include <rlog/StdioNode.h>
+#include <rlog/RLogChannel.h>
+
 // FLTK
 #include "fltk.h"
 #include "theme.h"
@@ -29,6 +35,12 @@
 
 int main(int argc, char **argv)
 {
+	rlog::RLogInit(argc, argv);
+	rlog::StdioNode stdlog(STDERR_FILENO);
+	stdlog.subscribeTo(rlog::GetGlobalChannel("debug"));
+	stdlog.subscribeTo(rlog::GetGlobalChannel("warning"));
+	stdlog.subscribeTo(rlog::GetGlobalChannel("error"));
+
 	Mlt::Factory::init(NULL);
 
 	Fl::visible_focus(0);
