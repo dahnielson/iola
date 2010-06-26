@@ -522,7 +522,65 @@ void MainWindow::program_overwrite()
 
 	if (m_pkProgram && m_pkSource)
 	{
-		rWarning("%s: Overwrite edit not implemented yet", __PRETTY_FUNCTION__);
+		int program_in, source_in, source_out;
+
+		if (program_get_mark_in() != -1 && program_get_mark_out() != -1 && 
+		    source_get_mark_in() != -1 && source_get_mark_out() != -1)
+		{
+			rDebug("%s: Four-point editing: program in/out takes precedence", __PRETTY_FUNCTION__);
+			const int duration = program_get_mark_out() - program_get_mark_in();
+			program_in = program_get_mark_in();
+			source_in = source_get_mark_in();
+			source_out = source_get_mark_in() + duration;
+		}
+		else if (program_get_mark_in() != -1 && program_get_mark_out() != -1 &&
+			 source_get_mark_in() != -1 && source_get_mark_out() == -1)
+		{
+			rDebug("%s: Three-point editing: program in/out and source in marked", __PRETTY_FUNCTION__);
+			const int duration = program_get_mark_out() - program_get_mark_in();
+			program_in = program_get_mark_in();
+			source_in = source_get_mark_in();
+			source_out = source_get_mark_in() + duration;
+		}
+		else if (program_get_mark_in() != -1 && program_get_mark_out() != -1 &&
+			 source_get_mark_in() == -1 && source_get_mark_out() != -1)
+		{
+			rDebug("%s: Three-point editing: program in/out and source out marked", __PRETTY_FUNCTION__);
+			const int duration = program_get_mark_out() - program_get_mark_in();
+			program_in = program_get_mark_in();
+			source_in = source_get_mark_out() - duration;
+			source_out = source_get_mark_out();
+		}
+		else if (program_get_mark_in() != -1 && program_get_mark_out() == -1 &&
+			 source_get_mark_in() != -1 && source_get_mark_out() != -1)
+		{
+			rDebug("%s: Three-point editing: program in and source in/out marked", __PRETTY_FUNCTION__);
+			program_in = program_get_mark_in();
+			source_in = source_get_mark_in();
+			source_out = source_get_mark_out();
+		}
+		else if (program_get_mark_in() == -1 && program_get_mark_out() != -1 &&
+			 source_get_mark_in() != -1 && source_get_mark_out() != -1)
+		{
+			rDebug("%s: Three-point editing: program out and source in/out marked", __PRETTY_FUNCTION__);
+			const int duration = source_get_mark_out() - source_get_mark_in();
+			program_in = program_get_mark_out() - duration;
+			source_in = source_get_mark_in();
+			source_out = source_get_mark_out();
+		}
+		else
+		{
+			rDebug("%s: To few in/out marked to perform three-point edit", __PRETTY_FUNCTION__);
+			return;
+		}
+
+		rDebug("%s: Overwrite edit into playlist with %i clipes", __PRETTY_FUNCTION__, m_pkProgram->count());
+		rDebug("%s: program_in=%i source_in=%i source_out=%i",  __PRETTY_FUNCTION__, program_in, source_in, source_out);
+		m_pkProgram->lock();
+		const int clip_index = m_pkProgram->remove_region(program_in, source_out - source_in);
+		m_pkProgram->insert(*m_pkSource, clip_index, source_in, source_out);
+		m_pkProgram->unlock();
+		rDebug("%s: Playlist now contain %i clips", __PRETTY_FUNCTION__, m_pkProgram->count());
 	}
 }
 
