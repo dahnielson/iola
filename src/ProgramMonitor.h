@@ -37,6 +37,9 @@ public:
 	~ProgramMonitor();
 
 	int handle(int event);
+	void stop();
+        bool restart();
+	void refresh();
 
 private:
 	MainWindow* m_pkParent;
@@ -54,7 +57,7 @@ private:
 	static void mark_out(Fl_Widget*, void* v) { reinterpret_cast<ProgramMonitor*>(v)->mark_out(); }
 	static void play_backward(Fl_Widget*, void* v) { reinterpret_cast<ProgramMonitor*>(v)->play_backward(); }
 	static void play_forward(Fl_Widget*, void* v) { reinterpret_cast<ProgramMonitor*>(v)->play_forward(); }
-	static void stop(Fl_Widget*, void* v) { reinterpret_cast<ProgramMonitor*>(v)->stop(); }
+	static void stop_playback(Fl_Widget*, void* v) { reinterpret_cast<ProgramMonitor*>(v)->stop_playback(); }
 
 	void mark_in();
 	void mark_out();
@@ -65,11 +68,11 @@ private:
 	void step_forward();
 	void play_backward();
 	void play_forward();
-	void stop();
+	void stop_playback();
+	void insert();
+	void overwrite();
 
 	Window xid();
-        bool restart();
-	void refresh();
 };
 
 #endif // IOLA_PROGRAMMONITOR_H

@@ -17,6 +17,9 @@
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+// RLOG
+#include <rlog/rlog.h>
+
 // STD
 #include <cstdlib>
 #include <iostream>
@@ -45,7 +48,7 @@ ProgramMonitor::ProgramMonitor(MainWindow* parent, int x, int y, int w, int h, c
 
 	Fl_Button *pkStop = new Fl_Button(0, 0, 25, 25, "@||");
 	pkStop->type(FL_NORMAL_BUTTON);
-	pkStop->callback((Fl_Callback *)stop, this);
+	pkStop->callback((Fl_Callback *)stop_playback, this);
 
 	Fl_Button *pkPlayForward = new Fl_Button(0, 0, 25, 25, "@|>");
 	pkPlayForward->type(FL_NORMAL_BUTTON);
@@ -70,9 +73,10 @@ ProgramMonitor::ProgramMonitor(MainWindow* parent, int x, int y, int w, int h, c
 	// Main Group
 	Fl_Group *pkMainGroup = new Fl_Group(x, y+20, w, h-25, "Program");
 	pkMainGroup->labelsize(11);
-	m_pkDisplay = new Fl_Window(x+4, y+30, w-8, h-82);
+	m_pkDisplay = new Fl_Single_Window(x+4, y+30, w-8, h-82);
 	m_pkDisplay->color(FL_BLACK);
 	m_pkDisplay->box(FL_FLAT_BOX);
+	m_pkDisplay->end();
 	pkMainGroup->add(m_pkDisplay);
 	pkMainGroup->add(pkSlider);
 	pkMainGroup->add(pkTransportGroup);
@@ -104,8 +108,6 @@ ProgramMonitor::ProgramMonitor(MainWindow* parent, int x, int y, int w, int h, c
 	on_program_playback_connection = m_pkParent->on_program_playback_signal.connect(
 		boost::bind(&ProgramMonitor::on_program_playback, this)
 		);
-
-	restart();
 }
 
 ProgramMonitor::~ProgramMonitor()
@@ -122,15 +124,22 @@ int ProgramMonitor::handle(int event)
 	switch(event)
 	{
 	case FL_PUSH:
+		rDebug("%s: Recieved mouse click", __PRETTY_FUNCTION__);
 		color(FL_DARK1);
 		redraw();
 		Fl::focus(this);
+		restart();
 		return Fl_Group::handle(event);
 	case FL_FOCUS:
+		rDebug("%s: Got focus", __PRETTY_FUNCTION__);
+		restart();
 		color(FL_DARK1); 
 		redraw();
 		return 1;
 	case FL_UNFOCUS:
+		rDebug("%s: Lost focus", __PRETTY_FUNCTION__);
+		stop_playback();
+		stop();
 		color(FL_BACKGROUND_COLOR); 
 		redraw();
 		return 1;
@@ -155,7 +164,7 @@ int ProgramMonitor::handle(int event)
 		}
 		else if (Fl::event_key() == 'k')
 		{
-			stop();
+			stop_playback();
 			return 1;
 		}
 		else if (Fl::event_key() == 'l')
@@ -166,6 +175,16 @@ int ProgramMonitor::handle(int event)
 				play_forward();
 			return 1;
 		}
+		else if (Fl::event_key() == 'v')
+		{
+			insert();
+			return 1;
+		}
+		else if (Fl::event_key() == 'b')
+		{
+			overwrite();
+			return 1;
+		}
 		return 0;
 	default:
 		return Fl_Group::handle(event);
@@ -174,10 +193,10 @@ int ProgramMonitor::handle(int event)
 
 void ProgramMonitor::on_program_load()
 {
+	rDebug("%s: Connect program to consumer", __PRETTY_FUNCTION__);
 	m_pkConsumer->lock();
 	m_pkConsumer->connect(m_pkParent->get_program());
 	m_pkConsumer->unlock();
-	restart();
 }
 
 void ProgramMonitor::on_program_playback()
@@ -233,15 +252,36 @@ void ProgramMonitor::play_forward()
 		m_pkParent->program_play_forward();
 }
 
-void ProgramMonitor::stop()
+void ProgramMonitor::stop_playback()
 {
 	if (m_pkParent)
 		m_pkParent->program_pause();
 }
 
+void ProgramMonitor::insert()
+{
+	if (m_pkParent)
+		m_pkParent->program_insert();
+}
+
+void ProgramMonitor::overwrite()
+{
+	if (m_pkParent)
+		m_pkParent->program_overwrite();
+}
+
 Window ProgramMonitor::xid()
 {
 	return m_pkDisplay->shown() ? fl_xid(m_pkDisplay) : 0;
+}
+
+void ProgramMonitor::stop()
+{
+	if (m_pkConsumer)
+	{
+		rDebug("%s: Stop consumer", __PRETTY_FUNCTION__);
+		m_pkConsumer->stop();
+	}
 }
 
 bool ProgramMonitor::restart()
@@ -252,6 +292,7 @@ bool ProgramMonitor::restart()
 		char temp[132];
 		sprintf(temp, "%d", (int)xid());
 		setenv("SDL_WINDOWID", temp, 1);
+		rDebug("%s: Start consumer with xid=%i", __PRETTY_FUNCTION__, (int)xid());
 		m_pkConsumer->start();
 	}
 	if (!m_pkConsumer->is_stopped())

@@ -17,6 +17,9 @@
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+// RLOG
+#include <rlog/rlog.h>
+
 // STD
 #include <iostream>
 
@@ -77,6 +80,9 @@ MainWindow::MainWindow() :
 	resizable(pkMainGroup);
 	size_range(800, 750);
 	end();
+
+	// Program
+	program_new();
 }
 
 MainWindow::~MainWindow()
@@ -111,12 +117,13 @@ void MainWindow::quit_application()
 
 void MainWindow::source_load(const char* clip)
 {
+	rDebug("%s: Load %s as source", __PRETTY_FUNCTION__, clip);
 	pthread_mutex_lock(&mutex);
 	delete m_pkSource;
 	m_pkSource = new Mlt::Producer(m_Profile, clip);
 	m_pkSource->set_speed(0);
-	m_pkSource->set("meta.iola.mark_in", 0);
-	m_pkSource->set("meta.iola.mark_out", m_pkSource->get_length()-1);
+	m_pkSource->set("meta.iola.mark_in", -1);
+	m_pkSource->set("meta.iola.mark_out", -1);
 //	m_pkSource->dump(); //debug
 	pthread_mutex_unlock(&mutex);
 	on_source_load_signal();
@@ -127,6 +134,7 @@ void MainWindow::source_set_speed(double speed)
 	pthread_mutex_lock(&mutex);
 	if (m_pkSource && m_pkSource->get_speed() != speed)
 	{
+		rDebug("%s: Set speed x%f", __PRETTY_FUNCTION__, speed);
 		m_pkSource->lock();
 		m_pkSource->set_speed(speed);
 		m_pkSource->unlock();
@@ -139,6 +147,7 @@ void MainWindow::source_seek(int position)
 {
 	if (m_pkSource)
 	{
+		rDebug("%s: Seek position x%i", __PRETTY_FUNCTION__, position);
 		m_pkSource->lock();
 		m_pkSource->seek(position < 0 ? 0 : position > m_pkSource->get_out() ? m_pkSource->get_out() : position);
 		m_pkSource->unlock();
@@ -201,11 +210,34 @@ void MainWindow::source_pause()
 	source_set_speed(0);
 }
 
+int MainWindow::source_get_mark_in()
+{
+	if (m_pkSource)
+	{
+		m_pkSource->lock();
+		const int mark = m_pkSource->get_int("meta.iola.mark_in");
+		m_pkSource->unlock();
+		return mark;
+	}
+}
+
+int MainWindow::source_get_mark_out()
+{
+	if (m_pkSource)
+	{
+		m_pkSource->lock();
+		const int mark = m_pkSource->get_int("meta.iola.mark_out");
+		m_pkSource->unlock();
+		return mark;
+	}
+}
+
 void MainWindow::source_set_mark_in()
 {
 	if (m_pkSource)
 	{
 		m_pkSource->lock();
+		rDebug("%s: Set source mark in at %i", __PRETTY_FUNCTION__, m_pkSource->frame());
 		m_pkSource->set("meta.iola.mark_in", m_pkSource->frame());
 		m_pkSource->unlock();
 	}
@@ -216,6 +248,7 @@ void MainWindow::source_set_mark_out()
 	if (m_pkSource)
 	{
 		m_pkSource->lock();
+		rDebug("%s: Set source mark out at %i", __PRETTY_FUNCTION__, m_pkSource->frame());
 		m_pkSource->set("meta.iola.mark_out", m_pkSource->frame());
 		m_pkSource->unlock();
 	}
@@ -226,7 +259,8 @@ void MainWindow::source_clear_mark_in()
 	if (m_pkSource)
 	{
 		m_pkSource->lock();
-		m_pkSource->set("meta.iola.mark_in", 0);
+		rDebug("%s: Clear source mark in", __PRETTY_FUNCTION__);
+		m_pkSource->set("meta.iola.mark_in", -1);
 		m_pkSource->unlock();
 	}
 }
@@ -236,7 +270,8 @@ void MainWindow::source_clear_mark_out()
 	if (m_pkSource)
 	{
 		m_pkSource->lock();
-		m_pkSource->set("meta.iola.mark_out", m_pkSource->get_length()-1);
+		rDebug("%s: Clear source mark out", __PRETTY_FUNCTION__);
+		m_pkSource->set("meta.iola.mark_out", -1);
 		m_pkSource->unlock();
 	}
 }
@@ -244,11 +279,26 @@ void MainWindow::source_clear_mark_out()
 ///////////////////////////////////////////
 // Program
 
+void MainWindow::program_new()
+{
+	rDebug("%s: Create a new program", __PRETTY_FUNCTION__);
+	pthread_mutex_lock(&mutex);
+	delete m_pkProgram;
+	m_pkProgram = new Mlt::Playlist();
+	m_pkProgram->set_speed(0);
+	m_pkProgram->set("meta.iola.mark_in", -1);
+	m_pkProgram->set("meta.iola.mark_out", -1);
+//	m_pkProgram->dump(); //debug
+	pthread_mutex_unlock(&mutex);
+	on_program_load_signal();
+}
+
 void MainWindow::program_set_speed(double speed)
 {
 	pthread_mutex_lock(&mutex);
 	if (m_pkProgram && m_pkProgram->get_speed() != speed)
 	{
+		rDebug("%s: Set speed x%f", __PRETTY_FUNCTION__, speed);
 		m_pkProgram->lock();
 		m_pkProgram->set_speed(speed);
 		m_pkProgram->unlock();
@@ -261,6 +311,7 @@ void MainWindow::program_seek(int position)
 {
 	if (m_pkProgram)
 	{
+		rDebug("%s: Seek position x%i", __PRETTY_FUNCTION__, position);
 		m_pkProgram->lock();
 		m_pkProgram->seek(position < 0 ? 0 : position > m_pkProgram->get_out() ? m_pkProgram->get_out() : position);
 		m_pkProgram->unlock();
@@ -323,11 +374,33 @@ void MainWindow::program_pause()
 	program_set_speed(0);
 }
 
+int MainWindow::program_get_mark_in()
+{
+	if (m_pkProgram)
+	{
+		m_pkProgram->lock();
+		const int mark = m_pkProgram->get_int("meta.iola.mark_in");
+		m_pkProgram->unlock();
+		return mark;
+	}
+}
+
+int MainWindow::program_get_mark_out()
+{
+	if (m_pkProgram)
+	{
+		m_pkProgram->lock();
+		const int mark = m_pkProgram->get_int("meta.iola.mark_out");
+		m_pkProgram->unlock();
+		return mark;
+	}}
+
 void MainWindow::program_set_mark_in()
 {
 	if (m_pkProgram)
 	{
 		m_pkProgram->lock();
+		rDebug("%s: Set program mark in at %i", __PRETTY_FUNCTION__, m_pkProgram->frame());
 		m_pkProgram->set("meta.iola.mark_in", m_pkProgram->frame());
 		m_pkProgram->unlock();
 	}
@@ -338,6 +411,7 @@ void MainWindow::program_set_mark_out()
 	if (m_pkProgram)
 	{
 		m_pkProgram->lock();
+		rDebug("%s: Set program mark out at %i", __PRETTY_FUNCTION__, m_pkProgram->frame());
 		m_pkProgram->set("meta.iola.mark_out", m_pkProgram->frame());
 		m_pkProgram->unlock();
 	}
@@ -348,7 +422,8 @@ void MainWindow::program_clear_mark_in()
 	if (m_pkProgram)
 	{
 		m_pkProgram->lock();
-		m_pkProgram->set("meta.iola.mark_in", 0);
+		rDebug("%s: Clear program mark in", __PRETTY_FUNCTION__);
+		m_pkProgram->set("meta.iola.mark_in", -1);
 		m_pkProgram->unlock();
 	}
 }
@@ -358,24 +433,96 @@ void MainWindow::program_clear_mark_out()
 	if (m_pkProgram)
 	{
 		m_pkProgram->lock();
-		m_pkProgram->set("meta.iola.mark_out", m_pkProgram->get_length()-1);
+		rDebug("%s: Clear program mark out", __PRETTY_FUNCTION__);
+		m_pkProgram->set("meta.iola.mark_out", -1);
 		m_pkProgram->unlock();
 	}
 }
 
 void MainWindow::program_insert()
 {
+	if (!m_pkProgram)
+		rWarning("%s: m_pkProgram is NULL", __PRETTY_FUNCTION__);
+
+	if (!m_pkSource)
+		rWarning("%s: m_pkSource is NULL", __PRETTY_FUNCTION__);
+
 	if (m_pkProgram && m_pkSource)
 	{
-		//todo: edit playlist
+		int program_in, source_in, source_out;
+
+		if (program_get_mark_in() != -1 && program_get_mark_out() != -1 && 
+		    source_get_mark_in() != -1 && source_get_mark_out() != -1)
+		{
+			rDebug("%s: Four-point editing: program in/out takes precedence", __PRETTY_FUNCTION__);
+			const int duration = program_get_mark_out() - program_get_mark_in();
+			program_in = program_get_mark_in();
+			source_in = source_get_mark_in();
+			source_out = source_get_mark_in() + duration;
+		}
+		else if (program_get_mark_in() != -1 && program_get_mark_out() != -1 &&
+			 source_get_mark_in() != -1 && source_get_mark_out() == -1)
+		{
+			rDebug("%s: Three-point editing: program in/out and source in marked", __PRETTY_FUNCTION__);
+			const int duration = program_get_mark_out() - program_get_mark_in();
+			program_in = program_get_mark_in();
+			source_in = source_get_mark_in();
+			source_out = source_get_mark_in() + duration;
+		}
+		else if (program_get_mark_in() != -1 && program_get_mark_out() != -1 &&
+			 source_get_mark_in() == -1 && source_get_mark_out() != -1)
+		{
+			rDebug("%s: Three-point editing: program in/out and source out marked", __PRETTY_FUNCTION__);
+			const int duration = program_get_mark_out() - program_get_mark_in();
+			program_in = program_get_mark_in();
+			source_in = source_get_mark_out() - duration;
+			source_out = source_get_mark_out();
+		}
+		else if (program_get_mark_in() != -1 && program_get_mark_out() == -1 &&
+			 source_get_mark_in() != -1 && source_get_mark_out() != -1)
+		{
+			rDebug("%s: Three-point editing: program in and source in/out marked", __PRETTY_FUNCTION__);
+			program_in = program_get_mark_in();
+			source_in = source_get_mark_in();
+			source_out = source_get_mark_out();
+		}
+		else if (program_get_mark_in() == -1 && program_get_mark_out() != -1 &&
+			 source_get_mark_in() != -1 && source_get_mark_out() != -1)
+		{
+			rDebug("%s: Three-point editing: program out and source in/out marked", __PRETTY_FUNCTION__);
+			const int duration = source_get_mark_out() - source_get_mark_in();
+			program_in = program_get_mark_out() - duration;
+			source_in = source_get_mark_in();
+			source_out = source_get_mark_out();
+		}
+		else
+		{
+			rDebug("%s: To few in/out marked to perform three-point edit", __PRETTY_FUNCTION__);
+			return;
+		}
+
+		rDebug("%s: Insert edit into playlist with %i clipes", __PRETTY_FUNCTION__, m_pkProgram->count());
+		rDebug("%s: program_in=%i source_in=%i source_out=%i",  __PRETTY_FUNCTION__, program_in, source_in, source_out);
+		m_pkProgram->lock();
+		const int clip_index = m_pkProgram->get_clip_index_at(program_in);
+		m_pkProgram->split(clip_index, program_in - m_pkProgram->clip_start(clip_index));
+		m_pkProgram->insert(*m_pkSource, clip_index+1, source_in, source_out);
+		m_pkProgram->unlock();
+		rDebug("%s: Playlist now contain %i clips", __PRETTY_FUNCTION__, m_pkProgram->count());
 	}
 }
 
 void MainWindow::program_overwrite()
 {
+	if (!m_pkProgram)
+		rWarning("%s: m_pkProgram is NULL", __PRETTY_FUNCTION__);
+
+	if (!m_pkSource)
+		rWarning("%s: m_pkSource is NULL", __PRETTY_FUNCTION__);
+
 	if (m_pkProgram && m_pkSource)
 	{
-		//todo: edit playlist
+		rWarning("%s: Overwrite edit not implemented yet", __PRETTY_FUNCTION__);
 	}
 }
 

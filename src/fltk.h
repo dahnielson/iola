@@ -36,6 +36,7 @@
 #include <FL/Fl_Pack.H>
 #include <FL/Fl_Slider.H>
 #include <FL/Fl_Scroll.H>
+#include <FL/Fl_Single_Window.H>
 #include <FL/Fl_Tooltip.H>
 #include <FL/Fl_Tabs.H>
 #include <FL/Fl_Valuator.H>

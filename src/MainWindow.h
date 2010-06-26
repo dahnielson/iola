@@ -55,11 +55,14 @@ public:
 	void source_play_forward();
 	void source_play_reverse();
 	void source_pause();
+	int source_get_mark_in();
+	int source_get_mark_out();
 	void source_set_mark_in();
 	void source_set_mark_out();
 	void source_clear_mark_in();
 	void source_clear_mark_out();
 
+	void program_new();
 	void program_set_speed(double speed);
 	void program_seek(int position);
 
@@ -68,6 +71,8 @@ public:
 	void program_play_forward();
 	void program_play_reverse();
 	void program_pause();
+	int program_get_mark_in();
+	int program_get_mark_out();
 	void program_set_mark_in();
 	void program_set_mark_out();
 	void program_clear_mark_in();

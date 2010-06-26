@@ -36,7 +36,7 @@
 int main(int argc, char **argv)
 {
 	rlog::RLogInit(argc, argv);
-	rlog::StdioNode stdlog(STDERR_FILENO);
+	rlog::StdioNode stdlog(STDERR_FILENO, rlog::StdioNode::OutputColor);
 	stdlog.subscribeTo(rlog::GetGlobalChannel("debug"));
 	stdlog.subscribeTo(rlog::GetGlobalChannel("warning"));
 	stdlog.subscribeTo(rlog::GetGlobalChannel("error"));

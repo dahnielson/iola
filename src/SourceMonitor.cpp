@@ -17,6 +17,9 @@
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+// RLOG
+#include <rlog/rlog.h>
+
 // STD
 #include <cstdlib>
 #include <iostream>
@@ -48,7 +51,7 @@ SourceMonitor::SourceMonitor(MainWindow* parent, int x, int y, int w, int h, con
 
 	Fl_Button *pkStop = new Fl_Button(0, 0, 25, 25, "@||");
 	pkStop->type(FL_NORMAL_BUTTON);
-	pkStop->callback((Fl_Callback *)stop, this);
+	pkStop->callback((Fl_Callback *)stop_playback, this);
 
 	Fl_Button *pkPlayForward = new Fl_Button(0, 0, 25, 25, "@|>");
 	pkPlayForward->type(FL_NORMAL_BUTTON);
@@ -73,9 +76,10 @@ SourceMonitor::SourceMonitor(MainWindow* parent, int x, int y, int w, int h, con
 	// Main Group
 	Fl_Group *pkMainGroup = new Fl_Group(x, y+20, w, h-25, "Source");
 	pkMainGroup->labelsize(11);
-	m_pkDisplay = new Fl_Window(x+4, y+30, w-8, h-82);
+	m_pkDisplay = new Fl_Single_Window(x+4, y+30, w-8, h-82);
 	m_pkDisplay->color(FL_BLACK);
 	m_pkDisplay->box(FL_FLAT_BOX);
+	m_pkDisplay->end();
 	pkMainGroup->add(m_pkDisplay);
 	pkMainGroup->add(pkSlider);
 	pkMainGroup->add(pkTransportGroup);
@@ -119,8 +123,6 @@ SourceMonitor::SourceMonitor(MainWindow* parent, int x, int y, int w, int h, con
 	on_source_playback_connection = m_pkParent->on_source_playback_signal.connect(
 		boost::bind(&SourceMonitor::on_source_playback, this)
 		);
-
-	restart();
 }
 
 SourceMonitor::~SourceMonitor()
@@ -137,15 +139,22 @@ int SourceMonitor::handle(int event)
 	switch(event)
 	{
 	case FL_PUSH:
+		rDebug("%s: Recieved mouse click", __PRETTY_FUNCTION__);
 		color(FL_DARK1); 
 		redraw();
 		Fl::focus(this);
+		restart();
 		return Fl_Group::handle(event);
 	case FL_FOCUS:
+		rDebug("%s: Got focus", __PRETTY_FUNCTION__);
+		restart();
 		color(FL_DARK1); 
 		redraw();
 		return 1;
 	case FL_UNFOCUS:
+		rDebug("%s: Lost focus", __PRETTY_FUNCTION__);
+		stop_playback();
+		stop();
 		color(FL_BACKGROUND_COLOR); 
 		redraw();
 		return 1;
@@ -170,7 +179,7 @@ int SourceMonitor::handle(int event)
 		}
 		else if (Fl::event_key() == 'k')
 		{
-			stop();
+			stop_playback();
 			return 1;
 		}
 		else if (Fl::event_key() == 'l')
@@ -189,10 +198,10 @@ int SourceMonitor::handle(int event)
 
 void SourceMonitor::on_source_load()
 {
+	rDebug("%s: Connect source to consumer", __PRETTY_FUNCTION__);
 	m_pkConsumer->lock();
 	m_pkConsumer->connect(m_pkParent->get_source());
 	m_pkConsumer->unlock();
-	restart();
 }
 
 void SourceMonitor::on_source_playback()
@@ -281,7 +290,7 @@ void SourceMonitor::play_forward()
 		m_pkParent->source_play_forward();
 }
 
-void SourceMonitor::stop()
+void SourceMonitor::stop_playback()
 {
 	if (m_pkParent)
 		m_pkParent->source_pause();
@@ -292,6 +301,15 @@ Window SourceMonitor::xid()
 	return m_pkDisplay->shown() ? fl_xid(m_pkDisplay) : 0;
 }
 
+void SourceMonitor::stop()
+{
+	if (m_pkConsumer)
+	{
+		rDebug("%s: Stop consumer", __PRETTY_FUNCTION__);
+		m_pkConsumer->stop();
+	}
+}
+
 bool SourceMonitor::restart()
 {
 	bool ret = m_pkConsumer->is_stopped() && xid() != 0;
@@ -300,6 +318,7 @@ bool SourceMonitor::restart()
 		char temp[132];
 		sprintf(temp, "%d", (int)xid());
 		setenv("SDL_WINDOWID", temp, 1);
+		rDebug("%s: Start consumer with xid=%i", __PRETTY_FUNCTION__, (int)xid());
 		m_pkConsumer->start();
 	}
 	if (!m_pkConsumer->is_stopped())

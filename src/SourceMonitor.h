@@ -37,6 +37,9 @@ public:
 	~SourceMonitor();
 
 	int handle(int event);
+	void stop();
+        bool restart();
+	void refresh();
 
 private:
 	MainWindow* m_pkParent;
@@ -57,7 +60,7 @@ private:
 	static void mark_out(Fl_Widget*, void* v) { reinterpret_cast<SourceMonitor*>(v)->mark_out(); }
 	static void play_backward(Fl_Widget*, void* v) { reinterpret_cast<SourceMonitor*>(v)->play_backward(); }
 	static void play_forward(Fl_Widget*, void* v) { reinterpret_cast<SourceMonitor*>(v)->play_forward(); }
-	static void stop(Fl_Widget*, void* v) { reinterpret_cast<SourceMonitor*>(v)->stop(); }
+	static void stop_playback(Fl_Widget*, void* v) { reinterpret_cast<SourceMonitor*>(v)->stop_playback(); }
 
 	void browser_load();
 	void browser_callback();
@@ -71,11 +74,9 @@ private:
 	void step_forward();
 	void play_backward();
 	void play_forward();
-	void stop();
+	void stop_playback();
 
 	Window xid();
-        bool restart();
-	void refresh();
 };
 
 #endif // IOLA_SOURCEMONITOR_H
