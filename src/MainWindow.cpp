@@ -452,7 +452,8 @@ void MainWindow::program_insert()
 		int program_in, source_in, source_out;
 
 		if (program_get_mark_in() != -1 && program_get_mark_out() != -1 && 
-		    source_get_mark_in() != -1 && source_get_mark_out() != -1)
+		    source_get_mark_in() != -1 && source_get_mark_out() != -1 &&
+		    program_get_mark_in() < program_get_mark_out())
 		{
 			rDebug("%s: Four-point editing: program in/out takes precedence", __PRETTY_FUNCTION__);
 			const int duration = program_get_mark_out() - program_get_mark_in();
@@ -461,7 +462,8 @@ void MainWindow::program_insert()
 			source_out = source_get_mark_in() + duration;
 		}
 		else if (program_get_mark_in() != -1 && program_get_mark_out() != -1 &&
-			 source_get_mark_in() != -1 && source_get_mark_out() == -1)
+			 source_get_mark_in() != -1 && source_get_mark_out() == -1 &&
+			 program_get_mark_in() < program_get_mark_out())
 		{
 			rDebug("%s: Three-point editing: program in/out and source in marked", __PRETTY_FUNCTION__);
 			const int duration = program_get_mark_out() - program_get_mark_in();
@@ -470,7 +472,8 @@ void MainWindow::program_insert()
 			source_out = source_get_mark_in() + duration;
 		}
 		else if (program_get_mark_in() != -1 && program_get_mark_out() != -1 &&
-			 source_get_mark_in() == -1 && source_get_mark_out() != -1)
+			 source_get_mark_in() == -1 && source_get_mark_out() != -1 &&
+			 program_get_mark_in() < program_get_mark_out())
 		{
 			rDebug("%s: Three-point editing: program in/out and source out marked", __PRETTY_FUNCTION__);
 			const int duration = program_get_mark_out() - program_get_mark_in();
@@ -479,7 +482,8 @@ void MainWindow::program_insert()
 			source_out = source_get_mark_out();
 		}
 		else if (program_get_mark_in() != -1 && program_get_mark_out() == -1 &&
-			 source_get_mark_in() != -1 && source_get_mark_out() != -1)
+			 source_get_mark_in() != -1 && source_get_mark_out() != -1 &&
+			 source_get_mark_in() < source_get_mark_out())
 		{
 			rDebug("%s: Three-point editing: program in and source in/out marked", __PRETTY_FUNCTION__);
 			program_in = program_get_mark_in();
@@ -487,7 +491,8 @@ void MainWindow::program_insert()
 			source_out = source_get_mark_out();
 		}
 		else if (program_get_mark_in() == -1 && program_get_mark_out() != -1 &&
-			 source_get_mark_in() != -1 && source_get_mark_out() != -1)
+			 source_get_mark_in() != -1 && source_get_mark_out() != -1 &&
+			 source_get_mark_in() < source_get_mark_out())
 		{
 			rDebug("%s: Three-point editing: program out and source in/out marked", __PRETTY_FUNCTION__);
 			const int duration = source_get_mark_out() - source_get_mark_in();
@@ -497,7 +502,7 @@ void MainWindow::program_insert()
 		}
 		else
 		{
-			rDebug("%s: To few in/out marked to perform three-point edit", __PRETTY_FUNCTION__);
+			rDebug("%s: Not goo enough in/out points marked to perform three-point edit", __PRETTY_FUNCTION__);
 			return;
 		}
 
@@ -525,7 +530,8 @@ void MainWindow::program_overwrite()
 		int program_in, source_in, source_out;
 
 		if (program_get_mark_in() != -1 && program_get_mark_out() != -1 && 
-		    source_get_mark_in() != -1 && source_get_mark_out() != -1)
+		    source_get_mark_in() != -1 && source_get_mark_out() != -1 &&
+		    program_get_mark_in() < program_get_mark_out())
 		{
 			rDebug("%s: Four-point editing: program in/out takes precedence", __PRETTY_FUNCTION__);
 			const int duration = program_get_mark_out() - program_get_mark_in();
@@ -534,7 +540,8 @@ void MainWindow::program_overwrite()
 			source_out = source_get_mark_in() + duration;
 		}
 		else if (program_get_mark_in() != -1 && program_get_mark_out() != -1 &&
-			 source_get_mark_in() != -1 && source_get_mark_out() == -1)
+			 source_get_mark_in() != -1 && source_get_mark_out() == -1 &&
+			 program_get_mark_in() < program_get_mark_out())
 		{
 			rDebug("%s: Three-point editing: program in/out and source in marked", __PRETTY_FUNCTION__);
 			const int duration = program_get_mark_out() - program_get_mark_in();
@@ -543,7 +550,8 @@ void MainWindow::program_overwrite()
 			source_out = source_get_mark_in() + duration;
 		}
 		else if (program_get_mark_in() != -1 && program_get_mark_out() != -1 &&
-			 source_get_mark_in() == -1 && source_get_mark_out() != -1)
+			 source_get_mark_in() == -1 && source_get_mark_out() != -1 &&
+			 program_get_mark_in() < program_get_mark_out())
 		{
 			rDebug("%s: Three-point editing: program in/out and source out marked", __PRETTY_FUNCTION__);
 			const int duration = program_get_mark_out() - program_get_mark_in();
@@ -552,7 +560,8 @@ void MainWindow::program_overwrite()
 			source_out = source_get_mark_out();
 		}
 		else if (program_get_mark_in() != -1 && program_get_mark_out() == -1 &&
-			 source_get_mark_in() != -1 && source_get_mark_out() != -1)
+			 source_get_mark_in() != -1 && source_get_mark_out() != -1 &&
+			 source_get_mark_in() < source_get_mark_out())
 		{
 			rDebug("%s: Three-point editing: program in and source in/out marked", __PRETTY_FUNCTION__);
 			program_in = program_get_mark_in();
@@ -560,7 +569,8 @@ void MainWindow::program_overwrite()
 			source_out = source_get_mark_out();
 		}
 		else if (program_get_mark_in() == -1 && program_get_mark_out() != -1 &&
-			 source_get_mark_in() != -1 && source_get_mark_out() != -1)
+			 source_get_mark_in() != -1 && source_get_mark_out() != -1 &&
+			 source_get_mark_in() < source_get_mark_out())
 		{
 			rDebug("%s: Three-point editing: program out and source in/out marked", __PRETTY_FUNCTION__);
 			const int duration = source_get_mark_out() - source_get_mark_in();
