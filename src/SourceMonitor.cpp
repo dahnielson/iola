@@ -33,12 +33,16 @@
 SourceMonitor::SourceMonitor(MainWindow* parent, int x, int y, int w, int h, const char *label) :
 	Fl_Group(x, y, w, h, label),
 	m_pkParent(parent),
-	m_pkConsumer(0)
+	m_pkConsumer(0),
+	m_pkSlider(0)
 {
 	// Transport Slider
-	Fl_Slider *pkSlider = new Fl_Slider(x+4, y+h-50, w-8, 19);
-	pkSlider->type(FL_HOR_SLIDER);
-	pkSlider->color(FL_BLUE);
+	m_pkSlider = new Fl_Slider(x+4, y+h-50, w-8, 19);
+	m_pkSlider->type(FL_HOR_SLIDER);
+	m_pkSlider->slider_size(0.02);
+	m_pkSlider->bounds(0, 100);
+	m_pkSlider->precision(0);
+	m_pkSlider->callback((Fl_Callback *)slider_callback, this);
 	
 	// Transport Buttons
 	Fl_Button *pkMarkIn = new Fl_Button(0, 0, 25, 25, "[");
@@ -81,7 +85,7 @@ SourceMonitor::SourceMonitor(MainWindow* parent, int x, int y, int w, int h, con
 	m_pkDisplay->box(FL_FLAT_BOX);
 	m_pkDisplay->end();
 	pkMainGroup->add(m_pkDisplay);
-	pkMainGroup->add(pkSlider);
+	pkMainGroup->add(m_pkSlider);
 	pkMainGroup->add(pkTransportGroup);
 	pkMainGroup->resizable(m_pkDisplay);
 	pkMainGroup->end();
@@ -115,6 +119,7 @@ SourceMonitor::SourceMonitor(MainWindow* parent, int x, int y, int w, int h, con
 	m_pkConsumer->set("app_locked", 1);
 	m_pkConsumer->set("app_lock", (void *)Fl::lock, 0);
 	m_pkConsumer->set("app_unlock", (void *)Fl::unlock, 0);
+	m_pkEvent = m_pkConsumer->listen("consumer-frame-show", this, (mlt_listener)consumer_frame_show);
 
 	// Connect signals
 	on_source_load_connection = m_pkParent->on_source_load_signal.connect(
@@ -127,6 +132,7 @@ SourceMonitor::SourceMonitor(MainWindow* parent, int x, int y, int w, int h, con
 
 SourceMonitor::~SourceMonitor()
 {
+	delete m_pkEvent;
 	on_source_load_connection.disconnect();
 	on_source_playback_connection.disconnect();
 	if (m_pkConsumer)
@@ -201,12 +207,33 @@ void SourceMonitor::on_source_load()
 	rDebug("%s: Connect source to consumer", __PRETTY_FUNCTION__);
 	m_pkConsumer->lock();
 	m_pkConsumer->connect(m_pkParent->get_source());
+	Fl::lock();
+	m_pkSlider->bounds(m_pkParent->get_source().get_in(), m_pkParent->get_source().get_out());
+	Fl::unlock();
 	m_pkConsumer->unlock();
 }
 
 void SourceMonitor::on_source_playback()
 {
 	refresh();
+}
+
+void SourceMonitor::frame_shown(Mlt::Frame &frame)
+{
+	if (m_pkConsumer)
+	{
+		Fl::lock();
+		m_pkSlider->value(frame.get_int("_position"));
+		Fl::check();
+		Fl::unlock();
+	}
+}
+
+void SourceMonitor::slider_callback()
+{
+	Fl::lock();
+	m_pkParent->source_seek(m_pkSlider->value());
+	Fl::unlock();
 }
 
 void SourceMonitor::browser_load()

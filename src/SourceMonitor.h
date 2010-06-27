@@ -44,9 +44,11 @@ public:
 private:
 	MainWindow* m_pkParent;
 	Mlt::Consumer* m_pkConsumer;
+	Mlt::Event* m_pkEvent;
 
 	Fl_Window* m_pkDisplay;
 	Fl_Hold_Browser* m_pkBrowser;
+	Fl_Slider* m_pkSlider;
 
 	void on_source_load();
 	void on_source_playback();
@@ -54,6 +56,7 @@ private:
 	boost::signals2::connection on_source_load_connection;
 	boost::signals2::connection on_source_playback_connection;
 
+	static void slider_callback(Fl_Widget*, void* v) { reinterpret_cast<SourceMonitor*>(v)->slider_callback(); }
 	static void browser_callback(Fl_Widget*, void* v) { reinterpret_cast<SourceMonitor*>(v)->browser_callback(); }
 
 	static void mark_in(Fl_Widget*, void* v) { reinterpret_cast<SourceMonitor*>(v)->mark_in(); }
@@ -61,6 +64,16 @@ private:
 	static void play_backward(Fl_Widget*, void* v) { reinterpret_cast<SourceMonitor*>(v)->play_backward(); }
 	static void play_forward(Fl_Widget*, void* v) { reinterpret_cast<SourceMonitor*>(v)->play_forward(); }
 	static void stop_playback(Fl_Widget*, void* v) { reinterpret_cast<SourceMonitor*>(v)->stop_playback(); }
+
+	static void consumer_frame_show(mlt_consumer, SourceMonitor* self, mlt_frame frame_ptr)
+	{
+		Mlt::Frame frame(frame_ptr);
+		self->frame_shown(frame);
+	}
+
+	void frame_shown(Mlt::Frame &frame);
+
+	void slider_callback();
 
 	void browser_load();
 	void browser_callback();
