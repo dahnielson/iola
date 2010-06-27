@@ -47,6 +47,7 @@ public:
 	void quit_application();
 
 	void source_load(const char* clip);
+	double source_get_speed();
 	void source_set_speed(double speed);
 	void source_seek(int position);
 
@@ -64,6 +65,7 @@ public:
 
 	void program_new();
 	void program_set_speed(double speed);
+	double program_get_speed();
 	void program_seek(int position);
 
 	void program_step_forward();

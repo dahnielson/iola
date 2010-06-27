@@ -129,6 +129,17 @@ void MainWindow::source_load(const char* clip)
 	on_source_load_signal();
 }
 
+double MainWindow::source_get_speed()
+{
+	if (!m_pkSource)
+		return 0;
+		
+	m_pkSource->lock();
+	double speed = m_pkSource->get_speed();
+	m_pkSource->unlock();
+	return speed;
+}
+
 void MainWindow::source_set_speed(double speed)
 {
 	pthread_mutex_lock(&mutex);
@@ -291,6 +302,15 @@ void MainWindow::program_new()
 //	m_pkProgram->dump(); //debug
 	pthread_mutex_unlock(&mutex);
 	on_program_load_signal();
+}
+
+
+double MainWindow::program_get_speed()
+{
+	m_pkProgram->lock();
+	double speed = m_pkProgram->get_speed();
+	m_pkProgram->unlock();
+	return speed;
 }
 
 void MainWindow::program_set_speed(double speed)
