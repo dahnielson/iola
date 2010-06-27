@@ -1,4 +1,39 @@
+Iola NLE
 
-* Make Bin a tab in the Source Monitor
+- Shape up the CMakeLists.txt
 
-* Make the 'v' shortcut insert clip into the sequence
+- Create sub-channels for debug messages
+
+- Display mark in/out in the monitors
+
+- Figure out why the source clip jumps to a new position on focus
+
+- Copy the slider control code from the source monitor to the program monitor
+
+- Copy clear mark in/out/both keyboard shortcuts from the source monitor to the program monitor
+
+- Implement more keyboard shortcuts for editing and navigation
+  - Lift (z)
+  - Extract (x)
+  - Goto in (q) / goto out (w)
+  - Goto prev. edit (a) / next edit (s)
+
+- Display the speed and direction of playback in the monitor
+
+- Load clip in source monitor using URI from clipboard (ctrl+v)
+
+- Copy URI of clip in source monitor to clipboard (ctrl+c)
+
+- Implement an OpenGL consumer
+
+- Implement the timeline
+
+- "New" clear the slate
+
+- "Open"/"Save" serialization of the project
+
+- Implement a dialog for editing the profile (project setting)
+
+- Export AVI
+
+- Export EDL
