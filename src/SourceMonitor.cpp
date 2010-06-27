@@ -165,7 +165,23 @@ int SourceMonitor::handle(int event)
 		redraw();
 		return 1;
 	case FL_KEYUP:
-		if (Fl::event_key() == 'i')
+		if (Fl::event_key() == 'd')
+		{
+			mark_in_clear();
+			return 1;
+		}
+		else if (Fl::event_key() == 'f')
+		{
+			mark_out_clear();
+			return 1;
+		}
+		else if (Fl::event_key() == 'g')
+		{
+			mark_in_clear();
+			mark_out_clear();
+			return 1;
+		}
+		else if (Fl::event_key() == 'i')
 		{
 			mark_in();
 			return 1;
