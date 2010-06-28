@@ -1,7 +1,5 @@
 Iola NLE
 
-- Shape up the CMakeLists.txt
-
 - Create sub-channels for debug messages
 
 - Display mark in/out in the monitors
