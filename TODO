@@ -14,6 +14,8 @@ Iola NLE
   - Extract (x)
   - Copy (c)
 
+- Add fade transition
+
 - Load clip in source monitor using URI from clipboard (ctrl+v)
 
 - Copy URI of clip in source monitor to clipboard (ctrl+c)
