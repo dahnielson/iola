@@ -44,8 +44,10 @@ public:
 private:
 	MainWindow* m_pkParent;
 	Mlt::Consumer* m_pkConsumer;
+	Mlt::Event* m_pkEvent;
 
 	Fl_Window* m_pkDisplay;
+	Fl_Slider* m_pkSlider;
 
 	void on_program_load();
 	void on_program_playback();
@@ -53,11 +55,23 @@ private:
 	boost::signals2::connection on_program_load_connection;
 	boost::signals2::connection on_program_playback_connection;
 
+	static void slider_callback(Fl_Widget*, void* v) { reinterpret_cast<ProgramMonitor*>(v)->slider_callback(); }
+
 	static void mark_in(Fl_Widget*, void* v) { reinterpret_cast<ProgramMonitor*>(v)->mark_in(); }
 	static void mark_out(Fl_Widget*, void* v) { reinterpret_cast<ProgramMonitor*>(v)->mark_out(); }
 	static void play_backward(Fl_Widget*, void* v) { reinterpret_cast<ProgramMonitor*>(v)->play_backward(); }
 	static void play_forward(Fl_Widget*, void* v) { reinterpret_cast<ProgramMonitor*>(v)->play_forward(); }
 	static void stop_playback(Fl_Widget*, void* v) { reinterpret_cast<ProgramMonitor*>(v)->stop_playback(); }
+
+	static void consumer_frame_show(mlt_consumer, ProgramMonitor* self, mlt_frame frame_ptr)
+	{
+		Mlt::Frame frame(frame_ptr);
+		self->frame_shown(frame);
+	}
+
+	void frame_shown(Mlt::Frame &frame);
+
+	void slider_callback();
 
 	void mark_in();
 	void mark_out();

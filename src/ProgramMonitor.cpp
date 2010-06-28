@@ -30,12 +30,16 @@
 ProgramMonitor::ProgramMonitor(MainWindow* parent, int x, int y, int w, int h, const char *label) :
 	Fl_Group(x, y, w, h, label),
 	m_pkParent(parent),
-	m_pkConsumer(0)
+	m_pkConsumer(0),
+	m_pkSlider(0)
 {
 	// Transport Slider
-	Fl_Slider *pkSlider = new Fl_Slider(x+4, y+h-50, w-8, 19);
-	pkSlider->type(FL_HOR_SLIDER);
-//	pkSlider->color(FL_BACKGROUND_COLOR);
+	m_pkSlider = new Fl_Slider(x+4, y+h-50, w-8, 19);
+	m_pkSlider->type(FL_HOR_SLIDER);
+	m_pkSlider->slider_size(0.02);
+	m_pkSlider->bounds(0, 100);
+	m_pkSlider->precision(0);
+	m_pkSlider->callback((Fl_Callback *)slider_callback, this);
 	
 	// Transport Buttons
 	Fl_Button *pkMarkIn = new Fl_Button(0, 0, 25, 25, "[");
@@ -78,7 +82,7 @@ ProgramMonitor::ProgramMonitor(MainWindow* parent, int x, int y, int w, int h, c
 	m_pkDisplay->box(FL_FLAT_BOX);
 	m_pkDisplay->end();
 	pkMainGroup->add(m_pkDisplay);
-	pkMainGroup->add(pkSlider);
+	pkMainGroup->add(m_pkSlider);
 	pkMainGroup->add(pkTransportGroup);
 	pkMainGroup->resizable(m_pkDisplay);
 	pkMainGroup->end();
@@ -100,6 +104,7 @@ ProgramMonitor::ProgramMonitor(MainWindow* parent, int x, int y, int w, int h, c
 	m_pkConsumer->set("app_locked", 1);
 	m_pkConsumer->set("app_lock", (void *)Fl::lock, 0);
 	m_pkConsumer->set("app_unlock", (void *)Fl::unlock, 0);
+	m_pkEvent = m_pkConsumer->listen("consumer-frame-show", this, (mlt_listener)consumer_frame_show);
 
 	// Connect signals
 	on_program_load_connection = m_pkParent->on_program_load_signal.connect(
@@ -202,6 +207,24 @@ void ProgramMonitor::on_program_load()
 void ProgramMonitor::on_program_playback()
 {
 	refresh();
+}
+
+void ProgramMonitor::frame_shown(Mlt::Frame &frame)
+{
+	if (m_pkConsumer && !m_pkConsumer->is_stopped())
+	{
+		Fl::lock();
+		m_pkSlider->value(frame.get_int("_position"));
+		Fl::check();
+		Fl::unlock();
+	}
+}
+
+void ProgramMonitor::slider_callback()
+{
+	Fl::lock();
+	m_pkParent->program_seek(m_pkSlider->value());
+	Fl::unlock();
 }
 
 void ProgramMonitor::mark_in()

@@ -8,8 +8,6 @@ Iola NLE
 
 - Figure out why the source clip jumps to a new position on focus
 
-- Copy the slider control code from the source monitor to the program monitor
-
 - Copy clear mark in/out/both keyboard shortcuts from the source monitor to the program monitor
 
 - Implement more keyboard shortcuts for editing and navigation
