@@ -12,6 +12,9 @@ Keyboard shortcuts
  I  	set mark in
  O  	set mark out
 
+ A	goto previous edit
+ S	goto next edit
+
  D	clear mark in
  F	clear mark out
  G	clear mark in and out
