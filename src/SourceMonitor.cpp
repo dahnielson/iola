@@ -236,7 +236,7 @@ void SourceMonitor::on_source_playback()
 
 void SourceMonitor::frame_shown(Mlt::Frame &frame)
 {
-	if (m_pkConsumer)
+	if (m_pkConsumer && !m_pkConsumer->is_stopped())
 	{
 		Fl::lock();
 		m_pkSlider->value(frame.get_int("_position"));
