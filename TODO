@@ -7,7 +7,6 @@ Iola NLE
 - Figure out why the source clip jumps to a new position on focus
 
 - Implement more keyboard shortcuts for editing and navigation
-  - Mark entire source clip / cut in program (t)
   - Lift (z)
   - Extract (x)
   - Copy (c)

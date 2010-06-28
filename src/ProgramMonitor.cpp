@@ -162,6 +162,11 @@ int ProgramMonitor::handle(int event)
 			mark_out_goto();
 			return 1;
 		}
+		else if (Fl::event_key() == 't')
+		{
+			mark_cut();
+			return 1;
+		}
 		else if (Fl::event_key() == 'i')
 		{
 			mark_in();
@@ -294,6 +299,12 @@ void ProgramMonitor::mark_out()
 {
 	if (m_pkParent)
 		m_pkParent->program_set_mark_out();
+}
+
+void ProgramMonitor::mark_cut()
+{
+	if (m_pkParent)
+		m_pkParent->program_set_mark_cut();
 }
 
 void ProgramMonitor::mark_in_clear()

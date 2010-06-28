@@ -174,6 +174,11 @@ int SourceMonitor::handle(int event)
 			mark_out_goto();
 			return 1;
 		}
+		else if (Fl::event_key() == 't')
+		{
+			mark_clip();
+			return 1;
+		}
 		else if (Fl::event_key() == 'i')
 		{
 			mark_in();
@@ -314,6 +319,12 @@ void SourceMonitor::mark_out()
 {
 	if (m_pkParent)
 		m_pkParent->source_set_mark_out();
+}
+
+void SourceMonitor::mark_clip()
+{
+	if (m_pkParent)
+		m_pkParent->source_set_mark_clip();
 }
 
 void SourceMonitor::mark_in_clear()

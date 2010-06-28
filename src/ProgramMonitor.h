@@ -82,6 +82,7 @@ private:
 
 	void mark_in();
 	void mark_out();
+	void mark_cut();
 	void mark_in_clear();
 	void mark_out_clear();
 	void mark_in_goto();

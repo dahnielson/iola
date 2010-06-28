@@ -60,6 +60,7 @@ public:
 	int source_get_mark_out();
 	void source_set_mark_in();
 	void source_set_mark_out();
+	void source_set_mark_clip();
 	void source_clear_mark_in();
 	void source_clear_mark_out();
 	void source_goto_mark_in();
@@ -81,6 +82,7 @@ public:
 	int program_get_mark_out();
 	void program_set_mark_in();
 	void program_set_mark_out();
+	void program_set_mark_cut();
 	void program_clear_mark_in();
 	void program_clear_mark_out();
 	void program_goto_mark_in();

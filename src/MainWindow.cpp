@@ -264,6 +264,20 @@ void MainWindow::source_set_mark_out()
 	}
 }
 
+void MainWindow::source_set_mark_clip()
+{
+	if (m_pkSource)
+	{
+		m_pkSource->lock();
+		const int in = m_pkSource->get_in();
+		const int out = m_pkSource->get_out();
+		rDebug("%s: Set source mark in at %i and out at %i", __PRETTY_FUNCTION__, in, out);
+		m_pkSource->set("meta.iola.mark_in", in);
+		m_pkSource->set("meta.iola.mark_out", out);
+		m_pkSource->unlock();
+	}
+}
+
 void MainWindow::source_clear_mark_in()
 {
 	if (m_pkSource)
@@ -471,6 +485,20 @@ void MainWindow::program_set_mark_out()
 		m_pkProgram->lock();
 		rDebug("%s: Set program mark out at %i", __PRETTY_FUNCTION__, m_pkProgram->frame());
 		m_pkProgram->set("meta.iola.mark_out", m_pkProgram->frame());
+		m_pkProgram->unlock();
+	}
+}
+
+void MainWindow::program_set_mark_cut()
+{
+	if (m_pkProgram)
+	{
+		m_pkProgram->lock();
+		const int in = m_pkProgram->clip(mlt_whence_relative_current, -1);
+		const int out = m_pkProgram->clip(mlt_whence_relative_current, 1);
+		rDebug("%s: Set program mark in at %i and out at %i", __PRETTY_FUNCTION__, in, out);
+		m_pkProgram->set("meta.iola.mark_in", in);
+		m_pkProgram->set("meta.iola.mark_out", out);
 		m_pkProgram->unlock();
 	}
 }
