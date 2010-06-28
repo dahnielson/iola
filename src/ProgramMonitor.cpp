@@ -117,6 +117,7 @@ ProgramMonitor::ProgramMonitor(MainWindow* parent, int x, int y, int w, int h, c
 
 ProgramMonitor::~ProgramMonitor()
 {
+	delete m_pkEvent;
 	on_program_load_connection.disconnect();
 	on_program_playback_connection.disconnect();
 	if (m_pkConsumer)
