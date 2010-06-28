@@ -6,6 +6,8 @@ Iola NLE
 
 - Figure out why the source clip jumps to a new position on focus
 
+- Fix slider bounds in program monitor
+
 - Implement more keyboard shortcuts for editing and navigation
   - Lift (z)
   - Extract (x)
