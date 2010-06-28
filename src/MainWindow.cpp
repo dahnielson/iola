@@ -287,6 +287,26 @@ void MainWindow::source_clear_mark_out()
 	}
 }
 
+void MainWindow::source_goto_mark_in()
+{
+	if (m_pkSource)
+	{
+		const int mark = source_get_mark_in();
+		rDebug("%s: Goto source mark in at %i", __PRETTY_FUNCTION__, mark);
+		source_seek(mark);
+	}
+}
+
+void MainWindow::source_goto_mark_out()
+{
+	if (m_pkSource)
+	{
+		const int mark = source_get_mark_out();
+		rDebug("%s: Goto source mark out at %i", __PRETTY_FUNCTION__, mark);
+		source_seek(mark);
+	}
+}
+
 ///////////////////////////////////////////
 // Program
 
@@ -456,6 +476,26 @@ void MainWindow::program_clear_mark_out()
 		rDebug("%s: Clear program mark out", __PRETTY_FUNCTION__);
 		m_pkProgram->set("meta.iola.mark_out", -1);
 		m_pkProgram->unlock();
+	}
+}
+
+void MainWindow::program_goto_mark_in()
+{
+	if (m_pkProgram)
+	{
+		const int mark = program_get_mark_in();
+		rDebug("%s: Goto program mark in at %i", __PRETTY_FUNCTION__, mark);
+		program_seek(mark);
+	}
+}
+
+void MainWindow::program_goto_mark_out()
+{
+	if (m_pkProgram)
+	{
+		const int mark = program_get_mark_out();
+		rDebug("%s: Goto program mark out at %i", __PRETTY_FUNCTION__, mark);
+		program_seek(mark);
 	}
 }
 

@@ -62,6 +62,8 @@ public:
 	void source_set_mark_out();
 	void source_clear_mark_in();
 	void source_clear_mark_out();
+	void source_goto_mark_in();
+	void source_goto_mark_out();
 
 	void program_new();
 	void program_set_speed(double speed);
@@ -78,7 +80,9 @@ public:
 	void program_set_mark_in();
 	void program_set_mark_out();
 	void program_clear_mark_in();
-	void program_clear_mark_out();	
+	void program_clear_mark_out();
+	void program_goto_mark_in();
+	void program_goto_mark_out();
 	void program_insert();
 	void program_overwrite();
 

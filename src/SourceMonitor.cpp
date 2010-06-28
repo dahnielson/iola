@@ -165,7 +165,27 @@ int SourceMonitor::handle(int event)
 		redraw();
 		return 1;
 	case FL_KEYUP:
-		if (Fl::event_key() == 'd')
+		if (Fl::event_key() == 'q')
+		{
+			mark_in_goto();
+			return 1;
+		}
+		else if (Fl::event_key() == 'w')
+		{
+			mark_out_goto();
+			return 1;
+		}
+		else if (Fl::event_key() == 'i')
+		{
+			mark_in();
+			return 1;
+		}
+		else if (Fl::event_key() == 'o')
+		{
+			mark_out();
+			return 1;
+		}
+		else if (Fl::event_key() == 'd')
 		{
 			mark_in_clear();
 			return 1;
@@ -179,16 +199,6 @@ int SourceMonitor::handle(int event)
 		{
 			mark_in_clear();
 			mark_out_clear();
-			return 1;
-		}
-		else if (Fl::event_key() == 'i')
-		{
-			mark_in();
-			return 1;
-		}
-		else if (Fl::event_key() == 'o')
-		{
-			mark_out();
 			return 1;
 		}
 		else if (Fl::event_key() == 'j')
@@ -307,6 +317,18 @@ void SourceMonitor::mark_out_clear()
 {
 	if (m_pkParent)
 		m_pkParent->source_clear_mark_out();
+}
+
+void SourceMonitor::mark_in_goto()
+{
+	if (m_pkParent)
+		m_pkParent->source_goto_mark_in();
+}
+
+void SourceMonitor::mark_out_goto()
+{
+	if (m_pkParent)
+		m_pkParent->source_goto_mark_out();
 }
 
 void SourceMonitor::step_backward()
