@@ -499,6 +499,26 @@ void MainWindow::program_goto_mark_out()
 	}
 }
 
+void MainWindow::program_goto_previous_edit()
+{
+	if (m_pkProgram)
+	{
+		const int mark = m_pkProgram->clip(mlt_whence_relative_current, -1);
+		rDebug("%s: Goto previous edit at %i", __PRETTY_FUNCTION__, mark);
+		program_seek(mark);
+	}
+}
+
+void MainWindow::program_goto_next_edit()
+{
+	if (m_pkProgram)
+	{
+		const int mark = m_pkProgram->clip(mlt_whence_relative_current, 1);
+		rDebug("%s: Goto next edit at %i", __PRETTY_FUNCTION__, mark);
+		program_seek(mark);
+	}
+}
+
 void MainWindow::program_insert()
 {
 	if (!m_pkProgram)

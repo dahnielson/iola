@@ -169,6 +169,16 @@ int ProgramMonitor::handle(int event)
 			mark_out();
 			return 1;
 		}
+		else if (Fl::event_key() == 'a')
+		{
+			edit_previous_goto();
+			return 1;
+		}
+		else if (Fl::event_key() == 's')
+		{
+			edit_next_goto();
+			return 1;
+		}
 		else if (Fl::event_key() == 'd')
 		{
 			mark_in_clear();
@@ -317,6 +327,18 @@ void ProgramMonitor::stop_playback()
 {
 	if (m_pkParent)
 		m_pkParent->program_pause();
+}
+
+void ProgramMonitor::edit_previous_goto()
+{
+	if (m_pkParent)
+		m_pkParent->program_goto_previous_edit();
+}
+
+void ProgramMonitor::edit_next_goto()
+{
+	if (m_pkParent)
+		m_pkParent->program_goto_next_edit();
 }
 
 void ProgramMonitor::insert()

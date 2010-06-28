@@ -9,7 +9,6 @@ Iola NLE
 - Implement more keyboard shortcuts for editing and navigation
   - Lift (z)
   - Extract (x)
-  - Goto prev. edit (a) / next edit (s)
 
 - Display the speed and direction of playback in the monitor
 

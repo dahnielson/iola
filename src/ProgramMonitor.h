@@ -85,6 +85,10 @@ private:
 	void play_backward();
 	void play_forward();
 	void stop_playback();
+
+	void edit_previous_goto();
+	void edit_next_goto();
+
 	void insert();
 	void overwrite();
 

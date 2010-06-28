@@ -83,6 +83,8 @@ public:
 	void program_clear_mark_out();
 	void program_goto_mark_in();
 	void program_goto_mark_out();
+	void program_goto_previous_edit();
+	void program_goto_next_edit();
 	void program_insert();
 	void program_overwrite();
 
