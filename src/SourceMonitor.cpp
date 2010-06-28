@@ -221,6 +221,16 @@ int SourceMonitor::handle(int event)
 				play_forward();
 			return 1;
 		}
+		else if (Fl::event_key() == FL_Home)
+		{
+			goto_start();
+			return 1;
+		}
+		else if (Fl::event_key() == FL_End)
+		{
+			goto_end();
+			return 1;
+		}
 		return 0;
 	default:
 		return Fl_Group::handle(event);
@@ -328,6 +338,18 @@ void SourceMonitor::mark_out_goto()
 {
 	if (m_pkParent)
 		m_pkParent->source_goto_mark_out();
+}
+
+void SourceMonitor::goto_start()
+{
+	if (m_pkParent)
+		m_pkParent->source_goto_start();
+}
+
+void SourceMonitor::goto_end()
+{
+	if (m_pkParent)
+		m_pkParent->source_goto_end();
 }
 
 void SourceMonitor::step_backward()

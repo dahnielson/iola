@@ -229,6 +229,16 @@ int ProgramMonitor::handle(int event)
 			overwrite();
 			return 1;
 		}
+		else if (Fl::event_key() == FL_Home)
+		{
+			goto_start();
+			return 1;
+		}
+		else if (Fl::event_key() == FL_End)
+		{
+			goto_end();
+			return 1;
+		}
 		return 0;
 	default:
 		return Fl_Group::handle(event);
@@ -308,6 +318,18 @@ void ProgramMonitor::mark_out_goto()
 {
 	if (m_pkParent)
 		m_pkParent->program_goto_mark_out();
+}
+
+void ProgramMonitor::goto_start()
+{
+	if (m_pkParent)
+		m_pkParent->program_goto_start();
+}
+
+void ProgramMonitor::goto_end()
+{
+	if (m_pkParent)
+		m_pkParent->program_goto_end();
 }
 
 void ProgramMonitor::step_backward()

@@ -306,6 +306,26 @@ void MainWindow::source_goto_mark_out()
 	}
 }
 
+void MainWindow::source_goto_start()
+{
+	if (m_pkSource)
+	{
+		const int frame = m_pkSource->get_in();
+		rDebug("%s: Goto source start at %i", __PRETTY_FUNCTION__, frame);
+		source_seek(frame);
+	}
+}
+
+void MainWindow::source_goto_end()
+{
+	if (m_pkSource)
+	{
+		const int frame = m_pkSource->get_out();
+		rDebug("%s: Goto source end at %i", __PRETTY_FUNCTION__, frame);
+		source_seek(frame);
+	}
+}
+
 ///////////////////////////////////////////
 // Program
 
@@ -514,6 +534,26 @@ void MainWindow::program_goto_next_edit()
 		const int mark = m_pkProgram->clip(mlt_whence_relative_current, 1);
 		rDebug("%s: Goto next edit at %i", __PRETTY_FUNCTION__, mark);
 		program_seek(mark);
+	}
+}
+
+void MainWindow::program_goto_start()
+{
+	if (m_pkProgram)
+	{
+		const int frame = m_pkProgram->get_in();
+		rDebug("%s: Goto program start at %i", __PRETTY_FUNCTION__, frame);
+		program_seek(frame);
+	}
+}
+
+void MainWindow::program_goto_end()
+{
+	if (m_pkProgram)
+	{
+		const int frame = m_pkProgram->get_out();
+		rDebug("%s: Goto program end at %i", __PRETTY_FUNCTION__, frame);
+		program_seek(frame);
 	}
 }
 

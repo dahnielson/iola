@@ -87,6 +87,9 @@ private:
 	void mark_in_goto();
 	void mark_out_goto();
 
+	void goto_start();
+	void goto_end();
+
 	void step_backward();
 	void step_forward();
 	void play_backward();
