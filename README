@@ -1,11 +1,13 @@
 Iola NLE
 
+Editing
+=======
+
 Keyboard shortcuts
 ------------------
 
- J	play backward
- K  	stop
- L  	play forward
+ Q	goto mark in
+ W	goto mark out
 
  I  	set mark in
  O  	set mark out
@@ -13,6 +15,10 @@ Keyboard shortcuts
  D	clear mark in
  F	clear mark out
  G	clear mark in and out
+
+ J	play backward
+ K  	stop
+ L  	play forward
 
  V	splice-in / insert
  B	overwrite
@@ -29,4 +35,27 @@ Overwrite
 When you edit a clip into a sequence using overwrite edit, any portions of clips that are already in the destination tracks are replaced by the source clip.
 
 
+Container & codec
+=================
 
+Containers
+----------
+          
+AVI       Audio Video Interleave
+GFX       General eXchange Format, SMPTE 360M
+MOV       QuickTime
+MXF       Material eXchange Format, SMPTE 377M
+
+Video codecs
+------------
+
+For editing:
+
+DNxHD     lossy intraframe high-definition video compression
+HuffYUV   lossless intraframe compression
+MJPEG     lossy intraframe compression
+
+For aquiring media:
+
+H.264	  lossy interframe compression (eg. from DSLR)
+MPEG-2    lossy interframe compression (eg. from HDV)
