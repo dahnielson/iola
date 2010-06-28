@@ -4,8 +4,6 @@ Iola NLE
 
 - Create sub-channels for debug messages
 
-- Beep on error
-
 - Display mark in/out in the monitors
 
 - Figure out why the source clip jumps to a new position on focus

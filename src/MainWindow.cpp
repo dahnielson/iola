@@ -562,7 +562,8 @@ void MainWindow::program_insert()
 		}
 		else
 		{
-			rDebug("%s: Not goo enough in/out points marked to perform three-point edit", __PRETTY_FUNCTION__);
+			rDebug("%s: Not good enough in/out points marked to perform three-point edit", __PRETTY_FUNCTION__);
+			fl_beep();
 			return;
 		}
 
@@ -640,7 +641,8 @@ void MainWindow::program_overwrite()
 		}
 		else
 		{
-			rDebug("%s: To few in/out marked to perform three-point edit", __PRETTY_FUNCTION__);
+			rDebug("%s: Not good enough in/out points marked to perform three-point edit", __PRETTY_FUNCTION__);
+			fl_beep();
 			return;
 		}
 
