@@ -7,10 +7,12 @@ Iola NLE
 - Figure out why the source clip jumps to a new position on focus
 
 - Implement more keyboard shortcuts for editing and navigation
+  - Goto beginning of source or program (home)
+  - Goto end of source or program (end)
+  - Mark entire source clip / cut in program (t)
   - Lift (z)
   - Extract (x)
-
-- Display the speed and direction of playback in the monitor
+  - Copy (c)
 
 - Load clip in source monitor using URI from clipboard (ctrl+v)
 
