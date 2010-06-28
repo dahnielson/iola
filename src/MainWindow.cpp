@@ -158,7 +158,7 @@ void MainWindow::source_seek(int position)
 {
 	if (m_pkSource)
 	{
-		rDebug("%s: Seek position x%i", __PRETTY_FUNCTION__, position);
+		rDebug("%s: Seek position at %i", __PRETTY_FUNCTION__, position);
 		m_pkSource->lock();
 		m_pkSource->seek(position < 0 ? 0 : position > m_pkSource->get_out() ? m_pkSource->get_out() : position);
 		m_pkSource->unlock();
@@ -351,7 +351,7 @@ void MainWindow::program_seek(int position)
 {
 	if (m_pkProgram)
 	{
-		rDebug("%s: Seek position x%i", __PRETTY_FUNCTION__, position);
+		rDebug("%s: Seek position at %i", __PRETTY_FUNCTION__, position);
 		m_pkProgram->lock();
 		m_pkProgram->seek(position < 0 ? 0 : position > m_pkProgram->get_out() ? m_pkProgram->get_out() : position);
 		m_pkProgram->unlock();
