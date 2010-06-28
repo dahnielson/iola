@@ -68,7 +68,6 @@ ProgramMonitor::ProgramMonitor(MainWindow* parent, int x, int y, int w, int h, c
 	Fl_Pack *pkTransportGroup = new Fl_Pack(x+w/2-62, y+h-28, 125, 25);
 	pkTransportGroup->box(FL_NO_BOX);
 	pkTransportGroup->type(Fl_Pack::HORIZONTAL);
-//	pkTransportGroup->spacing(2);
 	pkTransportGroup->add(pkMarkIn);
 	pkTransportGroup->add(pkPlayBackward);
 	pkTransportGroup->add(pkStop);

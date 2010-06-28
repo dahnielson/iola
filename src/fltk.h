@@ -53,8 +53,4 @@
 
 #include <FL/x.H>
 
-// Local
-//#include "Fl_TimeLine.h"
-//#include "Fl_ColumnManager.h"
-
 #endif // IOLA_FLTK_H

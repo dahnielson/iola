@@ -124,7 +124,6 @@ void MainWindow::source_load(const char* clip)
 	m_pkSource->set_speed(0);
 	m_pkSource->set("meta.iola.mark_in", -1);
 	m_pkSource->set("meta.iola.mark_out", -1);
-//	m_pkSource->dump(); //debug
 	pthread_mutex_unlock(&mutex);
 	on_source_load_signal();
 }
@@ -319,7 +318,6 @@ void MainWindow::program_new()
 	m_pkProgram->set_speed(0);
 	m_pkProgram->set("meta.iola.mark_in", -1);
 	m_pkProgram->set("meta.iola.mark_out", -1);
-//	m_pkProgram->dump(); //debug
 	pthread_mutex_unlock(&mutex);
 	on_program_load_signal();
 }
