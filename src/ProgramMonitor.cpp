@@ -31,6 +31,8 @@ ProgramMonitor::ProgramMonitor(MainWindow* parent, int x, int y, int w, int h, c
 	Fl_Group(x, y, w, h, label),
 	m_pkParent(parent),
 	m_pkConsumer(0),
+	m_pkFrameShowEvent(0),
+	m_pkProducerChangedEvent(0),
 	m_pkSlider(0)
 {
 	// Transport Slider
@@ -104,7 +106,7 @@ ProgramMonitor::ProgramMonitor(MainWindow* parent, int x, int y, int w, int h, c
 	m_pkConsumer->set("app_locked", 1);
 	m_pkConsumer->set("app_lock", (void *)Fl::lock, 0);
 	m_pkConsumer->set("app_unlock", (void *)Fl::unlock, 0);
-	m_pkEvent = m_pkConsumer->listen("consumer-frame-show", this, (mlt_listener)consumer_frame_show);
+	m_pkFrameShowEvent = m_pkConsumer->listen("consumer-frame-show", this, (mlt_listener)frame_show_callback);
 
 	// Connect signals
 	on_program_load_connection = m_pkParent->on_program_load_signal.connect(
@@ -117,7 +119,8 @@ ProgramMonitor::ProgramMonitor(MainWindow* parent, int x, int y, int w, int h, c
 
 ProgramMonitor::~ProgramMonitor()
 {
-	delete m_pkEvent;
+	delete m_pkFrameShowEvent;
+	delete m_pkProducerChangedEvent;
 	on_program_load_connection.disconnect();
 	on_program_playback_connection.disconnect();
 	if (m_pkConsumer)
@@ -239,6 +242,7 @@ void ProgramMonitor::on_program_load()
 	m_pkConsumer->lock();
 	m_pkConsumer->connect(m_pkParent->get_program());
 	m_pkConsumer->unlock();
+	m_pkProducerChangedEvent = m_pkParent->get_program().listen("producer-changed", this, (mlt_listener)producer_changed_callback);
 }
 
 void ProgramMonitor::on_program_playback()
@@ -255,6 +259,13 @@ void ProgramMonitor::frame_shown(Mlt::Frame &frame)
 		Fl::check();
 		Fl::unlock();
 	}
+}
+
+void ProgramMonitor::producer_changed()
+{
+	Fl::lock();
+	m_pkSlider->bounds(m_pkParent->get_program().get_in(), m_pkParent->get_program().get_out());
+	Fl::unlock();
 }
 
 void ProgramMonitor::slider_callback()
