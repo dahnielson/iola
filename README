@@ -68,3 +68,13 @@ For aquiring media:
 
 H.264	  lossy interframe compression (eg. from DSLR)
 MPEG-2    lossy interframe compression (eg. from HDV)
+
+
+Conforming
+==========
+
+To conform a sequence with another application it must be exported to an interchangable format.
+
+ - EDL (CMX 3600)
+ - FCP XML (Final Cut Pro XML Interchange Format, version 3)
+ - ALE (Avid Log Exchange)
