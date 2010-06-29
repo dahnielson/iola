@@ -1,5 +1,11 @@
 Iola NLE
 
+Terminology
+===========
+
+The user interface is split up into three panels: source monitor, program monitor and timeline. There are two types of assets: clips and sequences. Clips are the source material you will edit and assemble into an sequence. The source monitor is used to view clips and set in and out points in them for editing. The program monitor is used to view the sequence and edit clips into it. The timeline is used to get an oveview of the sequence and to edit clips into it.
+
+
 Editing
 =======
 
