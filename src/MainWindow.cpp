@@ -118,13 +118,11 @@ void MainWindow::quit_application()
 void MainWindow::source_load(const char* clip)
 {
 	rDebug("%s: Load %s as source", __PRETTY_FUNCTION__, clip);
-	pthread_mutex_lock(&mutex);
 	delete m_pkSource;
 	m_pkSource = new Mlt::Producer(m_Profile, clip);
 	m_pkSource->set_speed(0);
 	m_pkSource->set("meta.iola.mark_in", -1);
 	m_pkSource->set("meta.iola.mark_out", -1);
-	pthread_mutex_unlock(&mutex);
 	on_source_load_signal();
 }
 
@@ -141,7 +139,6 @@ double MainWindow::source_get_speed()
 
 void MainWindow::source_set_speed(double speed)
 {
-	pthread_mutex_lock(&mutex);
 	if (m_pkSource && m_pkSource->get_speed() != speed)
 	{
 		rDebug("%s: Set speed x%f", __PRETTY_FUNCTION__, speed);
@@ -149,7 +146,6 @@ void MainWindow::source_set_speed(double speed)
 		m_pkSource->set_speed(speed);
 		m_pkSource->unlock();
 	}
-	pthread_mutex_unlock(&mutex);
 	on_source_playback_signal();
 }
 
@@ -346,13 +342,11 @@ void MainWindow::source_goto_end()
 void MainWindow::program_new()
 {
 	rDebug("%s: Create a new program", __PRETTY_FUNCTION__);
-	pthread_mutex_lock(&mutex);
 	delete m_pkProgram;
 	m_pkProgram = new Mlt::Playlist();
 	m_pkProgram->set_speed(0);
 	m_pkProgram->set("meta.iola.mark_in", -1);
 	m_pkProgram->set("meta.iola.mark_out", -1);
-	pthread_mutex_unlock(&mutex);
 	on_program_load_signal();
 }
 
@@ -367,7 +361,6 @@ double MainWindow::program_get_speed()
 
 void MainWindow::program_set_speed(double speed)
 {
-	pthread_mutex_lock(&mutex);
 	if (m_pkProgram && m_pkProgram->get_speed() != speed)
 	{
 		rDebug("%s: Set speed x%f", __PRETTY_FUNCTION__, speed);
@@ -375,7 +368,6 @@ void MainWindow::program_set_speed(double speed)
 		m_pkProgram->set_speed(speed);
 		m_pkProgram->unlock();
 	}
-	pthread_mutex_unlock(&mutex);
 	on_program_playback_signal();
 }
 
