@@ -42,7 +42,7 @@ MainWindow::MainWindow() :
 	pkMenuBar->textsize(11);
 	pkMenuBar->textcolor(FL_FOREGROUND_COLOR);
 	pkMenuBar->color(FL_BACKGROUND_COLOR, FL_SELECTION_COLOR);
-//	pkMenuBar->add("&File/&New", FL_CTRL+'n', 0, this, 0);
+	pkMenuBar->add("&File/&New", FL_CTRL+'n', (Fl_Callback *)new_project, this, 0);
 //	pkMenuBar->add("&File/&Open...", FL_CTRL+'o', 0, this, 0);
 //	pkMenuBar->add("&File/&Save", FL_CTRL+'s', 0, this, 0);
 //	pkMenuBar->add("&File/Save &As...", 0, 0, this, 0);
@@ -81,7 +81,8 @@ MainWindow::MainWindow() :
 	size_range(800, 750);
 	end();
 
-	// Program
+	// Project
+	source_new();
 	program_new();
 }
 
@@ -107,6 +108,12 @@ Mlt::Producer& MainWindow::get_program()
 	return *m_pkProgram;
 }
 
+void MainWindow::clear_project()
+{
+	source_new();
+	program_new();
+}
+
 void MainWindow::quit_application()
 {
 	exit(0);
@@ -115,14 +122,29 @@ void MainWindow::quit_application()
 ///////////////////////////////////////////
 // Source
 
-void MainWindow::source_load(const char* clip)
+void MainWindow::source_new()
 {
-	rDebug("%s: Load %s as source", __PRETTY_FUNCTION__, clip);
+	rDebug("%s: Create a new source", __PRETTY_FUNCTION__);
 	delete m_pkSource;
-	m_pkSource = new Mlt::Producer(m_Profile, clip);
+	m_pkSource = new Mlt::Playlist();
 	m_pkSource->set_speed(0);
 	m_pkSource->set("meta.iola.mark_in", -1);
 	m_pkSource->set("meta.iola.mark_out", -1);
+	on_source_load_signal();
+}
+
+void MainWindow::source_load(const char* clip)
+{
+	rDebug("%s: Load %s as source", __PRETTY_FUNCTION__, clip);
+	m_pkSource->lock();
+	m_pkSource->clear();
+	Mlt::Producer* pkClipSource = new Mlt::Producer(m_Profile, clip);
+	m_pkSource->append(*pkClipSource);
+	m_pkSource->set_speed(0);
+	m_pkSource->seek(0);
+	m_pkSource->set("meta.iola.mark_in", -1);
+	m_pkSource->set("meta.iola.mark_out", -1);
+	m_pkSource->unlock();
 	on_source_load_signal();
 }
 
@@ -650,7 +672,9 @@ void MainWindow::program_insert()
 		m_pkProgram->lock();
 		const int clip_index = m_pkProgram->get_clip_index_at(program_in);
 		m_pkProgram->split(clip_index, program_in - m_pkProgram->clip_start(clip_index));
-		Mlt::Producer* pkClipSource = new Mlt::Producer(m_Profile, m_pkSource->get("resource"));
+		Mlt::ClipInfo* pkInfo = m_pkSource->clip_info(0);
+		Mlt::Producer* pkClipSource = new Mlt::Producer(m_Profile, pkInfo->resource);
+		Mlt::Playlist::delete_clip_info(pkInfo);
 		m_pkProgram->insert(*pkClipSource, clip_index+1, source_in, source_out);
 		m_pkProgram->unlock();
 		rDebug("%s: Playlist now contain %i clips", __PRETTY_FUNCTION__, m_pkProgram->count());
@@ -729,7 +753,9 @@ void MainWindow::program_overwrite()
 		rDebug("%s: program_in=%i source_in=%i source_out=%i",  __PRETTY_FUNCTION__, program_in, source_in, source_out);
 		m_pkProgram->lock();
 		const int clip_index = m_pkProgram->remove_region(program_in, source_out - source_in);
-		Mlt::Producer* pkClipSource = new Mlt::Producer(m_Profile, m_pkSource->get("resource"));
+		Mlt::ClipInfo* pkInfo = m_pkSource->clip_info(0);
+		Mlt::Producer* pkClipSource = new Mlt::Producer(m_Profile, pkInfo->resource);
+		Mlt::Playlist::delete_clip_info(pkInfo);
 		m_pkProgram->insert(*pkClipSource, clip_index, source_in, source_out);
 		m_pkProgram->unlock();
 		rDebug("%s: Playlist now contain %i clips", __PRETTY_FUNCTION__, m_pkProgram->count());

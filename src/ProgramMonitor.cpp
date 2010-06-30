@@ -266,6 +266,7 @@ void ProgramMonitor::on_program_load()
 	m_pkConsumer->lock();
 	m_pkConsumer->connect(m_pkParent->get_program());
 	m_pkConsumer->unlock();
+	delete m_pkProducerChangedEvent;
 	m_pkProducerChangedEvent = m_pkParent->get_program().listen("producer-changed", this, (mlt_listener)producer_changed_callback);
 }
 

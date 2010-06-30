@@ -34,6 +34,8 @@ SourceMonitor::SourceMonitor(MainWindow* parent, int x, int y, int w, int h, con
 	Fl_Group(x, y, w, h, label),
 	m_pkParent(parent),
 	m_pkConsumer(0),
+	m_pkFrameShowEvent(0),
+	m_pkProducerChangedEvent(0),
 	m_pkSlider(0)
 {
 	// Transport Slider
@@ -118,7 +120,7 @@ SourceMonitor::SourceMonitor(MainWindow* parent, int x, int y, int w, int h, con
 	m_pkConsumer->set("app_locked", 1);
 	m_pkConsumer->set("app_lock", (void *)Fl::lock, 0);
 	m_pkConsumer->set("app_unlock", (void *)Fl::unlock, 0);
-	m_pkEvent = m_pkConsumer->listen("consumer-frame-show", this, (mlt_listener)consumer_frame_show);
+	m_pkFrameShowEvent = m_pkConsumer->listen("consumer-frame-show", this, (mlt_listener)frame_show_callback);
 
 	// Connect signals
 	on_source_load_connection = m_pkParent->on_source_load_signal.connect(
@@ -131,7 +133,8 @@ SourceMonitor::SourceMonitor(MainWindow* parent, int x, int y, int w, int h, con
 
 SourceMonitor::~SourceMonitor()
 {
-	delete m_pkEvent;
+	delete m_pkFrameShowEvent;
+	delete m_pkProducerChangedEvent;
 	on_source_load_connection.disconnect();
 	on_source_playback_connection.disconnect();
 	if (m_pkConsumer)
@@ -257,10 +260,9 @@ void SourceMonitor::on_source_load()
 	rDebug("%s: Connect source to consumer", __PRETTY_FUNCTION__);
 	m_pkConsumer->lock();
 	m_pkConsumer->connect(m_pkParent->get_source());
-	Fl::lock();
-	m_pkSlider->bounds(m_pkParent->get_source().get_in(), m_pkParent->get_source().get_out());
-	Fl::unlock();
 	m_pkConsumer->unlock();
+	delete m_pkProducerChangedEvent;
+	m_pkProducerChangedEvent = m_pkParent->get_source().listen("producer-changed", this, (mlt_listener)producer_changed_callback);
 }
 
 void SourceMonitor::on_source_playback()
@@ -277,6 +279,13 @@ void SourceMonitor::frame_shown(Mlt::Frame &frame)
 		Fl::check();
 		Fl::unlock();
 	}
+}
+
+void SourceMonitor::producer_changed()
+{
+	Fl::lock();
+	m_pkSlider->bounds(m_pkParent->get_source().get_in(), m_pkParent->get_source().get_out());
+	Fl::unlock();
 }
 
 void SourceMonitor::slider_callback()

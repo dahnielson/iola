@@ -44,7 +44,8 @@ public:
 private:
 	MainWindow* m_pkParent;
 	Mlt::Consumer* m_pkConsumer;
-	Mlt::Event* m_pkEvent;
+	Mlt::Event* m_pkFrameShowEvent;
+	Mlt::Event* m_pkProducerChangedEvent;
 
 	Fl_Window* m_pkDisplay;
 	Fl_Hold_Browser* m_pkBrowser;
@@ -65,13 +66,19 @@ private:
 	static void play_forward(Fl_Widget*, void* v) { reinterpret_cast<SourceMonitor*>(v)->play_forward(); }
 	static void stop_playback(Fl_Widget*, void* v) { reinterpret_cast<SourceMonitor*>(v)->stop_playback(); }
 
-	static void consumer_frame_show(mlt_consumer, SourceMonitor* self, mlt_frame frame_ptr)
+	static void frame_show_callback(mlt_consumer, SourceMonitor* self, mlt_frame frame_ptr)
 	{
 		Mlt::Frame frame(frame_ptr);
 		self->frame_shown(frame);
 	}
 
+	static void producer_changed_callback(mlt_producer, SourceMonitor* self) 
+	{
+		self->producer_changed();
+	}
+
 	void frame_shown(Mlt::Frame &frame);
+	void producer_changed();
 
 	void slider_callback();
 

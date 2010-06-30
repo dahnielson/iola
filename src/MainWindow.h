@@ -44,8 +44,10 @@ public:
 	Mlt::Producer& get_source();
 	Mlt::Producer& get_program();
 
+	void clear_project();
 	void quit_application();
 
+	void source_new();
 	void source_load(const char* clip);
 	double source_get_speed();
 	void source_set_speed(double speed);
@@ -108,13 +110,14 @@ private:
 	pthread_mutex_t mutex;
 
 	// The "model"
-	Mlt::Producer* m_pkSource;
+	Mlt::Playlist* m_pkSource;
 	Mlt::Playlist* m_pkProgram;
 	Mlt::Profile m_Profile;
 
 	SourceMonitor* m_pkSourceMonitor;
 	ProgramMonitor* m_pkProgramMonitor;
 
+	static void new_project(Fl_Widget*, void* v) { reinterpret_cast<MainWindow*>(v)->clear_project(); }
 	static void quit_application(Fl_Widget*, void* v) { reinterpret_cast<MainWindow*>(v)->quit_application(); }
 };
 

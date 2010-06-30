@@ -4,8 +4,6 @@ Iola NLE
 
 - Display mark in/out in the monitors
 
-- Figure out why the source clip jumps to a new position on focus
-
 - Implement more keyboard shortcuts for editing and navigation
   - Lift (z)
   - Extract (x)
@@ -20,8 +18,6 @@ Iola NLE
 - Implement an OpenGL consumer
 
 - Implement the timeline
-
-- "New" clear the slate
 
 - "Open"/"Save" serialization of the project
 
