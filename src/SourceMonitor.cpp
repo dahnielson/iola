@@ -174,6 +174,16 @@ int SourceMonitor::handle(int event)
 			mark_out_goto();
 			return 1;
 		}
+		else if (Fl::event_key() == 'e')
+		{
+			mark_in();
+			return 1;
+		}
+		else if (Fl::event_key() == 'r')
+		{
+			mark_out();
+			return 1;
+		}
 		else if (Fl::event_key() == 't')
 		{
 			mark_clip();
