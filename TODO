@@ -28,3 +28,22 @@ Iola NLE
 - Export AVI
 
 - Export EDL
+
+- Refactor into proper MVC design pattern
+
+- Add unit tests to project and enable testing in CMake
+
+- Add pre-commit hook in git to run unit tests
+
+- Add Doxygen and document code
+
+- Implement the command pattern for editing to enable undo/redo
+
+- Store the path to a clip in a 'path' property
+
+- Use syslog for logging
+
+- Add a statusbar to the main window and show contextual help
+  messages.
+
+- Create pixmaps for buttons
