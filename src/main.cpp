@@ -21,6 +21,7 @@
 #include <rlog/rlog.h>
 #include <rlog/rloginit.h>
 #include <rlog/StdioNode.h>
+#include <rlog/SyslogNode.h>
 #include <rlog/RLogChannel.h>
 
 // FLTK
@@ -36,6 +37,14 @@
 int main(int argc, char **argv)
 {
 	rlog::RLogInit(argc, argv);
+
+	// Set up log to syslog
+	rlog::SyslogNode syslog("iola");
+	syslog.subscribeTo(rlog::GetGlobalChannel("debug"));
+	syslog.subscribeTo(rlog::GetGlobalChannel("warning"));
+	syslog.subscribeTo(rlog::GetGlobalChannel("error"));
+
+	// Set up log to standard out
 	rlog::StdioNode stdlog(STDERR_FILENO, rlog::StdioNode::OutputColor);
 	stdlog.subscribeTo(rlog::GetGlobalChannel("info"));
 	stdlog.subscribeTo(rlog::GetGlobalChannel("debug"));

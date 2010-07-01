@@ -37,8 +37,6 @@ Iola NLE
 
 - Implement the command pattern for editing to enable undo/redo
 
-- Use syslog for logging
-
 - Add a statusbar to the main window and show contextual help
   messages.
 
