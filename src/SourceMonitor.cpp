@@ -331,7 +331,7 @@ void SourceMonitor::browser_callback()
 		else if(Fl::event_clicks())
 		{
 			Fl::event_clicks(0);
-			m_pkParent->source_load(selected_path.filename().c_str());
+			m_pkParent->source_load(selected_path);
 		}
 	}
 }

@@ -21,6 +21,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 // BOOST
+#include <boost/filesystem.hpp>
 #include <boost/signals2.hpp>
 
 // FLTK
@@ -48,7 +49,7 @@ public:
 	void quit_application();
 
 	void source_new();
-	void source_load(const char* clip);
+	void source_load(boost::filesystem::path clip);
 	double source_get_speed();
 	void source_set_speed(double speed);
 	void source_seek(int position);
