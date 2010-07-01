@@ -36,10 +36,8 @@ ProgramMonitor::ProgramMonitor(MainWindow* parent, int x, int y, int w, int h, c
 	m_pkSlider(0)
 {
 	// Transport Slider
-	m_pkSlider = new Fl_Slider(x+4, y+h-50, w-8, 19);
-	m_pkSlider->type(FL_HOR_SLIDER);
-	m_pkSlider->slider_size(0.02);
-	m_pkSlider->bounds(0, 100);
+	m_pkSlider = new TimeRuler(x+4, y+h-50, w-8, 19);
+	m_pkSlider->bounds(0, 0);
 	m_pkSlider->precision(0);
 	m_pkSlider->callback((Fl_Callback *)slider_callback, this);
 	
@@ -114,6 +112,9 @@ ProgramMonitor::ProgramMonitor(MainWindow* parent, int x, int y, int w, int h, c
 	on_program_playback_connection = m_pkParent->on_program_playback_signal.connect(
 		boost::bind(&ProgramMonitor::on_program_playback, this)
 		);
+	on_program_marks_change_connection = m_pkParent->on_program_marks_change_signal.connect(
+		boost::bind(&ProgramMonitor::on_program_marks_change, this)
+		);
 }
 
 ProgramMonitor::~ProgramMonitor()
@@ -122,6 +123,7 @@ ProgramMonitor::~ProgramMonitor()
 	delete m_pkProducerChangedEvent;
 	on_program_load_connection.disconnect();
 	on_program_playback_connection.disconnect();
+	on_program_marks_change_connection.disconnect();
 	if (m_pkConsumer)
 		m_pkConsumer->stop();
 	delete m_pkConsumer;
@@ -273,6 +275,11 @@ void ProgramMonitor::on_program_load()
 void ProgramMonitor::on_program_playback()
 {
 	refresh();
+}
+
+void ProgramMonitor::on_program_marks_change()
+{
+	m_pkSlider->marks(m_pkParent->program_get_mark_in(), m_pkParent->program_get_mark_out());
 }
 
 void ProgramMonitor::frame_shown(Mlt::Frame &frame)

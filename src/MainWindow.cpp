@@ -131,6 +131,7 @@ void MainWindow::source_new()
 	m_pkSource->set("meta.iola.mark_in", -1);
 	m_pkSource->set("meta.iola.mark_out", -1);
 	on_source_load_signal();
+	on_source_marks_change_signal();
 }
 
 void MainWindow::source_load(const char* clip)
@@ -146,6 +147,7 @@ void MainWindow::source_load(const char* clip)
 	m_pkSource->set("meta.iola.mark_out", -1);
 	m_pkSource->unlock();
 	on_source_load_signal();
+	on_source_marks_change_signal();
 }
 
 double MainWindow::source_get_speed()
@@ -268,6 +270,7 @@ void MainWindow::source_set_mark_in()
 		rDebug("%s: Set source mark in at %i", __PRETTY_FUNCTION__, m_pkSource->frame());
 		m_pkSource->set("meta.iola.mark_in", m_pkSource->frame());
 		m_pkSource->unlock();
+		on_source_marks_change_signal();
 	}
 }
 
@@ -279,6 +282,7 @@ void MainWindow::source_set_mark_out()
 		rDebug("%s: Set source mark out at %i", __PRETTY_FUNCTION__, m_pkSource->frame());
 		m_pkSource->set("meta.iola.mark_out", m_pkSource->frame());
 		m_pkSource->unlock();
+		on_source_marks_change_signal();
 	}
 }
 
@@ -293,6 +297,7 @@ void MainWindow::source_set_mark_clip()
 		m_pkSource->set("meta.iola.mark_in", in);
 		m_pkSource->set("meta.iola.mark_out", out);
 		m_pkSource->unlock();
+		on_source_marks_change_signal();
 	}
 }
 
@@ -304,6 +309,7 @@ void MainWindow::source_clear_mark_in()
 		rDebug("%s: Clear source mark in", __PRETTY_FUNCTION__);
 		m_pkSource->set("meta.iola.mark_in", -1);
 		m_pkSource->unlock();
+		on_source_marks_change_signal();
 	}
 }
 
@@ -315,6 +321,7 @@ void MainWindow::source_clear_mark_out()
 		rDebug("%s: Clear source mark out", __PRETTY_FUNCTION__);
 		m_pkSource->set("meta.iola.mark_out", -1);
 		m_pkSource->unlock();
+		on_source_marks_change_signal();
 	}
 }
 
@@ -489,6 +496,7 @@ void MainWindow::program_set_mark_in()
 		rDebug("%s: Set program mark in at %i", __PRETTY_FUNCTION__, m_pkProgram->frame());
 		m_pkProgram->set("meta.iola.mark_in", m_pkProgram->frame());
 		m_pkProgram->unlock();
+		on_program_marks_change_signal();
 	}
 }
 
@@ -500,6 +508,7 @@ void MainWindow::program_set_mark_out()
 		rDebug("%s: Set program mark out at %i", __PRETTY_FUNCTION__, m_pkProgram->frame());
 		m_pkProgram->set("meta.iola.mark_out", m_pkProgram->frame());
 		m_pkProgram->unlock();
+		on_program_marks_change_signal();
 	}
 }
 
@@ -514,6 +523,7 @@ void MainWindow::program_set_mark_cut()
 		m_pkProgram->set("meta.iola.mark_in", in);
 		m_pkProgram->set("meta.iola.mark_out", out);
 		m_pkProgram->unlock();
+		on_program_marks_change_signal();
 	}
 }
 
@@ -525,6 +535,7 @@ void MainWindow::program_clear_mark_in()
 		rDebug("%s: Clear program mark in", __PRETTY_FUNCTION__);
 		m_pkProgram->set("meta.iola.mark_in", -1);
 		m_pkProgram->unlock();
+		on_program_marks_change_signal();
 	}
 }
 
@@ -536,6 +547,7 @@ void MainWindow::program_clear_mark_out()
 		rDebug("%s: Clear program mark out", __PRETTY_FUNCTION__);
 		m_pkProgram->set("meta.iola.mark_out", -1);
 		m_pkProgram->unlock();
+		on_program_marks_change_signal();
 	}
 }
 

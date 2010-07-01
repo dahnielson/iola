@@ -28,6 +28,7 @@
 
 // IOLA
 #include "MainWindow.h"
+#include "TimeRuler.h"
 
 class SourceMonitor :
 	public Fl_Group
@@ -49,13 +50,15 @@ private:
 
 	Fl_Window* m_pkDisplay;
 	Fl_Hold_Browser* m_pkBrowser;
-	Fl_Slider* m_pkSlider;
+	TimeRuler* m_pkSlider;
 
 	void on_source_load();
 	void on_source_playback();
+	void on_source_marks_change();
 
 	boost::signals2::connection on_source_load_connection;
 	boost::signals2::connection on_source_playback_connection;
+	boost::signals2::connection on_source_marks_change_connection;
 
 	static void slider_callback(Fl_Widget*, void* v) { reinterpret_cast<SourceMonitor*>(v)->slider_callback(); }
 	static void browser_callback(Fl_Widget*, void* v) { reinterpret_cast<SourceMonitor*>(v)->browser_callback(); }

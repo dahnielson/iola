@@ -28,6 +28,7 @@
 
 // IOLA
 #include "MainWindow.h"
+#include "TimeRuler.h"
 
 class ProgramMonitor :
 	public Fl_Group
@@ -48,13 +49,15 @@ private:
 	Mlt::Event* m_pkProducerChangedEvent;
 
 	Fl_Window* m_pkDisplay;
-	Fl_Slider* m_pkSlider;
+	TimeRuler* m_pkSlider;
 
 	void on_program_load();
 	void on_program_playback();
+	void on_program_marks_change();
 
 	boost::signals2::connection on_program_load_connection;
 	boost::signals2::connection on_program_playback_connection;
+	boost::signals2::connection on_program_marks_change_connection;
 
 	static void slider_callback(Fl_Widget*, void* v) { reinterpret_cast<ProgramMonitor*>(v)->slider_callback(); }
 

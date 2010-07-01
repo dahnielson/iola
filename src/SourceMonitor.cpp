@@ -39,10 +39,8 @@ SourceMonitor::SourceMonitor(MainWindow* parent, int x, int y, int w, int h, con
 	m_pkSlider(0)
 {
 	// Transport Slider
-	m_pkSlider = new Fl_Slider(x+4, y+h-50, w-8, 19);
-	m_pkSlider->type(FL_HOR_SLIDER);
-	m_pkSlider->slider_size(0.02);
-	m_pkSlider->bounds(0, 100);
+	m_pkSlider = new TimeRuler(x+4, y+h-50, w-8, 19);
+	m_pkSlider->bounds(0, 0);
 	m_pkSlider->precision(0);
 	m_pkSlider->callback((Fl_Callback *)slider_callback, this);
 	
@@ -129,6 +127,9 @@ SourceMonitor::SourceMonitor(MainWindow* parent, int x, int y, int w, int h, con
 	on_source_playback_connection = m_pkParent->on_source_playback_signal.connect(
 		boost::bind(&SourceMonitor::on_source_playback, this)
 		);
+	on_source_marks_change_connection = m_pkParent->on_source_marks_change_signal.connect(
+		boost::bind(&SourceMonitor::on_source_marks_change, this)
+		);
 }
 
 SourceMonitor::~SourceMonitor()
@@ -137,6 +138,7 @@ SourceMonitor::~SourceMonitor()
 	delete m_pkProducerChangedEvent;
 	on_source_load_connection.disconnect();
 	on_source_playback_connection.disconnect();
+	on_source_marks_change_connection.disconnect();
 	if (m_pkConsumer)
 		m_pkConsumer->stop();
 	delete m_pkConsumer;
@@ -268,6 +270,11 @@ void SourceMonitor::on_source_load()
 void SourceMonitor::on_source_playback()
 {
 	refresh();
+}
+
+void SourceMonitor::on_source_marks_change()
+{
+	m_pkSlider->marks(m_pkParent->source_get_mark_in(), m_pkParent->source_get_mark_out());
 }
 
 void SourceMonitor::frame_shown(Mlt::Frame &frame)

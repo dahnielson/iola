@@ -101,10 +101,12 @@ public:
 	signal_t on_source_load_signal;
 	signal_t on_source_playback_signal;
 	signal_t on_source_seek_signal;
+	signal_t on_source_marks_change_signal;
 
 	signal_t on_program_load_signal;
 	signal_t on_program_playback_signal;
 	signal_t on_program_seek_signal;
+	signal_t on_program_marks_change_signal;
 
 private:
 	pthread_mutex_t mutex;

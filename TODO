@@ -2,8 +2,6 @@ Iola NLE
 
 - Create sub-channels for debug messages
 
-- Display mark in/out in the monitors
-
 - Implement more keyboard shortcuts for editing and navigation
   - Lift (z)
   - Extract (x)
