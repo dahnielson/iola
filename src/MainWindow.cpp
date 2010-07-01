@@ -136,10 +136,10 @@ void MainWindow::source_new()
 
 void MainWindow::source_load(boost::filesystem::path clip)
 {
-	rDebug("%s: Load %s as source", __PRETTY_FUNCTION__, clip.filename().c_str());
+	rDebug("%s: Load %s as source", __PRETTY_FUNCTION__, clip.string().c_str());
 	m_pkSource->lock();
 	m_pkSource->clear();
-	Mlt::Producer* pkClipSource = new Mlt::Producer(m_Profile, clip.filename().c_str());
+	Mlt::Producer* pkClipSource = new Mlt::Producer(m_Profile, clip.string().c_str());
 	m_pkSource->append(*pkClipSource);
 	m_pkSource->set_speed(0);
 	m_pkSource->seek(0);
