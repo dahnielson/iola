@@ -21,7 +21,6 @@
 #include <rlog/rlog.h>
 
 // STD
-#include <cstdlib>
 #include <iostream>
 
 // BOOST
@@ -325,13 +324,13 @@ void SourceMonitor::browser_callback()
 		boost::filesystem::path selected_path(m_pkBrowser->text(selected));
 		if (boost::filesystem::is_directory(selected_path))
 		{
-			chdir(selected_path.filename().c_str());
+			boost::filesystem::current_path(selected_path);
 			browser_load();
 		}
 		else if(Fl::event_clicks())
 		{
 			Fl::event_clicks(0);
-			m_pkParent->source_load(selected_path);
+			m_pkParent->source_load(boost::filesystem::current_path()/selected_path);
 		}
 	}
 }
