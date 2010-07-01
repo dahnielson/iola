@@ -17,6 +17,12 @@
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+// STD
+#include <iostream>
+
+// BOOST
+#include <boost/program_options.hpp>
+
 // RLOG
 #include <rlog/rlog.h>
 #include <rlog/rloginit.h>
@@ -34,22 +40,49 @@
 // IOLA
 #include "MainWindow.h"
 
+namespace po = boost::program_options;
+
 int main(int argc, char **argv)
 {
+	int iStdioDbgLevel, iSyslogDbgLevel;
+
+	// Declare program options
+	po::options_description desc("Options");
+	desc.add_options()
+		("help,h", "Print usage information and exit.")
+		("stdio-dbg", po::value<int>(&iStdioDbgLevel)->default_value(0),
+		 "Set debug level for stdio.")
+		("syslog-dbg", po::value<int>(&iSyslogDbgLevel)->default_value(0),
+		 "Set debug level for syslog.")
+		;
+
+	// Parse commandline
+	po::variables_map vm;
+	po::store(po::parse_command_line(argc, argv, desc), vm);
+	po::notify(vm);
+
+	// Print help
+	if (vm.count("help"))
+	{
+		std::cout << desc << std::endl;
+		return 1;
+	}
+
+	// Initalize logging
 	rlog::RLogInit(argc, argv);
 
 	// Set up log to syslog
 	rlog::SyslogNode syslog("iola");
-	syslog.subscribeTo(rlog::GetGlobalChannel("debug"));
-	syslog.subscribeTo(rlog::GetGlobalChannel("warning"));
-	syslog.subscribeTo(rlog::GetGlobalChannel("error"));
+	if (iSyslogDbgLevel > 0) syslog.subscribeTo(rlog::GetGlobalChannel("error"));
+	if (iSyslogDbgLevel > 1) syslog.subscribeTo(rlog::GetGlobalChannel("warning"));
+	if (iSyslogDbgLevel > 2) syslog.subscribeTo(rlog::GetGlobalChannel("debug"));
 
 	// Set up log to standard out
 	rlog::StdioNode stdlog(STDERR_FILENO, rlog::StdioNode::OutputColor);
-	stdlog.subscribeTo(rlog::GetGlobalChannel("info"));
-	stdlog.subscribeTo(rlog::GetGlobalChannel("debug"));
-	stdlog.subscribeTo(rlog::GetGlobalChannel("warning"));
-	stdlog.subscribeTo(rlog::GetGlobalChannel("error"));
+	if (iStdioDbgLevel > 0) stdlog.subscribeTo(rlog::GetGlobalChannel("error"));
+	if (iStdioDbgLevel > 1) stdlog.subscribeTo(rlog::GetGlobalChannel("warning"));
+	if (iStdioDbgLevel > 2) stdlog.subscribeTo(rlog::GetGlobalChannel("debug"));
+	if (iStdioDbgLevel > 3) stdlog.subscribeTo(rlog::GetGlobalChannel("info"));
 
 	Mlt::Factory::init(NULL);
 

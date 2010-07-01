@@ -25,7 +25,7 @@ PKG_CHECK_MODULES(RLOG REQUIRED librlog)
 
 FIND_PACKAGE(Threads REQUIRED)
 
-FIND_PACKAGE(Boost 1.41.0 COMPONENTS filesystem)
+FIND_PACKAGE(Boost 1.41.0 COMPONENTS filesystem program_options)
 
 # Set up subdirectories...
 ADD_SUBDIRECTORY(src)
