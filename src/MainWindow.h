@@ -130,4 +130,7 @@ private:
 
 } // namespace iola
 
+namespace { static iola::MainWindow* g_pkMainWindow; }
+namespace iola { namespace application { MainWindow* factory(); } }
+
 #endif // IOLA_MAINWINDOW_H

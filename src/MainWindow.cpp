@@ -797,4 +797,16 @@ void MainWindow::program_overwrite(boost::filesystem::path resource, const int p
 	}
 }
 
+namespace application
+{
+
+MainWindow* factory()
+{
+	if (!g_pkMainWindow)
+		g_pkMainWindow = new iola::MainWindow();
+
+	return g_pkMainWindow;
+}
+
+} // namespace application
 } // namespace iola

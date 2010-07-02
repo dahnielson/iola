@@ -91,7 +91,7 @@ int main(int argc, char **argv)
 	Fl::visual(FL_DOUBLE|FL_RGB);
 	melies::theme();
 
-	MainWindow* window = new MainWindow();
+	MainWindow* window = iola::application::factory();
 	window->show();
 
 	return Fl::run();
