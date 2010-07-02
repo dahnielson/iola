@@ -30,6 +30,9 @@
 #include "MainWindow.h"
 #include "TimeRuler.h"
 
+namespace iola
+{
+
 class ProgramMonitor :
 	public Fl_Group
 {
@@ -108,5 +111,7 @@ private:
 
 	Window xid();
 };
+
+} // namespace iola
 
 #endif // IOLA_PROGRAMMONITOR_H

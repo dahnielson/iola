@@ -22,6 +22,9 @@
 
 #include <Fl/Fl_Valuator.H>
 
+namespace iola
+{
+
 class TimeRuler :
 	public Fl_Valuator
 {
@@ -41,5 +44,7 @@ private:
 	int value_to_x(const double v);
 	double x_to_value(const int x);
 };
+
+} // namespace iola
 
 #endif // IOLA_TIMERULER_H

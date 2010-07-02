@@ -27,6 +27,9 @@
 // IOLA
 #include "ProgramMonitor.h"
 
+namespace iola
+{
+
 ProgramMonitor::ProgramMonitor(MainWindow* parent, int x, int y, int w, int h, const char *label) :
 	Fl_Group(x, y, w, h, label),
 	m_pkParent(parent),
@@ -451,3 +454,5 @@ void ProgramMonitor::refresh()
 	m_pkConsumer->set("refresh", 1);
 	m_pkConsumer->unlock();
 }
+
+} // namespace iola

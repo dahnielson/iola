@@ -30,7 +30,9 @@
 // MLT
 #include <mlt++/Mlt.h>
 
-// IOLA
+namespace iola
+{
+
 class ProgramMonitor;
 class SourceMonitor;
 
@@ -123,5 +125,7 @@ private:
 	static void new_project(Fl_Widget*, void* v) { reinterpret_cast<MainWindow*>(v)->clear_project(); }
 	static void quit_application(Fl_Widget*, void* v) { reinterpret_cast<MainWindow*>(v)->quit_application(); }
 };
+
+} // namespace iola
 
 #endif // IOLA_MAINWINDOW_H

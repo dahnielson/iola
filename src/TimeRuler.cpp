@@ -21,7 +21,11 @@
 #include <FL/Fl.H>
 #include <FL/fl_draw.H>
 
+// IOLA
 #include "TimeRuler.h"
+
+namespace iola
+{
 
 TimeRuler::TimeRuler(int x, int y, int w, int h, const char *label) :
 	Fl_Valuator(x, y, w, h, label),
@@ -147,3 +151,5 @@ double TimeRuler::x_to_value(const int x)
 	const double val = x * (maximum() - minimum()) / W;
 	return round(val + minimum());
 }
+
+} // namespace iola

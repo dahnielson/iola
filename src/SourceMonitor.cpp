@@ -29,6 +29,9 @@
 // IOLA
 #include "SourceMonitor.h"
 
+namespace iola
+{
+
 SourceMonitor::SourceMonitor(MainWindow* parent, int x, int y, int w, int h, const char *label) :
 	Fl_Group(x, y, w, h, label),
 	m_pkParent(parent),
@@ -455,3 +458,5 @@ void SourceMonitor::refresh()
 	m_pkConsumer->set("refresh", 1);
 	m_pkConsumer->unlock();
 }
+
+} // namespace iola

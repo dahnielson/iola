@@ -28,6 +28,9 @@
 #include "ProgramMonitor.h"
 #include "SourceMonitor.h"
 
+namespace iola
+{
+
 MainWindow::MainWindow() :
 	Fl_Double_Window(Fl::w(), Fl::h(), "Iola NLE"),
 	m_pkSource(0),
@@ -774,3 +777,4 @@ void MainWindow::program_overwrite()
 	}
 }
 
+} // namespace iola
