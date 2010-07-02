@@ -682,16 +682,26 @@ void MainWindow::program_insert()
 			return;
 		}
 
-		rDebug("%s: Insert edit into playlist with %i clipes", __PRETTY_FUNCTION__, m_pkProgram->count());
-		rDebug("%s: program_in=%i source_in=%i source_out=%i",  __PRETTY_FUNCTION__, program_in, source_in, source_out);
+		Mlt::ClipInfo* pkInfo = m_pkSource->clip_info(0);
+		program_insert(boost::filesystem::path(pkInfo->resource), program_in, source_in, source_out);
+		Mlt::Playlist::delete_clip_info(pkInfo);
+	}
+}
+
+void MainWindow::program_insert(boost::filesystem::path resource, const int program_in, const int source_in, const int source_out)
+{
+	if (m_pkProgram)
+	{
+		rDebug("%s: Insert edit into playlist with %i clips: program_in=%i source_in=%i source_out=%i",
+		       __PRETTY_FUNCTION__, m_pkProgram->count(), program_in, source_in, source_out);
+
 		m_pkProgram->lock();
 		const int clip_index = m_pkProgram->get_clip_index_at(program_in);
 		m_pkProgram->split(clip_index, program_in - m_pkProgram->clip_start(clip_index));
-		Mlt::ClipInfo* pkInfo = m_pkSource->clip_info(0);
-		Mlt::Producer* pkClipSource = new Mlt::Producer(m_Profile, pkInfo->resource);
-		Mlt::Playlist::delete_clip_info(pkInfo);
+		Mlt::Producer* pkClipSource = new Mlt::Producer(m_Profile, resource.string().c_str());
 		m_pkProgram->insert(*pkClipSource, clip_index+1, source_in, source_out);
 		m_pkProgram->unlock();
+
 		rDebug("%s: Playlist now contain %i clips", __PRETTY_FUNCTION__, m_pkProgram->count());
 	}
 }
@@ -764,15 +774,25 @@ void MainWindow::program_overwrite()
 			return;
 		}
 
-		rDebug("%s: Overwrite edit into playlist with %i clipes", __PRETTY_FUNCTION__, m_pkProgram->count());
-		rDebug("%s: program_in=%i source_in=%i source_out=%i",  __PRETTY_FUNCTION__, program_in, source_in, source_out);
+		Mlt::ClipInfo* pkInfo = m_pkSource->clip_info(0);
+		program_overwrite(boost::filesystem::path(pkInfo->resource), program_in, source_in, source_out);
+		Mlt::Playlist::delete_clip_info(pkInfo);
+	}
+}
+
+void MainWindow::program_overwrite(boost::filesystem::path resource, const int program_in, const int source_in, const int source_out)
+{
+	if (m_pkProgram)
+	{
+		rDebug("%s: Overwrite edit into playlist with %i clips: program_in=%i source_in=%i source_out=%i",
+		       __PRETTY_FUNCTION__, m_pkProgram->count(), program_in, source_in, source_out);
+
 		m_pkProgram->lock();
 		const int clip_index = m_pkProgram->remove_region(program_in, source_out - source_in);
-		Mlt::ClipInfo* pkInfo = m_pkSource->clip_info(0);
-		Mlt::Producer* pkClipSource = new Mlt::Producer(m_Profile, pkInfo->resource);
-		Mlt::Playlist::delete_clip_info(pkInfo);
+		Mlt::Producer* pkClipSource = new Mlt::Producer(m_Profile, resource.string().c_str());
 		m_pkProgram->insert(*pkClipSource, clip_index, source_in, source_out);
 		m_pkProgram->unlock();
+
 		rDebug("%s: Playlist now contain %i clips", __PRETTY_FUNCTION__, m_pkProgram->count());
 	}
 }

@@ -97,7 +97,9 @@ public:
 	void program_goto_start();
 	void program_goto_end();
 	void program_insert();
+	void program_insert(boost::filesystem::path resource, const int program_in, const int source_in, const int source_out);
 	void program_overwrite();
+	void program_overwrite(boost::filesystem::path resource, const int program_in, const int source_in, const int source_out);
 
 	typedef boost::signals2::signal<void ()> signal_t;
 
