@@ -1,0 +1,40 @@
+Color Schemes
+
+Primaries (in HSV)
+------------------
+
+Color         H
+
+Red            0
+Yellow        43
+Green         85
+Cyan         128
+Blue         170
+Magenta      213
+
+
+Variants (in HSV)
+----------------
+
+Variant       S       V
+
+Bright       192     255
+Subdued      103     196
+Dark subued   65     114
+
+
+Dark/ligh variants
+------------------
+
+The dark/light variations in the current theme were created using the
+excelent Color Scheme Designer 3.
+
+
+Tools
+-----
+
+Color Scheme Designer
+http://colorschemedesigner.com/
+
+ColorRotate
+http://www.colorotate.org/

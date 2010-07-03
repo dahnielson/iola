@@ -89,7 +89,7 @@ int main(int argc, char **argv)
 
 	Fl::visible_focus(0);
 	Fl::visual(FL_DOUBLE|FL_RGB);
-	melies::theme();
+	iola::scheme::theme();
 
 	MainWindow* window = iola::application::factory();
 	window->show();
