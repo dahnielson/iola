@@ -20,6 +20,9 @@
 // RLOG
 #include <rlog/rlog.h>
 
+// BOOST
+#include <boost/filesystem/fstream.hpp>
+
 // STD
 #include <iostream>
 
@@ -27,6 +30,9 @@
 #include "MainWindow.h"
 #include "ProgramMonitor.h"
 #include "SourceMonitor.h"
+#include "dom/element_factory.h"
+#include "dom/root.h"
+#include "xml/parser.h"
 
 namespace iola
 {
@@ -46,7 +52,7 @@ MainWindow::MainWindow() :
 	pkMenuBar->textcolor(FL_FOREGROUND_COLOR);
 	pkMenuBar->color(FL_BACKGROUND_COLOR, FL_SELECTION_COLOR);
 	pkMenuBar->add("&File/&New", FL_CTRL+'n', (Fl_Callback *)new_project, this, 0);
-//	pkMenuBar->add("&File/&Open...", FL_CTRL+'o', 0, this, 0);
+	pkMenuBar->add("&File/&Open...", FL_CTRL+'o', (Fl_Callback *)open_project, this, 0);
 //	pkMenuBar->add("&File/&Save", FL_CTRL+'s', 0, this, 0);
 //	pkMenuBar->add("&File/Save &As...", 0, 0, this, 0);
 	pkMenuBar->add("&File/&Quit", FL_CTRL+'q', (Fl_Callback *)quit_application, this, 0);
@@ -109,6 +115,16 @@ Mlt::Producer& MainWindow::get_source()
 Mlt::Producer& MainWindow::get_program()
 {
 	return *m_pkProgram;
+}
+
+void MainWindow::open_project()
+{
+	char* filename = fl_file_chooser("Open", "Sequence (*.xml)", NULL);
+	if (filename)
+	{
+		m_kProjectPath = boost::filesystem::path(filename);
+		program_load(m_kProjectPath);
+	}
 }
 
 void MainWindow::clear_project()
@@ -382,9 +398,64 @@ void MainWindow::program_new()
 	on_program_load_signal();
 }
 
+void MainWindow::program_load(boost::filesystem::path sequence)
+{
+	if (!m_pkProgram)
+		return;
+
+	rDebug("%s: Load %s as program", __PRETTY_FUNCTION__, sequence.string().c_str());
+	iola::dom::element_factory* pkFactory = new iola::dom::element_factory();
+	iola::dom::root* pkRoot = new iola::dom::root();
+	boost::filesystem::ifstream isXML(sequence);
+	iola::xml::parser(pkFactory, pkRoot, isXML);
+	delete m_pkProgram;
+	m_pkProgram = new Mlt::Playlist();
+	m_pkProgram->set_speed(0);
+	m_pkProgram->set("meta.iola.mark_in", -1);
+	m_pkProgram->set("meta.iola.mark_out", -1);
+	pkRoot->restore();
+	delete pkFactory;
+        delete pkRoot;
+	on_program_load_signal();
+}
+
+void MainWindow::program_set_duration(int duration)
+{
+	if (m_pkProgram && m_pkProgram->get_length() != duration)
+	{
+		rDebug("%s: Set duration to %i", __PRETTY_FUNCTION__, duration);
+		if (m_pkProgram->get_length() > duration)
+		{
+			// Make shorter
+			const int delta = m_pkProgram->get_length() - duration;
+			m_pkProgram->remove_region(duration, delta);
+		}
+		else
+		{
+			// Make longer
+			m_pkProgram->lock();
+			m_pkProgram->blank(duration);
+			m_pkProgram->unlock();
+		}
+	}
+}
+
+int MainWindow::program_get_duration()
+{
+	if (!m_pkProgram)
+		return 0;
+
+	m_pkProgram->lock();
+	int duration = m_pkProgram->get_length();
+	m_pkProgram->unlock();
+	return duration;
+}
 
 double MainWindow::program_get_speed()
 {
+	if (!m_pkProgram)
+		return 0;
+
 	m_pkProgram->lock();
 	double speed = m_pkProgram->get_speed();
 	m_pkProgram->unlock();

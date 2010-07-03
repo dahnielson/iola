@@ -47,6 +47,7 @@ public:
 	Mlt::Producer& get_source();
 	Mlt::Producer& get_program();
 
+	void open_project();
 	void clear_project();
 	void quit_application();
 
@@ -74,6 +75,9 @@ public:
 	void source_goto_end();
 
 	void program_new();
+	void program_load(boost::filesystem::path sequence);
+	void program_set_duration(int duration);
+	int program_get_duration();
 	void program_set_speed(double speed);
 	double program_get_speed();
 	void program_seek(int position);
@@ -124,7 +128,10 @@ private:
 	SourceMonitor* m_pkSourceMonitor;
 	ProgramMonitor* m_pkProgramMonitor;
 
+	boost::filesystem::path m_kProjectPath;
+
 	static void new_project(Fl_Widget*, void* v) { reinterpret_cast<MainWindow*>(v)->clear_project(); }
+	static void open_project(Fl_Widget*, void* v) { reinterpret_cast<MainWindow*>(v)->open_project(); }
 	static void quit_application(Fl_Widget*, void* v) { reinterpret_cast<MainWindow*>(v)->quit_application(); }
 };
 
