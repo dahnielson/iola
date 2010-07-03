@@ -31,7 +31,8 @@ namespace dom
 // class iola::dom::iola_element
 
 iola_element::iola_element(const std::string strName) :
-        m_strName(strName)
+        m_strName(strName),
+	m_pkSequence(0)
 {}
 
 void
@@ -57,14 +58,23 @@ void
 iola_element::xml(std::ostream& osXML)
 {
 	osXML << "<" << m_strName << " version=\"" << m_strVersion << "\">";
-	m_pkSequence->xml(osXML);
+	if (m_pkSequence)
+		m_pkSequence->xml(osXML);
 	osXML << "</" << m_strName << ">";
 }
 
 void
 iola_element::restore()
 {
-	m_pkSequence->restore();
+	if (m_pkSequence)
+		m_pkSequence->restore();
+}
+
+void
+iola_element::store()
+{
+	if (m_pkSequence)
+		m_pkSequence->store();
 }
 
 } // namespace dom

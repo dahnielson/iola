@@ -34,7 +34,9 @@ namespace dom
 // class iola::dom::sequence_element
 
 sequence_element::sequence_element(const std::string strName) :
-        m_strName(strName)
+        m_strName(strName),
+	m_pkDuration(0),
+	m_pkMedia(0)
 {}
 
 void
@@ -60,17 +62,37 @@ void
 sequence_element::xml(std::ostream& osXML)
 {
 	osXML << "<" << m_strName << ">";
-	m_pkDuration->xml(osXML);
-	m_pkMedia->xml(osXML);
+	if (m_pkDuration)
+		m_pkDuration->xml(osXML);
+	if (m_pkMedia)
+		m_pkMedia->xml(osXML);
 	osXML << "</" << m_strName << ">";
 }
 
 void
 sequence_element::restore()
 {
-	int duration = m_pkDuration->get();
-	iola::application::factory()->program_set_duration(duration);
-	m_pkMedia->restore();
+	if (m_pkDuration)
+	{
+		int duration = m_pkDuration->get();
+		iola::application::factory()->program_set_duration(duration);
+	}
+
+	if (m_pkMedia)
+		m_pkMedia->restore();
+}
+
+void
+sequence_element::store()
+{
+	if (m_pkDuration)
+	{
+		int duration = iola::application::factory()->program_get_duration();
+		m_pkDuration->set(duration);
+	}
+
+	if (m_pkMedia)
+		m_pkMedia->store();
 }
 
 } // namespace dom

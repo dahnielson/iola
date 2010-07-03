@@ -44,6 +44,7 @@ public:
 	void text(std::string strText);
 	void xml(std::ostream& osXML);
 	void restore();
+	void store();
 
 private:
 	iola_element* m_pkIola;

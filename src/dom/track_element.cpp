@@ -19,8 +19,14 @@
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-#include "track_element.h"
+#include "../MainWindow.h"
+
 #include "clipitem_element.h"
+#include "in_element.h"
+#include "out_element.h"
+#include "pathurl_element.h"
+#include "start_element.h"
+#include "track_element.h"
 
 namespace iola
 {
@@ -65,6 +71,39 @@ track_element::restore()
 {
 	for (clipitem_iterator_t i = m_vpkClipItem.begin(); i != m_vpkClipItem.end(); i++)
 		(*i)->restore();
+}
+
+void
+track_element::store()
+{
+	// Erase all clip items
+	m_vpkClipItem.erase(m_vpkClipItem.begin(), m_vpkClipItem.end());
+
+	// Add clip items
+	const int number_of_clips = iola::application::factory()->program_get_clip_count();
+	for (int i = 0; i < number_of_clips; ++i)
+	{
+		Mlt::ClipInfo* pkInfo = iola::application::factory()->program_get_clip_info(i);
+
+		clipitem_element* pkClipItem = new clipitem_element("clipitem");
+		pathurl_element* pkPathURL = new pathurl_element("pathurl");
+		in_element* pkIn = new in_element("in");
+		out_element* pkOut = new out_element("out");
+		start_element* pkStart = new start_element("start");
+
+		pkPathURL->set(pkInfo->resource);
+		pkIn->set(pkInfo->frame_in);
+		pkOut->set(pkInfo->frame_out);
+		pkStart->set(pkInfo->start);
+
+		m_vpkClipItem.push_back(pkClipItem);
+
+		Mlt::Playlist::delete_clip_info(pkInfo);
+	}
+
+	// Call all children
+	for (clipitem_iterator_t i = m_vpkClipItem.begin(); i != m_vpkClipItem.end(); i++)
+		(*i)->store();
 }
 
 } // namespace dom

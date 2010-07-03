@@ -17,8 +17,6 @@ Iola NLE
 
 - Implement the timeline
 
-- "Open"/"Save" serialization of the project
-
 - Implement a dialog for editing the profile (project setting)
 
 - Improve the bin

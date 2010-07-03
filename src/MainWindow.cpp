@@ -25,6 +25,7 @@
 
 // STD
 #include <iostream>
+#include <sstream>
 
 // IOLA
 #include "MainWindow.h"
@@ -53,8 +54,8 @@ MainWindow::MainWindow() :
 	pkMenuBar->color(FL_BACKGROUND_COLOR, FL_SELECTION_COLOR);
 	pkMenuBar->add("&File/&New", FL_CTRL+'n', (Fl_Callback *)new_project, this, 0);
 	pkMenuBar->add("&File/&Open...", FL_CTRL+'o', (Fl_Callback *)open_project, this, 0);
-//	pkMenuBar->add("&File/&Save", FL_CTRL+'s', 0, this, 0);
-//	pkMenuBar->add("&File/Save &As...", 0, 0, this, 0);
+	pkMenuBar->add("&File/&Save", FL_CTRL+'s', (Fl_Callback *)save_project, this, 0);
+	pkMenuBar->add("&File/_Save &As...", 0, (Fl_Callback *)save_as_project, this, 0);
 	pkMenuBar->add("&File/&Quit", FL_CTRL+'q', (Fl_Callback *)quit_application, this, 0);
 //	pkMenuBar->add("&Edit/&Undo", FL_CTRL+'z', 0, this, 0);
 //	pkMenuBar->add("&Edit/&Redo", FL_CTRL+'y', 0, this, 0);
@@ -124,6 +125,24 @@ void MainWindow::open_project()
 	{
 		m_kProjectPath = boost::filesystem::path(filename);
 		program_load(m_kProjectPath);
+	}
+}
+
+void MainWindow::save_project()
+{
+	if (m_kProjectPath.empty())
+		save_as_project();
+	else
+		program_save(m_kProjectPath);
+}
+
+void MainWindow::save_as_project()
+{
+	char* filename = fl_file_chooser("Save", "Sequence (*.xml)", NULL);
+	if (filename)
+	{
+		m_kProjectPath = boost::filesystem::path(filename);
+		program_save(m_kProjectPath);
 	}
 }
 
@@ -419,6 +438,43 @@ void MainWindow::program_load(boost::filesystem::path sequence)
 	on_program_load_signal();
 }
 
+void MainWindow::program_save(boost::filesystem::path sequence) //FIXME
+{
+	if (!m_pkProgram)
+		return;
+
+	rDebug("%s: Save program as %s", __PRETTY_FUNCTION__, sequence.string().c_str());
+	iola::dom::element_factory* pkFactory = new iola::dom::element_factory();
+	iola::dom::root* pkRoot = new iola::dom::root();
+
+	// This is the easiest way to create a skeleton
+	std::stringstream isXML;
+	isXML << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+	isXML << "<!DOCTYPE iola>";
+	isXML << "<iola version=\"0\">";
+	isXML << "  <sequence>";
+	isXML << "    <duration>0</duration>";
+	isXML << "    <media>";
+	isXML << "      <video><track></track></video>";
+	isXML << "      <audio></audio>";
+	isXML << "    </media>";
+	isXML << "  </sequence>";
+	isXML << "</iola>";
+
+	// Parse the skeleton into an object
+	iola::xml::parser(pkFactory, pkRoot, isXML);
+
+	// Then call store to populate it
+	pkRoot->store();
+
+	// Output it as XML
+	boost::filesystem::ofstream osXML(sequence);
+	pkRoot->xml(osXML);
+
+	delete pkFactory;
+	delete pkRoot;
+}
+
 void MainWindow::program_set_duration(int duration)
 {
 	if (m_pkProgram && m_pkProgram->get_length() != duration)
@@ -484,6 +540,18 @@ void MainWindow::program_seek(int position)
 		m_pkProgram->unlock();
 	}
 	on_program_seek_signal();
+}
+
+int MainWindow::program_get_clip_count()
+{
+	if (m_pkProgram)
+		return m_pkProgram->count();
+}
+
+Mlt::ClipInfo* MainWindow::program_get_clip_info(int index)
+{
+	if (m_pkProgram)
+		return m_pkProgram->clip_info(index);
 }
 
 void MainWindow::program_step_forward()

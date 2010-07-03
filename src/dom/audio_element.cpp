@@ -63,5 +63,11 @@ audio_element::restore()
 	// Call restore() on any children...
 }
 
+void
+audio_element::store()
+{
+	// Call store() on any children...
+}
+
 } // namespace dom
 } // namespace iola

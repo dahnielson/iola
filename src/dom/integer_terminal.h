@@ -42,6 +42,7 @@ public:
 	void text(std::string strText);
 	void xml(std::ostream& osXML);
 	int get();
+	void set(int iValue);
 
 private:
 	const std::string m_strName; 

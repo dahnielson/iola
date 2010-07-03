@@ -76,5 +76,11 @@ integer_terminal::get()
 	return m_iValue;
 }
 
+void
+integer_terminal::set(int iValue)
+{
+	m_iValue = iValue;
+}
+
 } // namespace dom
 } // namespace iola

@@ -66,5 +66,11 @@ string_terminal::get()
 	return m_strValue;
 }
 
+void
+string_terminal::set(std::string strValue)
+{
+	m_strValue = strValue;
+}
+
 } // namespace dom
 } // namespace iola

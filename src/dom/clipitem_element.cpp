@@ -40,7 +40,11 @@ namespace dom
 // class iola::dom::clipitem_element
 
 clipitem_element::clipitem_element(const std::string strName) :
-        m_strName(strName)
+        m_strName(strName),
+	m_pkPathURL(0),
+	m_pkIn(0),
+	m_pkOut(0),
+	m_pkStart(0)
 {}
 
 void
@@ -72,21 +76,34 @@ void
 clipitem_element::xml(std::ostream& osXML)
 {
 	osXML << "<" << m_strName << ">";
-	m_pkPathURL->xml(osXML);
-	m_pkIn->xml(osXML);
-	m_pkOut->xml(osXML);
-	m_pkStart->xml(osXML);
+	if (m_pkPathURL)
+		m_pkPathURL->xml(osXML);
+	if (m_pkIn)
+		m_pkIn->xml(osXML);
+	if (m_pkOut)
+		m_pkOut->xml(osXML);
+	if (m_pkStart)
+		m_pkStart->xml(osXML);
 	osXML << "</" << m_strName << ">";
 }
 
 void
 clipitem_element::restore()
 {
-	boost::filesystem::path pathurl(m_pkPathURL->get());
-	const int in = m_pkIn->get();
-	const int out = m_pkOut->get();
-	const int start = m_pkStart->get();
-	iola::application::factory()->program_overwrite(pathurl, start, in, out);
+	if (m_pkPathURL && m_pkIn && m_pkOut && m_pkStart)
+	{
+		boost::filesystem::path pathurl(m_pkPathURL->get());
+		const int in = m_pkIn->get();
+		const int out = m_pkOut->get();
+		const int start = m_pkStart->get();
+		iola::application::factory()->program_overwrite(pathurl, start, in, out);
+	}
+}
+
+void
+clipitem_element::store()
+{
+	// Has currently only terminal elements
 }
 
 } // namespace dom

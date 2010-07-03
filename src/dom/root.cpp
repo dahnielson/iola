@@ -31,7 +31,8 @@ namespace dom
 ////////////////////////////////////////////////////////////////////////////
 // class iola::dom::root
 
-root::root()
+root::root() :
+	m_pkIola(0)
 {}
 
 void
@@ -58,13 +59,22 @@ root::xml(std::ostream& osXML)
 {
 	osXML << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << std::endl;
 	osXML << "<!DOCTYPE iola>" << std::endl;
-	m_pkIola->xml(osXML);
+	if (m_pkIola)
+		m_pkIola->xml(osXML);
 }
 
 void
 root::restore()
 {
-	m_pkIola->restore();
+	if (m_pkIola)
+		m_pkIola->restore();
+}
+
+void
+root::store()
+{
+	if (m_pkIola)
+		m_pkIola->store();
 }
 
 } // namespace dom

@@ -44,6 +44,7 @@ public:
 	void text(std::string strText);
 	void xml(std::ostream& osXML);
 	void restore();
+	void store();
 
 private:
 	const std::string m_strName; 

@@ -32,7 +32,9 @@ namespace dom
 // class iola::dom::media_element
 
 media_element::media_element(const std::string strName) :
-        m_strName(strName)
+        m_strName(strName),
+	m_pkVideo(0),
+	m_pkAudio(0)
 {}
 
 void
@@ -58,16 +60,29 @@ void
 media_element::xml(std::ostream& osXML)
 {
 	osXML << "<" << m_strName << ">";
-	m_pkVideo->xml(osXML);
-	m_pkAudio->xml(osXML);
+	if (m_pkVideo)
+		m_pkVideo->xml(osXML);
+	if (m_pkAudio)
+		m_pkAudio->xml(osXML);
 	osXML << "</" << m_strName << ">";
 }
 
 void
 media_element::restore()
 {
-	m_pkVideo->restore();
-	m_pkAudio->restore();
+	if (m_pkVideo)
+		m_pkVideo->restore();
+	if (m_pkAudio)
+		m_pkAudio->restore();
+}
+
+void
+media_element::store()
+{
+	if (m_pkVideo)
+		m_pkVideo->store();
+	if (m_pkAudio)
+		m_pkAudio->store();
 }
 
 } // namespace dom

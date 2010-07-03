@@ -31,7 +31,8 @@ namespace dom
 // class iola::dom::video_element
 
 video_element::video_element(const std::string strName) :
-        m_strName(strName)
+        m_strName(strName),
+	m_pkTrack(0)
 {}
 
 void
@@ -55,14 +56,23 @@ void
 video_element::xml(std::ostream& osXML)
 {
 	osXML << "<" << m_strName << ">";
-	m_pkTrack->xml(osXML);
+	if (m_pkTrack)
+		m_pkTrack->xml(osXML);
 	osXML << "</" << m_strName << ">";
 }
 
 void
 video_element::restore()
 {
-	m_pkTrack->restore();
+	if (m_pkTrack)
+		m_pkTrack->restore();
+}
+
+void
+video_element::store()
+{
+	if (m_pkTrack)
+		m_pkTrack->store();
 }
 
 } // namespace dom
