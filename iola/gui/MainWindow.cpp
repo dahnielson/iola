@@ -31,9 +31,9 @@
 #include "MainWindow.h"
 #include "ProgramMonitor.h"
 #include "SourceMonitor.h"
-#include "dom/element_factory.h"
-#include "dom/root.h"
-#include "xml/parser.h"
+#include <iola/dom/element_factory.h>
+#include <iola/dom/root.h>
+#include <iola/xml/parser.h>
 
 namespace iola
 {

@@ -19,7 +19,7 @@
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-#include "../MainWindow.h"
+#include <iola/gui/MainWindow.h>
 
 #include "clipitem_element.h"
 #include "in_element.h"

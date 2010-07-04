@@ -31,14 +31,14 @@
 #include <rlog/RLogChannel.h>
 
 // FLTK
-#include "fltk.h"
-#include "theme.h"
+#include <iola/gui/fltk.h>
+#include <iola/gui/theme.h>
 
 // MLT
 #include <mlt++/Mlt.h>
 
 // IOLA
-#include "MainWindow.h"
+#include <iola/gui/MainWindow.h>
 
 using namespace iola;
 namespace po = boost::program_options;

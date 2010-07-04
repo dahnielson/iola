@@ -19,7 +19,7 @@
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-#include "../MainWindow.h"
+#include <iola/gui/MainWindow.h>
 
 #include "sequence_element.h"
 #include "duration_element.h"

@@ -29,7 +29,7 @@
 #include "out_element.h"
 #include "start_element.h"
 
-#include "../MainWindow.h"
+#include <iola/gui/MainWindow.h>
 
 namespace iola
 {
