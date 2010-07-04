@@ -28,7 +28,7 @@
 #include <expat.h>
 
 // IOLA
-#include "../string_cast.h"
+#include <iola/string_cast.h>
 #include "parser.h"
 
 namespace

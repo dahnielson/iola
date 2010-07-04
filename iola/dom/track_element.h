@@ -25,7 +25,7 @@
 #include <vector>
 
 // IOLA
-#include "../xml/ielement.h"
+#include <iola/xml/ielement.h>
 
 namespace  iola
 {

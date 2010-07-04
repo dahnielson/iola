@@ -26,7 +26,7 @@
 #include <iostream>
 
 // IOLA
-#include "../iunknown.h"
+#include <iola/iunknown.h>
 
 namespace iola
 {

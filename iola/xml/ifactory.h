@@ -25,7 +25,7 @@
 #include <string>
 
 // IOLA
-#include "../iunknown.h"
+#include <iola/iunknown.h>
 #include "ielement.h"
 
 namespace iola
