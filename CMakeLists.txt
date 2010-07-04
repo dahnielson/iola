@@ -30,4 +30,4 @@ FIND_PACKAGE(Boost 1.41.0 COMPONENTS filesystem program_options)
 FIND_PACKAGE(EXPAT REQUIRED)
 
 # Set up subdirectories...
-ADD_SUBDIRECTORY(src)
+ADD_SUBDIRECTORY(iola)
