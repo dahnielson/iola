@@ -49,8 +49,6 @@ public:
 	void quit_application();
 
 private:
-	pthread_mutex_t mutex;
-
 	SourceMonitor* m_pkSourceMonitor;
 	ProgramMonitor* m_pkProgramMonitor;
 

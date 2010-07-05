@@ -34,8 +34,6 @@ namespace gui
 MainWindow::MainWindow() :
 	Fl_Double_Window(Fl::w(), Fl::h(), "Iola NLE")
 {
-	pthread_mutex_init(&mutex, NULL);
-
 	// Menu
 	Fl_Menu_Bar* pkMenuBar = new Fl_Menu_Bar(0, 0, Fl::w(), 25);
 	pkMenuBar->clear();
@@ -85,7 +83,6 @@ MainWindow::MainWindow() :
 
 MainWindow::~MainWindow()
 {
-	pthread_mutex_destroy(&mutex);
 }
 
 void MainWindow::open_project()
