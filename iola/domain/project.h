@@ -117,6 +117,19 @@ private:
 	Mlt::Playlist* m_pkSource;
 	Mlt::Playlist* m_pkProgram;
 	Mlt::Profile m_Profile;
+
+	Mlt::Event* m_pkSourceProducerChangeEvent;
+	Mlt::Event* m_pkProgramProducerChangeEvent;
+
+	static void source_producer_change_callback(mlt_producer, project* self)
+	{
+		self->on_source_producer_change_signal();
+	}
+
+	static void program_producer_change_callback(mlt_producer, project* self)
+	{
+		self->on_program_producer_change_signal();
+	}
 };
 
 } // namespace domain

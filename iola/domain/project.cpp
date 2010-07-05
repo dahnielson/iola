@@ -48,9 +48,18 @@ namespace domain
 
 project::project() :
 	m_pkSource(new Mlt::Playlist),
-	m_pkProgram(new Mlt::Playlist)
-
+	m_pkProgram(new Mlt::Playlist),
+	m_pkSourceProducerChangeEvent(0),
+	m_pkProgramProducerChangeEvent(0)
 {
+	m_pkSourceProducerChangeEvent = m_pkSource->listen(
+		"producer-changed", this, (mlt_listener)source_producer_change_callback
+		);
+
+	m_pkProgramProducerChangeEvent = m_pkProgram->listen(
+		"producer-changed", this, (mlt_listener)program_producer_change_callback
+		);
+
 	source_new();
 	program_new();
 }
@@ -59,6 +68,8 @@ project::~project()
 {
 	delete m_pkSource;
 	delete m_pkProgram;
+	delete m_pkSourceProducerChangeEvent;
+	delete m_pkProgramProducerChangeEvent;
 }
 
 Mlt::Profile& project::get_profile()

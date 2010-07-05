@@ -37,7 +37,6 @@ ProgramMonitor::ProgramMonitor(int x, int y, int w, int h, const char *label) :
 	Fl_Group(x, y, w, h, label),
 	m_pkConsumer(0),
 	m_pkFrameShowEvent(0),
-	m_pkProducerChangedEvent(0),
 	m_pkSlider(0)
 {
 	// Transport Slider
@@ -113,11 +112,6 @@ ProgramMonitor::ProgramMonitor(int x, int y, int w, int h, const char *label) :
 	m_pkConsumer->connect(iola::application::get_instance()->get_project()->get_program());
 	m_pkConsumer->unlock();
 
-	// Producer
-	m_pkProducerChangedEvent = iola::application::get_instance()->get_project()->get_program().listen(
-		"producer-changed", this, (mlt_listener)producer_changed_callback
-		);
-
 	// Connect signals
 	on_program_load_connection = iola::application::get_instance()->get_project()->on_program_load_signal.connect(
 		boost::bind(&ProgramMonitor::on_program_load, this)
@@ -128,6 +122,9 @@ ProgramMonitor::ProgramMonitor(int x, int y, int w, int h, const char *label) :
 	on_program_marks_change_connection = iola::application::get_instance()->get_project()->on_program_marks_change_signal.connect(
 		boost::bind(&ProgramMonitor::on_program_marks_change, this)
 		);
+	on_program_producer_change_connection = iola::application::get_instance()->get_project()->on_program_producer_change_signal.connect(
+		boost::bind(&ProgramMonitor::on_program_producer_change, this)
+		);
 
 	rDebug("%s: Program monitor initiated", __PRETTY_FUNCTION__);
 }
@@ -135,7 +132,6 @@ ProgramMonitor::ProgramMonitor(int x, int y, int w, int h, const char *label) :
 ProgramMonitor::~ProgramMonitor()
 {
 	delete m_pkFrameShowEvent;
-	delete m_pkProducerChangedEvent;
 	on_program_load_connection.disconnect();
 	on_program_playback_connection.disconnect();
 	on_program_marks_change_connection.disconnect();
@@ -308,7 +304,7 @@ void ProgramMonitor::frame_shown(Mlt::Frame &frame)
 	}
 }
 
-void ProgramMonitor::producer_changed()
+void ProgramMonitor::on_program_producer_change()
 {
 	rDebug("%s: Got program change", __PRETTY_FUNCTION__);
 	Fl::lock();

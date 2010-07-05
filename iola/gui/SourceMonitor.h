@@ -49,7 +49,6 @@ public:
 private:
 	Mlt::Consumer* m_pkConsumer;
 	Mlt::Event* m_pkFrameShowEvent;
-	Mlt::Event* m_pkProducerChangedEvent;
 
 	Fl_Window* m_pkDisplay;
 	Fl_Hold_Browser* m_pkBrowser;
@@ -62,6 +61,7 @@ private:
 	boost::signals2::connection on_source_load_connection;
 	boost::signals2::connection on_source_playback_connection;
 	boost::signals2::connection on_source_marks_change_connection;
+	boost::signals2::connection on_source_producer_change_connection;
 
 	static void slider_callback(Fl_Widget*, void* v) { reinterpret_cast<SourceMonitor*>(v)->slider_callback(); }
 	static void browser_callback(Fl_Widget*, void* v) { reinterpret_cast<SourceMonitor*>(v)->browser_callback(); }
@@ -78,13 +78,8 @@ private:
 		self->frame_shown(frame);
 	}
 
-	static void producer_changed_callback(mlt_producer, SourceMonitor* self) 
-	{
-		self->producer_changed();
-	}
-
 	void frame_shown(Mlt::Frame &frame);
-	void producer_changed();
+	void on_source_producer_change();
 
 	void slider_callback();
 

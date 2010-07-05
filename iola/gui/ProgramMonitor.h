@@ -49,7 +49,6 @@ public:
 private:
 	Mlt::Consumer* m_pkConsumer;
 	Mlt::Event* m_pkFrameShowEvent;
-	Mlt::Event* m_pkProducerChangedEvent;
 
 	Fl_Window* m_pkDisplay;
 	TimeRuler* m_pkSlider;
@@ -61,6 +60,7 @@ private:
 	boost::signals2::connection on_program_load_connection;
 	boost::signals2::connection on_program_playback_connection;
 	boost::signals2::connection on_program_marks_change_connection;
+	boost::signals2::connection on_program_producer_change_connection;
 
 	static void slider_callback(Fl_Widget*, void* v) { reinterpret_cast<ProgramMonitor*>(v)->slider_callback(); }
 
@@ -76,13 +76,8 @@ private:
 		self->frame_shown(frame);
 	}
 
-	static void producer_changed_callback(mlt_producer, ProgramMonitor* self) 
-	{
-		self->producer_changed();
-	}
-
 	void frame_shown(Mlt::Frame &frame);
-	void producer_changed();
+	void on_program_producer_change();
 
 	void slider_callback();
 

@@ -39,7 +39,6 @@ SourceMonitor::SourceMonitor(int x, int y, int w, int h, const char *label) :
 	Fl_Group(x, y, w, h, label),
 	m_pkConsumer(0),
 	m_pkFrameShowEvent(0),
-	m_pkProducerChangedEvent(0),
 	m_pkSlider(0)
 {
 	// Transport Slider
@@ -127,11 +126,6 @@ SourceMonitor::SourceMonitor(int x, int y, int w, int h, const char *label) :
 	m_pkConsumer->connect(iola::application::get_instance()->get_project()->get_source());
 	m_pkConsumer->unlock();
 
-	// Producer
-	m_pkProducerChangedEvent = iola::application::get_instance()->get_project()->get_source().listen(
-		"producer-changed", this, (mlt_listener)producer_changed_callback
-		);
-
 	// Connect signals
 	on_source_load_connection = iola::application::get_instance()->get_project()->on_source_load_signal.connect(
 		boost::bind(&SourceMonitor::on_source_load, this)
@@ -142,6 +136,9 @@ SourceMonitor::SourceMonitor(int x, int y, int w, int h, const char *label) :
 	on_source_marks_change_connection = iola::application::get_instance()->get_project()->on_source_marks_change_signal.connect(
 		boost::bind(&SourceMonitor::on_source_marks_change, this)
 		);
+	on_source_producer_change_connection = iola::application::get_instance()->get_project()->on_source_producer_change_signal.connect(
+		boost::bind(&SourceMonitor::on_source_producer_change, this)
+		);
 
 	rDebug("%s: Source monitor initiated", __PRETTY_FUNCTION__);
 }
@@ -149,10 +146,10 @@ SourceMonitor::SourceMonitor(int x, int y, int w, int h, const char *label) :
 SourceMonitor::~SourceMonitor()
 {
 	delete m_pkFrameShowEvent;
-	delete m_pkProducerChangedEvent;
 	on_source_load_connection.disconnect();
 	on_source_playback_connection.disconnect();
 	on_source_marks_change_connection.disconnect();
+	on_source_producer_change_connection.disconnect();
 	if (m_pkConsumer)
 		m_pkConsumer->stop();
 	delete m_pkConsumer;
@@ -302,7 +299,7 @@ void SourceMonitor::frame_shown(Mlt::Frame &frame)
 	}
 }
 
-void SourceMonitor::producer_changed()
+void SourceMonitor::on_source_producer_change()
 {
 	rDebug("%s: Got producer change", __PRETTY_FUNCTION__);
 	Fl::lock();
