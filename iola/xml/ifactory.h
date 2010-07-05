@@ -58,4 +58,4 @@ protected:
 } // namespace xml
 } // namespace iola
 
-#endif // !IOLA_XML_IFACTORY_H
+#endif // IOLA_XML_IFACTORY_H

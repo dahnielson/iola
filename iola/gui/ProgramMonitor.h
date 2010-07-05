@@ -1,5 +1,5 @@
-#ifndef IOLA_PROGRAMMONITOR_H
-#define IOLA_PROGRAMMONITOR_H
+#ifndef IOLA_GUI_PROGRAMMONITOR_H
+#define IOLA_GUI_PROGRAMMONITOR_H
 
 // Iola NLE
 // Copyright (c) 2010, Anders Dahnielson
@@ -117,4 +117,4 @@ private:
 } // namespace gui
 } // namespace iola
 
-#endif // IOLA_PROGRAMMONITOR_H
+#endif // IOLA_GUI_PROGRAMMONITOR_H

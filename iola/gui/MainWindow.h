@@ -1,5 +1,5 @@
-#ifndef IOLA_MAINWINDOW_H
-#define IOLA_MAINWINDOW_H
+#ifndef IOLA_GUI_MAINWINDOW_H
+#define IOLA_GUI_MAINWINDOW_H
 
 // Iola NLE
 // Copyright (c) 2010, Anders Dahnielson
@@ -151,4 +151,4 @@ private:
 namespace { static iola::gui::MainWindow* g_pkMainWindow; }
 namespace iola { namespace application { iola::gui::MainWindow* factory(); } }
 
-#endif // IOLA_MAINWINDOW_H
+#endif // IOLA_GUI_MAINWINDOW_H

@@ -1,5 +1,5 @@
-#ifndef IOLA_THEME_H
-#define IOLA_THEME_H
+#ifndef IOLA_GUI_THEME_H
+#define IOLA_GUI_THEME_H
 
 // Iola NLE
 // Copyright (c) 2010, Anders Dahnielson
@@ -265,4 +265,4 @@ namespace scheme
 } // namespace gui
 } // namespace iola
 
-#endif // IOLA_THEME_H
+#endif // IOLA_GUI_THEME_H

@@ -1,5 +1,5 @@
-#ifndef IOLA_IOLA_IUNKNOWN_H
-#define IOLA_IOLA_IUNKNOWN_H
+#ifndef IOLA_IUNKNOWN_H
+#define IOLA_IUNKNOWN_H
 
 // Iola NLE
 // Copyright (c) 2010, Anders Dahnielson
@@ -35,4 +35,4 @@ protected:
 
 } // namespace iola
 
-#endif // IOLA_IOLA_IUNKNOWN_H
+#endif // IOLA_IUNKNOWN_H

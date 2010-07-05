@@ -1,5 +1,5 @@
-#ifndef IOLA_FLTK_H
-#define IOLA_FLTK_H
+#ifndef IOLA_GUI_FLTK_H
+#define IOLA_GUI_FLTK_H
 
 // Iola NLE
 // Copyright (c) 2010, Anders Dahnielson
@@ -53,4 +53,4 @@
 
 #include <FL/x.H>
 
-#endif // IOLA_FLTK_H
+#endif // IOLA_GUI_FLTK_H

@@ -1,5 +1,5 @@
-#ifndef IOLA_TIMERULER_H
-#define IOLA_TIMERULER_H
+#ifndef IOLA_GUI_TIMERULER_H
+#define IOLA_GUI_TIMERULER_H
 
 // Iola NLE
 // Copyright (c) 2010, Anders Dahnielson
@@ -50,4 +50,4 @@ private:
 } // namespace gui
 } // namespace iola
 
-#endif // IOLA_TIMERULER_H
+#endif // IOLA_GUI_TIMERULER_H

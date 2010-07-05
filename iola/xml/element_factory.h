@@ -1,6 +1,6 @@
 /* -*- Mode: C++ ; c-basic-offset: 8 -*- */
-#ifndef IOLA_XML_FACTORY_H
-#define IOLA_XML_FACTORY_H
+#ifndef IOLA_XML_ELEMENT_FACTORY_H
+#define IOLA_XML_ELEMENT_FACTORY_H
 
 // Iola NLE
 // Copyright (c) 2010, Anders Dahnielson
@@ -43,4 +43,4 @@ public:
 } // namespace xml
 } // namespace iola
 
-#endif // !IOLA_XML_FACTORY_H
+#endif // IOLA_XML_ELEMENT_FACTORY_H
