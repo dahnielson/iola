@@ -19,7 +19,7 @@
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-#include <iola/gui/MainWindow.h>
+#include <iola/application/get_instance.h>
 
 #include "clipitem_element.h"
 #include "in_element.h"
@@ -80,10 +80,10 @@ track_element::store()
 	m_vpkClipItem.erase(m_vpkClipItem.begin(), m_vpkClipItem.end());
 
 	// Add clip items
-	const int number_of_clips = iola::application::factory()->program_get_clip_count();
+	const int number_of_clips = iola::application::get_instance()->get_project()->program_get_clip_count();
 	for (int i = 0; i < number_of_clips; ++i)
 	{
-		Mlt::ClipInfo* pkInfo = iola::application::factory()->program_get_clip_info(i);
+		Mlt::ClipInfo* pkInfo = iola::application::get_instance()->get_project()->program_get_clip_info(i);
 
 		clipitem_element* pkClipItem = new clipitem_element("clipitem");
 		pathurl_element* pkPathURL = new pathurl_element("pathurl");

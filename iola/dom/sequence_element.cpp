@@ -19,7 +19,7 @@
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-#include <iola/gui/MainWindow.h>
+#include <iola/application/get_instance.h>
 
 #include "sequence_element.h"
 #include "duration_element.h"
@@ -75,7 +75,7 @@ sequence_element::restore()
 	if (m_pkDuration)
 	{
 		int duration = m_pkDuration->get();
-		iola::application::factory()->program_set_duration(duration);
+		iola::application::get_instance()->get_project()->program_set_duration(duration);
 	}
 
 	if (m_pkMedia)
@@ -87,7 +87,7 @@ sequence_element::store()
 {
 	if (m_pkDuration)
 	{
-		int duration = iola::application::factory()->program_get_duration();
+		int duration = iola::application::get_instance()->get_project()->program_get_duration();
 		m_pkDuration->set(duration);
 	}
 

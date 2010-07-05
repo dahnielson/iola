@@ -27,6 +27,7 @@
 #include <boost/filesystem.hpp>
 
 // IOLA
+#include <iola/application/get_instance.h>
 #include "SourceMonitor.h"
 
 namespace iola
@@ -34,9 +35,8 @@ namespace iola
 namespace gui
 {
 
-SourceMonitor::SourceMonitor(MainWindow* parent, int x, int y, int w, int h, const char *label) :
+SourceMonitor::SourceMonitor(int x, int y, int w, int h, const char *label) :
 	Fl_Group(x, y, w, h, label),
-	m_pkParent(parent),
 	m_pkConsumer(0),
 	m_pkFrameShowEvent(0),
 	m_pkProducerChangedEvent(0),
@@ -118,22 +118,32 @@ SourceMonitor::SourceMonitor(MainWindow* parent, int x, int y, int w, int h, con
 	end();
 
 	// Consumer
-	m_pkConsumer = new Mlt::Consumer(m_pkParent->get_profile(), "sdl");
+	m_pkConsumer = new Mlt::Consumer(iola::application::get_instance()->get_project()->get_profile(), "sdl");
+	m_pkConsumer->lock();
 	m_pkConsumer->set("app_locked", 1);
 	m_pkConsumer->set("app_lock", (void *)Fl::lock, 0);
 	m_pkConsumer->set("app_unlock", (void *)Fl::unlock, 0);
 	m_pkFrameShowEvent = m_pkConsumer->listen("consumer-frame-show", this, (mlt_listener)frame_show_callback);
+	m_pkConsumer->connect(iola::application::get_instance()->get_project()->get_source());
+	m_pkConsumer->unlock();
+
+	// Producer
+	m_pkProducerChangedEvent = iola::application::get_instance()->get_project()->get_source().listen(
+		"producer-changed", this, (mlt_listener)producer_changed_callback
+		);
 
 	// Connect signals
-	on_source_load_connection = m_pkParent->on_source_load_signal.connect(
+	on_source_load_connection = iola::application::get_instance()->get_project()->on_source_load_signal.connect(
 		boost::bind(&SourceMonitor::on_source_load, this)
 		);
-	on_source_playback_connection = m_pkParent->on_source_playback_signal.connect(
+	on_source_playback_connection = iola::application::get_instance()->get_project()->on_source_playback_signal.connect(
 		boost::bind(&SourceMonitor::on_source_playback, this)
 		);
-	on_source_marks_change_connection = m_pkParent->on_source_marks_change_signal.connect(
+	on_source_marks_change_connection = iola::application::get_instance()->get_project()->on_source_marks_change_signal.connect(
 		boost::bind(&SourceMonitor::on_source_marks_change, this)
 		);
+
+	rDebug("%s: Source monitor initiated", __PRETTY_FUNCTION__);
 }
 
 SourceMonitor::~SourceMonitor()
@@ -263,22 +273,22 @@ int SourceMonitor::handle(int event)
 
 void SourceMonitor::on_source_load()
 {
-	rDebug("%s: Connect source to consumer", __PRETTY_FUNCTION__);
-	m_pkConsumer->lock();
-	m_pkConsumer->connect(m_pkParent->get_source());
-	m_pkConsumer->unlock();
-	delete m_pkProducerChangedEvent;
-	m_pkProducerChangedEvent = m_pkParent->get_source().listen("producer-changed", this, (mlt_listener)producer_changed_callback);
+	rDebug("%s: Got source load", __PRETTY_FUNCTION__);
 }
 
 void SourceMonitor::on_source_playback()
 {
+	rDebug("%s: Got source playback", __PRETTY_FUNCTION__);
 	refresh();
 }
 
 void SourceMonitor::on_source_marks_change()
 {
-	m_pkSlider->marks(m_pkParent->source_get_mark_in(), m_pkParent->source_get_mark_out());
+	rDebug("%s: Got source marks change", __PRETTY_FUNCTION__);
+	m_pkSlider->marks(
+		iola::application::get_instance()->get_project()->source_get_mark_in(),
+		iola::application::get_instance()->get_project()->source_get_mark_out()
+		);
 }
 
 void SourceMonitor::frame_shown(Mlt::Frame &frame)
@@ -294,15 +304,19 @@ void SourceMonitor::frame_shown(Mlt::Frame &frame)
 
 void SourceMonitor::producer_changed()
 {
+	rDebug("%s: Got producer change", __PRETTY_FUNCTION__);
 	Fl::lock();
-	m_pkSlider->bounds(m_pkParent->get_source().get_in(), m_pkParent->get_source().get_out());
+	m_pkSlider->bounds(
+		iola::application::get_instance()->get_project()->get_source().get_in(),
+		iola::application::get_instance()->get_project()->get_source().get_out()
+		);
 	Fl::unlock();
 }
 
 void SourceMonitor::slider_callback()
 {
 	Fl::lock();
-	m_pkParent->source_seek(m_pkSlider->value());
+	iola::application::get_instance()->get_project()->source_seek(m_pkSlider->value());
 	Fl::unlock();
 }
 
@@ -335,93 +349,81 @@ void SourceMonitor::browser_callback()
 		else if(Fl::event_clicks())
 		{
 			Fl::event_clicks(0);
-			m_pkParent->source_load(boost::filesystem::current_path()/selected_path);
+			iola::application::get_instance()->get_project()->source_load(
+				boost::filesystem::current_path() / selected_path
+				);
 		}
 	}
 }
 
 void SourceMonitor::mark_in()
 {
-	if (m_pkParent)
-		m_pkParent->source_set_mark_in();
+	iola::application::get_instance()->get_project()->source_set_mark_in();
 }
 
 void SourceMonitor::mark_out()
 {
-	if (m_pkParent)
-		m_pkParent->source_set_mark_out();
+	iola::application::get_instance()->get_project()->source_set_mark_out();
 }
 
 void SourceMonitor::mark_clip()
 {
-	if (m_pkParent)
-		m_pkParent->source_set_mark_clip();
+	iola::application::get_instance()->get_project()->source_set_mark_clip();
 }
 
 void SourceMonitor::mark_in_clear()
 {
-	if (m_pkParent)
-		m_pkParent->source_clear_mark_in();
+	iola::application::get_instance()->get_project()->source_clear_mark_in();
 }
 
 void SourceMonitor::mark_out_clear()
 {
-	if (m_pkParent)
-		m_pkParent->source_clear_mark_out();
+	iola::application::get_instance()->get_project()->source_clear_mark_out();
 }
 
 void SourceMonitor::mark_in_goto()
 {
-	if (m_pkParent)
-		m_pkParent->source_goto_mark_in();
+	iola::application::get_instance()->get_project()->source_goto_mark_in();
 }
 
 void SourceMonitor::mark_out_goto()
 {
-	if (m_pkParent)
-		m_pkParent->source_goto_mark_out();
+	iola::application::get_instance()->get_project()->source_goto_mark_out();
 }
 
 void SourceMonitor::goto_start()
 {
-	if (m_pkParent)
-		m_pkParent->source_goto_start();
+	iola::application::get_instance()->get_project()->source_goto_start();
 }
 
 void SourceMonitor::goto_end()
 {
-	if (m_pkParent)
-		m_pkParent->source_goto_end();
+	iola::application::get_instance()->get_project()->source_goto_end();
 }
 
 void SourceMonitor::step_backward()
 {
-	if (m_pkParent)
-		m_pkParent->source_step_backward();
+	iola::application::get_instance()->get_project()->source_step_backward();
 }
 
 void SourceMonitor::step_forward()
 {
-	if (m_pkParent)
-		m_pkParent->source_step_forward();
+	iola::application::get_instance()->get_project()->source_step_forward();
 }
 
 void SourceMonitor::play_backward()
 {
-	if (m_pkParent)
-		m_pkParent->source_play_reverse();
+	iola::application::get_instance()->get_project()->source_play_reverse();
 }
 
 void SourceMonitor::play_forward()
 {
-	if (m_pkParent)
-		m_pkParent->source_play_forward();
+	iola::application::get_instance()->get_project()->source_play_forward();
 }
 
 void SourceMonitor::stop_playback()
 {
-	if (m_pkParent)
-		m_pkParent->source_pause();
+	iola::application::get_instance()->get_project()->source_pause();
 }
 
 Window SourceMonitor::xid()

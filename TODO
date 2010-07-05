@@ -25,8 +25,6 @@ Iola NLE
 
 - Export EDL
 
-- Refactor into proper MVC design pattern
-
 - Add unit tests to project and enable testing in CMake
 
 - Add pre-commit hook in git to run unit tests

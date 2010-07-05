@@ -27,7 +27,6 @@
 #include <mlt++/Mlt.h>
 
 // IOLA
-#include "MainWindow.h"
 #include "TimeRuler.h"
 
 namespace iola
@@ -39,7 +38,7 @@ class ProgramMonitor :
 	public Fl_Group
 {
 public:
-	ProgramMonitor(MainWindow* parent, int x, int y, int w, int h, const char *label = 0);
+	ProgramMonitor(int x, int y, int w, int h, const char *label = 0);
 	~ProgramMonitor();
 
 	int handle(int event);
@@ -48,7 +47,6 @@ public:
 	void refresh();
 
 private:
-	MainWindow* m_pkParent;
 	Mlt::Consumer* m_pkConsumer;
 	Mlt::Event* m_pkFrameShowEvent;
 	Mlt::Event* m_pkProducerChangedEvent;

@@ -29,7 +29,7 @@
 #include "out_element.h"
 #include "start_element.h"
 
-#include <iola/gui/MainWindow.h>
+#include <iola/application/get_instance.h>
 
 namespace iola
 {
@@ -96,7 +96,7 @@ clipitem_element::restore()
 		const int in = m_pkIn->get();
 		const int out = m_pkOut->get();
 		const int start = m_pkStart->get();
-		iola::application::factory()->program_overwrite(pathurl, start, in, out);
+		iola::application::get_instance()->get_project()->program_overwrite(pathurl, start, in, out);
 	}
 }
 

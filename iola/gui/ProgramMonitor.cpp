@@ -25,6 +25,7 @@
 #include <iostream>
 
 // IOLA
+#include <iola/application/get_instance.h>
 #include "ProgramMonitor.h"
 
 namespace iola
@@ -32,9 +33,8 @@ namespace iola
 namespace gui
 {
 
-ProgramMonitor::ProgramMonitor(MainWindow* parent, int x, int y, int w, int h, const char *label) :
+ProgramMonitor::ProgramMonitor(int x, int y, int w, int h, const char *label) :
 	Fl_Group(x, y, w, h, label),
-	m_pkParent(parent),
 	m_pkConsumer(0),
 	m_pkFrameShowEvent(0),
 	m_pkProducerChangedEvent(0),
@@ -104,22 +104,32 @@ ProgramMonitor::ProgramMonitor(MainWindow* parent, int x, int y, int w, int h, c
 	end();
 
 	// Consumer
-	m_pkConsumer = new Mlt::Consumer(m_pkParent->get_profile(), "sdl");
+	m_pkConsumer = new Mlt::Consumer(iola::application::get_instance()->get_project()->get_profile(), "sdl");
+	m_pkConsumer->lock();
 	m_pkConsumer->set("app_locked", 1);
 	m_pkConsumer->set("app_lock", (void *)Fl::lock, 0);
 	m_pkConsumer->set("app_unlock", (void *)Fl::unlock, 0);
 	m_pkFrameShowEvent = m_pkConsumer->listen("consumer-frame-show", this, (mlt_listener)frame_show_callback);
+	m_pkConsumer->connect(iola::application::get_instance()->get_project()->get_program());
+	m_pkConsumer->unlock();
+
+	// Producer
+	m_pkProducerChangedEvent = iola::application::get_instance()->get_project()->get_program().listen(
+		"producer-changed", this, (mlt_listener)producer_changed_callback
+		);
 
 	// Connect signals
-	on_program_load_connection = m_pkParent->on_program_load_signal.connect(
+	on_program_load_connection = iola::application::get_instance()->get_project()->on_program_load_signal.connect(
 		boost::bind(&ProgramMonitor::on_program_load, this)
 		);
-	on_program_playback_connection = m_pkParent->on_program_playback_signal.connect(
+	on_program_playback_connection = iola::application::get_instance()->get_project()->on_program_playback_signal.connect(
 		boost::bind(&ProgramMonitor::on_program_playback, this)
 		);
-	on_program_marks_change_connection = m_pkParent->on_program_marks_change_signal.connect(
+	on_program_marks_change_connection = iola::application::get_instance()->get_project()->on_program_marks_change_signal.connect(
 		boost::bind(&ProgramMonitor::on_program_marks_change, this)
 		);
+
+	rDebug("%s: Program monitor initiated", __PRETTY_FUNCTION__);
 }
 
 ProgramMonitor::~ProgramMonitor()
@@ -269,22 +279,22 @@ int ProgramMonitor::handle(int event)
 
 void ProgramMonitor::on_program_load()
 {
-	rDebug("%s: Connect program to consumer", __PRETTY_FUNCTION__);
-	m_pkConsumer->lock();
-	m_pkConsumer->connect(m_pkParent->get_program());
-	m_pkConsumer->unlock();
-	delete m_pkProducerChangedEvent;
-	m_pkProducerChangedEvent = m_pkParent->get_program().listen("producer-changed", this, (mlt_listener)producer_changed_callback);
+	rDebug("%s: Got program load", __PRETTY_FUNCTION__);
 }
 
 void ProgramMonitor::on_program_playback()
 {
+	rDebug("%s: Got program playback", __PRETTY_FUNCTION__);
 	refresh();
 }
 
 void ProgramMonitor::on_program_marks_change()
 {
-	m_pkSlider->marks(m_pkParent->program_get_mark_in(), m_pkParent->program_get_mark_out());
+	rDebug("%s: Got program marks change", __PRETTY_FUNCTION__);
+	m_pkSlider->marks(
+		iola::application::get_instance()->get_project()->program_get_mark_in(),
+		iola::application::get_instance()->get_project()->program_get_mark_out()
+		);
 }
 
 void ProgramMonitor::frame_shown(Mlt::Frame &frame)
@@ -300,124 +310,110 @@ void ProgramMonitor::frame_shown(Mlt::Frame &frame)
 
 void ProgramMonitor::producer_changed()
 {
+	rDebug("%s: Got program change", __PRETTY_FUNCTION__);
 	Fl::lock();
-	m_pkSlider->bounds(m_pkParent->get_program().get_in(), m_pkParent->get_program().get_out());
+	m_pkSlider->bounds(
+		iola::application::get_instance()->get_project()->get_program().get_in(),
+		iola::application::get_instance()->get_project()->get_program().get_out()
+		);
 	Fl::unlock();
 }
 
 void ProgramMonitor::slider_callback()
 {
 	Fl::lock();
-	m_pkParent->program_seek(m_pkSlider->value());
+	iola::application::get_instance()->get_project()->program_seek(m_pkSlider->value());
 	Fl::unlock();
 }
 
 void ProgramMonitor::mark_in()
 {
-	if (m_pkParent)
-		m_pkParent->program_set_mark_in();
+	iola::application::get_instance()->get_project()->program_set_mark_in();
 }
 
 void ProgramMonitor::mark_out()
 {
-	if (m_pkParent)
-		m_pkParent->program_set_mark_out();
+	iola::application::get_instance()->get_project()->program_set_mark_out();
 }
 
 void ProgramMonitor::mark_cut()
 {
-	if (m_pkParent)
-		m_pkParent->program_set_mark_cut();
+	iola::application::get_instance()->get_project()->program_set_mark_cut();
 }
 
 void ProgramMonitor::mark_in_clear()
 {
-	if (m_pkParent)
-		m_pkParent->program_clear_mark_in();
+	iola::application::get_instance()->get_project()->program_clear_mark_in();
 }
 
 void ProgramMonitor::mark_out_clear()
 {
-	if (m_pkParent)
-		m_pkParent->program_clear_mark_out();
+	iola::application::get_instance()->get_project()->program_clear_mark_out();
 }
 
 void ProgramMonitor::mark_in_goto()
 {
-	if (m_pkParent)
-		m_pkParent->program_goto_mark_in();
+	iola::application::get_instance()->get_project()->program_goto_mark_in();
 }
 
 void ProgramMonitor::mark_out_goto()
 {
-	if (m_pkParent)
-		m_pkParent->program_goto_mark_out();
+	iola::application::get_instance()->get_project()->program_goto_mark_out();
 }
 
 void ProgramMonitor::goto_start()
 {
-	if (m_pkParent)
-		m_pkParent->program_goto_start();
+	iola::application::get_instance()->get_project()->program_goto_start();
 }
 
 void ProgramMonitor::goto_end()
 {
-	if (m_pkParent)
-		m_pkParent->program_goto_end();
+	iola::application::get_instance()->get_project()->program_goto_end();
 }
 
 void ProgramMonitor::step_backward()
 {
-	if (m_pkParent)
-		m_pkParent->program_step_backward();
+	iola::application::get_instance()->get_project()->program_step_backward();
 }
 
 void ProgramMonitor::step_forward()
 {
-	if (m_pkParent)
-		m_pkParent->program_step_forward();
+	iola::application::get_instance()->get_project()->program_step_forward();
 }
 
 void ProgramMonitor::play_backward()
 {
-	if (m_pkParent)
-		m_pkParent->program_play_reverse();
+	iola::application::get_instance()->get_project()->program_play_reverse();
 }
 
 void ProgramMonitor::play_forward()
 {
-	if (m_pkParent)
-		m_pkParent->program_play_forward();
+	iola::application::get_instance()->get_project()->program_play_forward();
 }
 
 void ProgramMonitor::stop_playback()
 {
-	if (m_pkParent)
-		m_pkParent->program_pause();
+	iola::application::get_instance()->get_project()->program_pause();
 }
 
 void ProgramMonitor::edit_previous_goto()
 {
-	if (m_pkParent)
-		m_pkParent->program_goto_previous_edit();
+	iola::application::get_instance()->get_project()->program_goto_previous_edit();
 }
 
 void ProgramMonitor::edit_next_goto()
 {
-	if (m_pkParent)
-		m_pkParent->program_goto_next_edit();
+	iola::application::get_instance()->get_project()->program_goto_next_edit();
 }
 
 void ProgramMonitor::insert()
 {
-	if (m_pkParent)
-		m_pkParent->program_insert();
+	iola::application::get_instance()->get_project()->program_insert();
 }
 
 void ProgramMonitor::overwrite()
 {
-	if (m_pkParent)
-		m_pkParent->program_overwrite();
+	iola::application::get_instance()->get_project()->program_overwrite();
 }
 
 Window ProgramMonitor::xid()

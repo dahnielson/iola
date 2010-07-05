@@ -18,6 +18,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 // STD
+#include <exception>
 #include <iostream>
 
 // BOOST
@@ -38,7 +39,7 @@
 #include <mlt++/Mlt.h>
 
 // IOLA
-#include <iola/gui/MainWindow.h>
+#include <iola/application/get_instance.h>
 
 namespace po = boost::program_options;
 
@@ -90,8 +91,20 @@ int main(int argc, char **argv)
 	Fl::visual(FL_DOUBLE|FL_RGB);
 	iola::gui::scheme::theme();
 
-	iola::gui::MainWindow* window = iola::application::factory();
-	window->show();
+	try
+	{
+		iola::application::iapplication* const application = iola::application::get_instance();
+		application->run();
+	}
+	catch (std::exception& e)
+	{
+		rError("%s: Caught exception: %s", __PRETTY_FUNCTION__, e.what());
+		throw;
+	}
+	catch (...)
+	{
+		rError("%s: Caught unknown exception ... terminating", __PRETTY_FUNCTION__);
+	}
 
-	return Fl::run();
+	return 0;
 }
