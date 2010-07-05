@@ -32,6 +32,8 @@
 
 namespace iola
 {
+namespace gui
+{
 
 class ProgramMonitor :
 	public Fl_Group
@@ -112,6 +114,7 @@ private:
 	Window xid();
 };
 
+} // namespace gui
 } // namespace iola
 
 #endif // IOLA_PROGRAMMONITOR_H

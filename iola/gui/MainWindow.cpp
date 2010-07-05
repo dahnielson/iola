@@ -37,6 +37,8 @@
 
 namespace iola
 {
+namespace gui
+{
 
 MainWindow::MainWindow() :
 	Fl_Double_Window(Fl::w(), Fl::h(), "Iola NLE"),
@@ -936,13 +938,15 @@ void MainWindow::program_overwrite(boost::filesystem::path resource, const int p
 	}
 }
 
+} // namespace gui
+
 namespace application
 {
 
-MainWindow* factory()
+iola::gui::MainWindow* factory()
 {
 	if (!g_pkMainWindow)
-		g_pkMainWindow = new iola::MainWindow();
+		g_pkMainWindow = new iola::gui::MainWindow();
 
 	return g_pkMainWindow;
 }

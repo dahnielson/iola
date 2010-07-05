@@ -29,6 +29,8 @@
 
 namespace iola
 {
+namespace gui
+{
 
 ProgramMonitor::ProgramMonitor(MainWindow* parent, int x, int y, int w, int h, const char *label) :
 	Fl_Group(x, y, w, h, label),
@@ -455,4 +457,5 @@ void ProgramMonitor::refresh()
 	m_pkConsumer->unlock();
 }
 
+} // namespace gui
 } // namespace iola

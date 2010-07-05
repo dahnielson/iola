@@ -24,6 +24,8 @@
 
 namespace iola
 {
+namespace gui
+{
 
 class TimeRuler :
 	public Fl_Valuator
@@ -45,6 +47,7 @@ private:
 	double x_to_value(const int x);
 };
 
+} // namespace gui
 } // namespace iola
 
 #endif // IOLA_TIMERULER_H

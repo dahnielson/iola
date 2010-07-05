@@ -32,6 +32,8 @@
 
 namespace iola
 {
+namespace gui
+{
 
 class ProgramMonitor;
 class SourceMonitor;
@@ -143,9 +145,10 @@ private:
 	static void quit_application(Fl_Widget*, void* v) { reinterpret_cast<MainWindow*>(v)->quit_application(); }
 };
 
+} // namespace gui
 } // namespace iola
 
-namespace { static iola::MainWindow* g_pkMainWindow; }
-namespace iola { namespace application { MainWindow* factory(); } }
+namespace { static iola::gui::MainWindow* g_pkMainWindow; }
+namespace iola { namespace application { iola::gui::MainWindow* factory(); } }
 
 #endif // IOLA_MAINWINDOW_H

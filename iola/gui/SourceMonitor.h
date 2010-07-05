@@ -32,6 +32,8 @@
 
 namespace iola
 {
+namespace gui
+{
 
 class SourceMonitor :
 	public Fl_Group
@@ -111,6 +113,7 @@ private:
 	Window xid();
 };
 
+} // namespace gui
 } // namespace iola
 
 #endif // IOLA_SOURCEMONITOR_H

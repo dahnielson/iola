@@ -26,6 +26,8 @@
 
 namespace iola
 {
+namespace gui
+{
 
 TimeRuler::TimeRuler(int x, int y, int w, int h, const char *label) :
 	Fl_Valuator(x, y, w, h, label),
@@ -152,4 +154,5 @@ double TimeRuler::x_to_value(const int x)
 	return round(val + minimum());
 }
 
+} // namespace gui
 } // namespace iola

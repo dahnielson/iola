@@ -71,6 +71,8 @@ void iola_no_box(int x, int y, int w, int h, Fl_Color c)
 
 namespace iola
 {
+namespace gui
+{
 namespace rgb
 {
 
@@ -260,6 +262,7 @@ namespace scheme
 	}
 
 } // namespace scheme
+} // namespace gui
 } // namespace iola
 
 #endif // IOLA_THEME_H

@@ -40,7 +40,6 @@
 // IOLA
 #include <iola/gui/MainWindow.h>
 
-using namespace iola;
 namespace po = boost::program_options;
 
 int main(int argc, char **argv)
@@ -89,9 +88,9 @@ int main(int argc, char **argv)
 
 	Fl::visible_focus(0);
 	Fl::visual(FL_DOUBLE|FL_RGB);
-	iola::scheme::theme();
+	iola::gui::scheme::theme();
 
-	MainWindow* window = iola::application::factory();
+	iola::gui::MainWindow* window = iola::application::factory();
 	window->show();
 
 	return Fl::run();
