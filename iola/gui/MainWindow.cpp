@@ -79,10 +79,21 @@ MainWindow::MainWindow() :
 	resizable(pkMainGroup);
 	size_range(800, 750);
 	end();
+
+	// Signals
+	on_alert_connection = iola::application::get_instance()->get_project()->on_alert.connect(
+		boost::bind(&MainWindow::on_alert, this, _1)
+		);
 }
 
 MainWindow::~MainWindow()
 {
+	on_alert_connection.disconnect();
+}
+
+void MainWindow::on_alert(std::string)
+{
+	fl_beep();
 }
 
 void MainWindow::open_project()

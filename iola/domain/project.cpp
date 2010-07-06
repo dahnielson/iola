@@ -29,9 +29,6 @@
 #include <iostream>
 #include <sstream>
 
-// FLTK
-#include <FL/fl_ask.H>
-
 // IOLA
 #include <iola/dom/element_factory.h>
 #include <iola/dom/root.h>
@@ -773,7 +770,7 @@ void project::program_insert()
 		else
 		{
 			rDebug("%s: Not good enough in/out points marked to perform three-point edit", __PRETTY_FUNCTION__);
-			fl_beep();
+			on_alert("Not good enough in/out points marked to perform three-point edit");
 			return;
 		}
 
@@ -865,7 +862,7 @@ void project::program_overwrite()
 		else
 		{
 			rDebug("%s: Not good enough in/out points marked to perform three-point edit", __PRETTY_FUNCTION__);
-			fl_beep();
+			on_alert("Not good enough in/out points marked to perform three-point edit");
 			return;
 		}
 

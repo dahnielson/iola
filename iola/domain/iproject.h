@@ -21,6 +21,9 @@
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+// STD
+#include <string>
+
 // BOOST
 #include <boost/filesystem.hpp>
 #include <boost/signals2.hpp>
@@ -117,6 +120,7 @@ public:
 
 	// Signals
 	typedef boost::signals2::signal<void ()> signal_t;
+	typedef boost::signals2::signal<void (std::string)> msg_signal_t;
 
 	signal_t on_source_load_signal;
 	signal_t on_source_playback_signal;
@@ -129,6 +133,8 @@ public:
 	signal_t on_program_seek_signal;
 	signal_t on_program_marks_change_signal;
 	signal_t on_program_producer_change_signal;
+
+	msg_signal_t on_alert;
 };
 
 } // namespace domain

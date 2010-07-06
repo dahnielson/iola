@@ -20,6 +20,9 @@
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+// STD
+#include <string>
+
 // BOOST
 #include <boost/filesystem.hpp>
 #include <boost/signals2.hpp>
@@ -53,6 +56,10 @@ private:
 	ProgramMonitor* m_pkProgramMonitor;
 
 	boost::filesystem::path m_kProjectPath;
+
+	void on_alert(std::string);
+
+	boost::signals2::connection on_alert_connection;
 
 	static void new_project(Fl_Widget*, void* v) { reinterpret_cast<MainWindow*>(v)->clear_project(); }
 	static void open_project(Fl_Widget*, void* v) { reinterpret_cast<MainWindow*>(v)->open_project(); }
