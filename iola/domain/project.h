@@ -51,6 +51,8 @@ public:
 	Mlt::Producer& get_program();
 
 	// Source
+	void source_connect_consumer(Mlt::Consumer* consumer);
+
 	void source_new();
 	void source_load(boost::filesystem::path clip);
 	int source_get_start();
@@ -77,6 +79,8 @@ public:
 	void source_goto_end();
 
 	// Program
+	void program_connect_consumer(Mlt::Consumer* consumer);
+
 	void program_new();
 	void program_load(boost::filesystem::path sequence);
 	void program_save(boost::filesystem::path sequence);

@@ -123,8 +123,9 @@ SourceMonitor::SourceMonitor(int x, int y, int w, int h, const char *label) :
 	m_pkConsumer->set("app_lock", (void *)Fl::lock, 0);
 	m_pkConsumer->set("app_unlock", (void *)Fl::unlock, 0);
 	m_pkFrameShowEvent = m_pkConsumer->listen("consumer-frame-show", this, (mlt_listener)frame_show_callback);
-	m_pkConsumer->connect(iola::application::get_instance()->get_project()->get_source());
 	m_pkConsumer->unlock();
+
+	iola::application::get_instance()->get_project()->source_connect_consumer(m_pkConsumer);
 
 	// Connect signals
 	on_source_load_connection = iola::application::get_instance()->get_project()->on_source_load_signal.connect(

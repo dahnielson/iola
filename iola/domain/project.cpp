@@ -90,6 +90,13 @@ Mlt::Producer& project::get_program()
 ///////////////////////////////////////////
 // Source
 
+void project::source_connect_consumer(Mlt::Consumer* consumer)
+{
+	consumer->lock();
+	consumer->connect(*m_pkSource);
+	consumer->unlock();
+}
+
 void project::source_new()
 {
 	rDebug("%s: Create a new source", __PRETTY_FUNCTION__);
@@ -344,6 +351,13 @@ void project::source_goto_end()
 
 ///////////////////////////////////////////
 // Program
+
+void project::program_connect_consumer(Mlt::Consumer* consumer)
+{
+	consumer->lock();
+	consumer->connect(*m_pkProgram);
+	consumer->unlock();
+}
 
 void project::program_new()
 {

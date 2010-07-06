@@ -48,6 +48,8 @@ public:
 	virtual Mlt::Producer& get_program() = 0;
 
 	// Source
+	virtual void source_connect_consumer(Mlt::Consumer* consumer) = 0;
+
 	virtual void source_new() = 0;
 	virtual void source_load(boost::filesystem::path clip) = 0;
 	virtual int source_get_start() = 0;
@@ -74,6 +76,8 @@ public:
 	virtual void source_goto_end() = 0;
 
 	// Program
+	virtual void program_connect_consumer(Mlt::Consumer* consumer) = 0;
+
 	virtual void program_new() = 0;
 	virtual void program_load(boost::filesystem::path sequence) = 0;
 	virtual void program_save(boost::filesystem::path sequence) = 0;
