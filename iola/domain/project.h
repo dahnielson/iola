@@ -53,6 +53,8 @@ public:
 	// Source
 	void source_new();
 	void source_load(boost::filesystem::path clip);
+	int source_get_start();
+	int source_get_end();
 	double source_get_speed();
 	void source_set_speed(double speed);
 	void source_seek(int position);
@@ -78,6 +80,8 @@ public:
 	void program_new();
 	void program_load(boost::filesystem::path sequence);
 	void program_save(boost::filesystem::path sequence);
+	int program_get_start();
+	int program_get_end();
 	void program_set_duration(int duration);
 	int program_get_duration();
 	void program_set_speed(double speed);

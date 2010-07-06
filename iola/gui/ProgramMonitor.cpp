@@ -307,12 +307,10 @@ void ProgramMonitor::frame_shown(Mlt::Frame &frame)
 void ProgramMonitor::on_program_producer_change()
 {
 	rDebug("%s: Got program change", __PRETTY_FUNCTION__);
-	Fl::lock();
 	m_pkSlider->bounds(
-		iola::application::get_instance()->get_project()->get_program().get_in(),
-		iola::application::get_instance()->get_project()->get_program().get_out()
+		iola::application::get_instance()->get_project()->program_get_start(),
+		iola::application::get_instance()->get_project()->program_get_end()
 		);
-	Fl::unlock();
 }
 
 void ProgramMonitor::slider_callback()

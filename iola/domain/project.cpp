@@ -117,6 +117,16 @@ void project::source_load(boost::filesystem::path clip)
 	on_source_marks_change_signal();
 }
 
+int project::source_get_start()
+{
+	return m_pkSource->get_in();
+}
+
+int project::source_get_end()
+{
+	return m_pkSource->get_out();
+}
+
 double project::source_get_speed()
 {
 	if (!m_pkSource)
@@ -405,6 +415,16 @@ void project::program_save(boost::filesystem::path sequence)
 
 	delete pkFactory;
 	delete pkRoot;
+}
+
+int project::program_get_start()
+{
+	return m_pkProgram->get_in();
+}
+
+int project::program_get_end()
+{
+	return m_pkProgram->get_out();
 }
 
 void project::program_set_duration(int duration)

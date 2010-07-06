@@ -302,12 +302,10 @@ void SourceMonitor::frame_shown(Mlt::Frame &frame)
 void SourceMonitor::on_source_producer_change()
 {
 	rDebug("%s: Got producer change", __PRETTY_FUNCTION__);
-	Fl::lock();
 	m_pkSlider->bounds(
-		iola::application::get_instance()->get_project()->get_source().get_in(),
-		iola::application::get_instance()->get_project()->get_source().get_out()
+		iola::application::get_instance()->get_project()->source_get_start(),
+		iola::application::get_instance()->get_project()->source_get_end()
 		);
-	Fl::unlock();
 }
 
 void SourceMonitor::slider_callback()

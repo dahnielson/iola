@@ -50,6 +50,8 @@ public:
 	// Source
 	virtual void source_new() = 0;
 	virtual void source_load(boost::filesystem::path clip) = 0;
+	virtual int source_get_start() = 0;
+	virtual int source_get_end() = 0;
 	virtual double source_get_speed() = 0;
 	virtual void source_set_speed(double speed) = 0;
 	virtual void source_seek(int position) = 0;
@@ -75,6 +77,8 @@ public:
 	virtual void program_new() = 0;
 	virtual void program_load(boost::filesystem::path sequence) = 0;
 	virtual void program_save(boost::filesystem::path sequence) = 0;
+	virtual int program_get_start() = 0;
+	virtual int program_get_end() = 0;
 	virtual void program_set_duration(int duration) = 0;
 	virtual int program_get_duration() = 0;
 	virtual void program_set_speed(double speed) = 0;
