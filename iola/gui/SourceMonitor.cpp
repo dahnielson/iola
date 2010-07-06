@@ -22,6 +22,7 @@
 
 // STD
 #include <iostream>
+#include <exception>
 
 // BOOST
 #include <boost/filesystem.hpp>
@@ -82,9 +83,8 @@ SourceMonitor::SourceMonitor(int x, int y, int w, int h, const char *label) :
 	// Main Group
 	Fl_Group *pkMainGroup = new Fl_Group(x, y+20, w, h-25, "Source");
 	pkMainGroup->labelsize(11);
-	m_pkDisplay = new Fl_Single_Window(x+4, y+30, w-8, h-82);
+	m_pkDisplay = new Fl_Window(x+4, y+30, w-8, h-82);
 	m_pkDisplay->color(FL_BLACK);
-	m_pkDisplay->box(FL_FLAT_BOX);
 	m_pkDisplay->end();
 	pkMainGroup->add(m_pkDisplay);
 	pkMainGroup->add(m_pkSlider);
@@ -117,7 +117,12 @@ SourceMonitor::SourceMonitor(int x, int y, int w, int h, const char *label) :
 	end();
 
 	// Consumer
-	m_pkConsumer = new Mlt::Consumer(iola::application::get_instance()->get_project()->get_profile(), "sdl");
+	m_pkConsumer = Mlt::Factory::consumer(iola::application::get_instance()->get_project()->get_profile(), "iola");
+	if (!m_pkConsumer->get_consumer())
+	{
+		rError("%s: No consumer!", __PRETTY_FUNCTION__);
+		throw std::exception();
+	}
 	m_pkConsumer->lock();
 	m_pkConsumer->set("app_locked", 1);
 	m_pkConsumer->set("app_lock", (void *)Fl::lock, 0);
@@ -445,6 +450,7 @@ bool SourceMonitor::restart()
 		sprintf(temp, "%d", (int)xid());
 		setenv("SDL_WINDOWID", temp, 1);
 		rDebug("%s: Start consumer with xid=%i", __PRETTY_FUNCTION__, (int)xid());
+		m_pkConsumer->set("xid", (int)xid());
 		m_pkConsumer->start();
 	}
 	if (!m_pkConsumer->is_stopped())

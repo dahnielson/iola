@@ -36,6 +36,7 @@
 
 // IOLA
 #include <iola/application/get_instance.h>
+#include <iola/consumer/consumer_iola.h>
 
 namespace po = boost::program_options;
 
@@ -81,7 +82,8 @@ int main(int argc, char **argv)
 	if (iStdioDbgLevel > 2) stdlog.subscribeTo(rlog::GetGlobalChannel("debug"));
 	if (iStdioDbgLevel > 3) stdlog.subscribeTo(rlog::GetGlobalChannel("info"));
 
-	Mlt::Factory::init(NULL);
+	Mlt::Repository* pkRepos = Mlt::Factory::init(NULL);
+	pkRepos->register_service(consumer_type, "iola", consumer_iola_init);
 
 	try
 	{

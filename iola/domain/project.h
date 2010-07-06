@@ -122,7 +122,7 @@ private:
 	// The "model"
 	Mlt::Playlist* m_pkSource;
 	Mlt::Playlist* m_pkProgram;
-	Mlt::Profile m_Profile;
+	Mlt::Profile m_kProfile;
 
 	Mlt::Event* m_pkSourceProducerChangeEvent;
 	Mlt::Event* m_pkProgramProducerChangeEvent;

@@ -13,8 +13,6 @@ Iola NLE
 
 - Copy URI of clip in source monitor to clipboard (ctrl+c)
 
-- Implement an OpenGL consumer
-
 - Implement the timeline
 
 - Implement a dialog for editing the profile (project setting)

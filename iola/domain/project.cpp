@@ -46,6 +46,7 @@ namespace domain
 project::project() :
 	m_pkSource(new Mlt::Playlist),
 	m_pkProgram(new Mlt::Playlist),
+	m_kProfile(Mlt::Profile("dv_ntsc")),
 	m_pkSourceProducerChangeEvent(0),
 	m_pkProgramProducerChangeEvent(0)
 {
@@ -71,7 +72,7 @@ project::~project()
 
 Mlt::Profile& project::get_profile()
 {
-	return m_Profile;
+	return m_kProfile;
 }
 
 ///////////////////////////////////////////
@@ -100,7 +101,7 @@ void project::source_load(boost::filesystem::path clip)
 	rDebug("%s: Load %s as source", __PRETTY_FUNCTION__, clip.string().c_str());
 	m_pkSource->lock();
 	m_pkSource->clear();
-	Mlt::Producer* pkClipSource = new Mlt::Producer(m_Profile, clip.string().c_str());
+	Mlt::Producer* pkClipSource = new Mlt::Producer(m_kProfile, clip.string().c_str());
 	m_pkSource->append(*pkClipSource);
 	m_pkSource->set_speed(0);
 	m_pkSource->seek(0);
@@ -790,7 +791,7 @@ void project::program_insert(boost::filesystem::path resource, const int program
 		m_pkProgram->lock();
 		const int clip_index = m_pkProgram->get_clip_index_at(program_in);
 		m_pkProgram->split(clip_index, program_in - m_pkProgram->clip_start(clip_index));
-		Mlt::Producer* pkClipSource = new Mlt::Producer(m_Profile, resource.string().c_str());
+		Mlt::Producer* pkClipSource = new Mlt::Producer(m_kProfile, resource.string().c_str());
 		m_pkProgram->insert(*pkClipSource, clip_index+1, source_in, source_out);
 		m_pkProgram->unlock();
 
@@ -881,7 +882,7 @@ void project::program_overwrite(boost::filesystem::path resource, const int prog
 
 		m_pkProgram->lock();
 		const int clip_index = m_pkProgram->remove_region(program_in, source_out - source_in);
-		Mlt::Producer* pkClipSource = new Mlt::Producer(m_Profile, resource.string().c_str());
+		Mlt::Producer* pkClipSource = new Mlt::Producer(m_kProfile, resource.string().c_str());
 		m_pkProgram->insert(*pkClipSource, clip_index, source_in, source_out);
 		m_pkProgram->unlock();
 
