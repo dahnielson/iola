@@ -44,8 +44,6 @@ class iproject :
 {
 public:
 	virtual Mlt::Profile& get_profile() = 0;
-	virtual Mlt::Producer& get_source() = 0;
-	virtual Mlt::Producer& get_program() = 0;
 
 	// Source
 	virtual void source_connect_consumer(Mlt::Consumer* consumer) = 0;

@@ -47,8 +47,6 @@ public:
 	~project();
 
 	Mlt::Profile& get_profile();
-	Mlt::Producer& get_source();
-	Mlt::Producer& get_program();
 
 	// Source
 	void source_connect_consumer(Mlt::Consumer* consumer);

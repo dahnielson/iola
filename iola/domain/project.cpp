@@ -77,16 +77,6 @@ Mlt::Profile& project::get_profile()
 	return m_Profile;
 }
 
-Mlt::Producer& project::get_source()
-{
-	return *m_pkSource;
-}
-
-Mlt::Producer& project::get_program()
-{
-	return *m_pkProgram;
-}
-
 ///////////////////////////////////////////
 // Source
 
