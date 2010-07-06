@@ -31,10 +31,6 @@
 #include <rlog/SyslogNode.h>
 #include <rlog/RLogChannel.h>
 
-// FLTK
-#include <iola/gui/fltk.h>
-#include <iola/gui/theme.h>
-
 // MLT
 #include <mlt++/Mlt.h>
 
@@ -86,10 +82,6 @@ int main(int argc, char **argv)
 	if (iStdioDbgLevel > 3) stdlog.subscribeTo(rlog::GetGlobalChannel("info"));
 
 	Mlt::Factory::init(NULL);
-
-	Fl::visible_focus(0);
-	Fl::visual(FL_DOUBLE|FL_RGB);
-	iola::gui::scheme::theme();
 
 	try
 	{
