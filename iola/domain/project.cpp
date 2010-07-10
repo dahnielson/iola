@@ -777,6 +777,8 @@ void project::program_insert()
 
 		Mlt::ClipInfo* pkInfo = m_pkSource->clip_info(0);
 		program_insert(boost::filesystem::path(pkInfo->resource), program_in, source_in, source_out);
+		if (program_in > 0)
+			program_seek(program_in + 1);
 		Mlt::Playlist::delete_clip_info(pkInfo);
 	}
 }
@@ -869,6 +871,8 @@ void project::program_overwrite()
 
 		Mlt::ClipInfo* pkInfo = m_pkSource->clip_info(0);
 		program_overwrite(boost::filesystem::path(pkInfo->resource), program_in, source_in, source_out);
+		if (program_in > 0)
+			program_seek(program_in + 1);
 		Mlt::Playlist::delete_clip_info(pkInfo);
 	}
 }
