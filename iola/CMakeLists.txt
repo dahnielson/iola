@@ -18,16 +18,8 @@ INCLUDE_DIRECTORIES(
   ${EXPAT_INCLUDE_DIRS}
   )
 
-LINK_DIRECTORIES(
-  ${IOLA_BINARY_DIR}/iola/application
-  ${IOLA_BINARY_DIR}/iola/dom
-  ${IOLA_BINARY_DIR}/iola/domain
-  ${IOLA_BINARY_DIR}/iola/gui
-  ${IOLA_BINARY_DIR}/iola/xml
-  )
-
 ADD_EXECUTABLE(iola ${SOURCES})
-TARGET_LINK_LIBRARIES(iola iolaapplication iolaconsumer iolagui ioladomain ioladom iolaxml mlt++ ${MLT_LIBRARIES} ${FLTK_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} ${RLOG_LIBRARIES} ${EXPAT_LIBRARIES})
+TARGET_LINK_LIBRARIES(iola iolaapplication iolaconsumer iolagui ioladomain ioladom iolaxml mlt++ ${MLT_LIBRARIES} ${FLTK_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} ${RLOG_LIBRARIES} ${EXPAT_LIBRARIES} ${LIBAO_LIBRARIES})
 
 # Set up subdirectories...
 ADD_SUBDIRECTORY(application)

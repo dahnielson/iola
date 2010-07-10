@@ -22,6 +22,9 @@
 // FLTK
 #include <FL/Fl.H>
 
+// LIBAO
+#include <ao/ao.h>
+
 // IOLA
 #include <iola/gui/MainWindow.h>
 #include <iola/domain/iproject.h>
@@ -60,6 +63,8 @@ public:
 
 	void run()
 	{
+		ao_initialize();
+
 		// Instance project
 		m_pkProject = new iola::domain::project();
 
@@ -71,6 +76,8 @@ public:
 
 		while(m_bRun)
 			execute();
+
+		ao_shutdown();
 	}
 
 	// Actions

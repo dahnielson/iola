@@ -32,6 +32,9 @@
 #include <GL/gl.h>
 #include <GL/glx.h>
 
+// LIBAO
+#include <ao/ao.h>
+
 // IOLA
 #include "consumer_iola.h"
 
@@ -58,6 +61,9 @@ struct consumer_iola_s
 	Window xid;
 	GLXContext context;
 	GLuint texture;
+	int audio_driver;
+	ao_device* audio_device;
+	ao_sample_format audio_format;
 };
 
 static int consumer_start(mlt_consumer parent);
@@ -287,6 +293,38 @@ static int consumer_play_video(consumer_iola self, mlt_frame frame)
 	return 0;
 }
 
+// Output frame audio
+static int consumer_play_audio(consumer_iola self, mlt_frame frame)
+{
+	// The pcm
+	char* pcm;
+
+	// The audio format
+	mlt_audio_format afmt = mlt_audio_s16;
+
+	// Frequency, channels and samples
+	int frequency = self->audio_format.rate;
+	int channels = self->audio_format.channels;
+	static int counter = 0;
+	int samples = mlt_sample_calculator(mlt_properties_get_double(self->properties, "fps"), frequency, counter++);
+	int bytes = samples * channels * 2;
+
+	if (self->running)
+	{
+		// Get pcm, format, frequency, channels and samples
+		mlt_frame_get_audio(frame, (void**) &pcm, &afmt, &frequency, &channels, &samples);
+
+		// Check that we got the format we asked for
+		if (afmt != mlt_audio_s16)
+			return 0;
+
+		// Play samples
+		ao_play(self->audio_device, pcm, bytes);
+	}
+
+	return 0;
+}
+
 // Consumer thread
 static void* consumer_thread(void *arg)
 {
@@ -309,6 +347,17 @@ static void* consumer_thread(void *arg)
 	mlt_frame frame = NULL;
 	mlt_properties frame_properties = NULL;
 	double speed = 0;
+
+	// Audio
+	self->audio_format.bits = 16;
+	self->audio_format.channels = mlt_properties_get_int(self->properties, "channels");
+	self->audio_format.rate = mlt_properties_get_int(self->properties, "frequency");
+	self->audio_format.byte_format = AO_FMT_NATIVE;
+	self->audio_driver = ao_default_driver_id();
+	self->audio_device = ao_open_live(self->audio_driver, &self->audio_format, NULL);
+
+	if (!self->audio_device)
+		rError("%s: No audio device!", __PRETTY_FUNCTION__);
 
 	// Create OpenGL context
 	int attrib[] = {
@@ -368,6 +417,10 @@ static void* consumer_thread(void *arg)
 
 			// Get a frame from the attached producer
 			frame = mlt_consumer_rt_frame(consumer);
+
+			// Output audio
+			if (frame != NULL)
+				consumer_play_audio(self, frame);
 		}
 
 		// Check for termination
@@ -395,6 +448,8 @@ static void* consumer_thread(void *arg)
 	}
 
 	self->running = false;
+
+	ao_close(self->audio_device);
 
 	glDeleteTextures(1, &self->texture);
 	glXDestroyContext(self->display, self->context);
