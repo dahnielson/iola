@@ -5,6 +5,9 @@ SET(CMAKE_HAS_SORT 1)
 
 SET(CMAKE_MODULE_PATH ${IOLA_SOURCE_DIR}/cmake/modules ${CMAKE_MODULE_PATH})
 
+# Disallow in-source builds
+INCLUDE(OutOfSourceBuild)
+
 # Set the Iola version
 SET(IOLA_MAJOR_VERSION 0)
 SET(IOLA_MINOR_VERSION 0)
