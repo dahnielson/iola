@@ -358,8 +358,6 @@ static void* consumer_thread(void *arg)
 
 	// Internal intialization
 	mlt_frame frame = NULL;
-	mlt_properties frame_properties = NULL;
-	double speed = 0;
 
 	// Audio device
 	self->audio_format.bits = 16;
@@ -450,12 +448,6 @@ static void* consumer_thread(void *arg)
 		// Ensure that we have a frame
 		if (frame != NULL)
 		{
-			// Get the frame properties
-			frame_properties = MLT_FRAME_PROPERTIES(frame);
-
-			// Get the speed of the frame
-			speed = mlt_properties_get_double(frame_properties, "_speed");
-
 			// Draw the frame
 			consumer_play_video(self, frame);
 
