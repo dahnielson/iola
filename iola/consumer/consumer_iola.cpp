@@ -22,6 +22,7 @@
 // STD
 #include <algorithm>
 #include <stdlib.h>
+#include <cstring>
 #include <pthread.h>
 #include <sys/time.h>
 
@@ -64,6 +65,9 @@ struct consumer_iola_s
 	int audio_driver;
 	ao_device* audio_device;
 	ao_sample_format audio_format;
+	char audio_buffer[4096 * 10];
+	int audio_buffer_fill;
+	int audio_buffer_period;
 };
 
 static int consumer_start(mlt_consumer parent);
@@ -98,6 +102,9 @@ void* consumer_iola_init(mlt_profile profile, mlt_service_type type, const char 
 
 		// Set buffer to one frame for low latency
 		mlt_properties_set_int(self->properties, "buffer", 1);
+
+		// Default audio buffer
+		mlt_properties_set_int(self->properties, "audio_buffer", 512);
 
 		// Ensure we don't join on a non-running object
 		self->joined = true;
@@ -307,8 +314,6 @@ static int consumer_play_audio(consumer_iola self, mlt_frame frame)
 	int channels = self->audio_format.channels;
 	static int counter = 0;
 	int samples = mlt_sample_calculator(mlt_properties_get_double(self->properties, "fps"), frequency, counter++);
-	int bytes = samples * channels * 2;
-
 	if (self->running)
 	{
 		// Get pcm, format, frequency, channels and samples
@@ -318,8 +323,16 @@ static int consumer_play_audio(consumer_iola self, mlt_frame frame)
 		if (afmt != mlt_audio_s16)
 			return 0;
 
-		// Play samples
-		ao_play(self->audio_device, pcm, bytes);
+		// Play samples if buffer is filled
+		if (self->audio_buffer_fill + samples >= self->audio_buffer_period)
+		{
+			ao_play(self->audio_device, self->audio_buffer, self->audio_buffer_fill * channels * 2);
+			self->audio_buffer_fill = 0;
+		}
+
+		// Copy samples to buffer
+		memcpy(self->audio_buffer + self->audio_buffer_fill * channels * 2, pcm, samples * channels * 2);
+		self->audio_buffer_fill += samples;
 	}
 
 	return 0;
@@ -348,7 +361,7 @@ static void* consumer_thread(void *arg)
 	mlt_properties frame_properties = NULL;
 	double speed = 0;
 
-	// Audio
+	// Audio device
 	self->audio_format.bits = 16;
 	self->audio_format.channels = mlt_properties_get_int(self->properties, "channels");
 	self->audio_format.rate = mlt_properties_get_int(self->properties, "frequency");
@@ -358,6 +371,13 @@ static void* consumer_thread(void *arg)
 
 	if (!self->audio_device)
 		rError("%s: No audio device!", __PRETTY_FUNCTION__);
+
+	// Audio buffer
+	self->audio_buffer_fill = 0;
+	self->audio_buffer_period = mlt_properties_get_int(self->properties, "audio_buffer");
+
+	if (!self->audio_buffer)
+		rError("%s: No audio buffer allocated!", __PRETTY_FUNCTION__);
 
 	// Create OpenGL context
 	int attrib[] = {
