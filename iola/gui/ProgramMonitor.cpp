@@ -143,6 +143,7 @@ ProgramMonitor::~ProgramMonitor()
 	if (m_pkConsumer)
 		m_pkConsumer->stop();
 	delete m_pkConsumer;
+	rDebug("%s: Program monitor demolished", __PRETTY_FUNCTION__);
 }
 
 int ProgramMonitor::handle(int event)

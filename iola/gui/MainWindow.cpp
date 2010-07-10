@@ -99,6 +99,7 @@ MainWindow::MainWindow() :
 MainWindow::~MainWindow()
 {
 	on_alert_connection.disconnect();
+	rDebug("%s: Application window demolished", __PRETTY_FUNCTION__);
 }
 
 void MainWindow::on_alert(std::string)

@@ -159,6 +159,7 @@ SourceMonitor::~SourceMonitor()
 	if (m_pkConsumer)
 		m_pkConsumer->stop();
 	delete m_pkConsumer;
+	rDebug("%s: Source monitor demolished", __PRETTY_FUNCTION__);
 }
 
 int SourceMonitor::handle(int event)

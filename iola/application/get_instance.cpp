@@ -25,10 +25,14 @@
 // LIBAO
 #include <ao/ao.h>
 
+// MLT
+#include <mlt++/Mlt.h>
+
 // IOLA
-#include <iola/gui/MainWindow.h>
+#include <iola/consumer/consumer_iola.h>
 #include <iola/domain/iproject.h>
 #include <iola/domain/project.h>
+#include <iola/gui/MainWindow.h>
 #include "get_instance.h"
 
 namespace
@@ -63,7 +67,12 @@ public:
 
 	void run()
 	{
+		// Initialize audio
 		ao_initialize();
+
+		// Initialize MLT
+		Mlt::Repository* pkRepos = Mlt::Factory::init(NULL);
+		pkRepos->register_service(consumer_type, "iola", consumer_iola_init);
 
 		// Instance project
 		m_pkProject = new iola::domain::project();
@@ -71,12 +80,18 @@ public:
 		// Instance GUI
 		m_pkGUI = new iola::gui::MainWindow();
 
+		// Enter main loop
 		m_bRun = true;
 		m_pkGUI->show();
 
 		while(m_bRun)
 			execute();
 
+		// Clean up
+		delete m_pkGUI;
+		delete m_pkProject;
+
+		// Shutdown audio
 		ao_shutdown();
 	}
 
