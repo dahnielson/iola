@@ -1,6 +1,6 @@
 /* -*- Mode: C++ ; c-basic-offset: 8 -*- */
-#ifndef IOLA_CONSUMER_IOLA_H
-#define IOLA_CONSUMER_IOLA_H
+#ifndef IOLA_CONSUMER_CONSUMER_IOLA_H
+#define IOLA_CONSUMER_CONSUMER_IOLA_H
 
 // Iola NLE
 // Copyright (c) 2010, Anders Dahnielson
@@ -24,6 +24,14 @@
 // MLT
 #include <mlt++/Mlt.h>
 
+namespace iola
+{
+namespace consumer
+{
+
 void* consumer_iola_init(mlt_profile profile, mlt_service_type type, const char *id, const void *arg);
 
-#endif // IOLA_CONSUMER_IOLA_H
+} // namespace consumer
+} // namespace iola
+
+#endif // IOLA_CONSUMER_CONSUMER_IOLA_H

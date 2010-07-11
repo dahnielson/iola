@@ -43,6 +43,11 @@
 // with an OpenGL context to draw frames using OpenGL calls in the
 // consumer video thread.
 
+namespace iola
+{
+namespace consumer
+{
+
 typedef struct consumer_iola_s *consumer_iola;
 
 struct consumer_iola_s
@@ -473,3 +478,6 @@ static void* consumer_thread(void *arg)
 
 	return NULL;
 }
+
+} // namespace consumer
+} // namespace iola

@@ -72,7 +72,7 @@ public:
 
 		// Initialize MLT
 		Mlt::Repository* pkRepos = Mlt::Factory::init(NULL);
-		pkRepos->register_service(consumer_type, "iola", consumer_iola_init);
+		pkRepos->register_service(consumer_type, "iola", iola::consumer::consumer_iola_init);
 
 		// Instance project
 		m_pkProject = new iola::domain::project();
