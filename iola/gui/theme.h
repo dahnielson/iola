@@ -1,3 +1,5 @@
+/* -*- Mode: C++ ; c-basic-offset: 8 -*- */
+
 #ifndef IOLA_GUI_THEME_H
 #define IOLA_GUI_THEME_H
 

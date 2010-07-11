@@ -1,5 +1,6 @@
-#ifndef IOLA_GUISOURCEMONITOR_H
-#define IOLA_GUISOURCEMONITOR_H
+/* -*- Mode: C++ ; c-basic-offset: 8 -*- */
+#ifndef IOLA_GUI_SOURCEMONITOR_H
+#define IOLA_GUI_SOURCEMONITOR_H
 
 // Iola NLE
 // Copyright (c) 2010, Anders Dahnielson

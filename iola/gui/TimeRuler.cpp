@@ -1,3 +1,5 @@
+/* -*- Mode: C++ ; c-basic-offset: 8 -*- */
+
 // Iola NLE
 // Copyright (c) 2010, Anders Dahnielson
 //

@@ -1,3 +1,4 @@
+/* -*- Mode: C++ ; c-basic-offset: 8 -*- */
 #ifndef IOLA_IUNKNOWN_H
 #define IOLA_IUNKNOWN_H
 

@@ -1,3 +1,4 @@
+/* -*- Mode: C++ ; c-basic-offset: 8 -*- */
 #ifndef IOLA_STRING_CAST_H
 #define IOLA_STRING_CAST_H
 
