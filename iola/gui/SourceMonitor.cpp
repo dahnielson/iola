@@ -184,7 +184,6 @@ int SourceMonitor::handle(int event)
 	case FL_UNFOCUS:
 		rDebug("%s: Lost focus", __PRETTY_FUNCTION__);
 		stop_playback();
-		stop();
 		color(FL_BACKGROUND_COLOR); 
 		redraw();
 		return 1;
@@ -447,7 +446,6 @@ bool SourceMonitor::restart()
 	{
 		char temp[132];
 		sprintf(temp, "%d", (int)xid());
-		setenv("SDL_WINDOWID", temp, 1);
 		rDebug("%s: Start consumer with xid=%i", __PRETTY_FUNCTION__, (int)xid());
 		m_pkConsumer->set("xid", (int)xid());
 		m_pkConsumer->start();
