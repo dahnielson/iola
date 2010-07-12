@@ -19,6 +19,9 @@
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+// STD
+#include <pthread.h>
+
 // FLTK
 #include <FL/Fl.H>
 
@@ -41,6 +44,7 @@ namespace
 /////////////////////////////////////////////////////////////////////////////
 // global instance
 
+pthread_mutex_t instance_mutex = PTHREAD_MUTEX_INITIALIZER;
 static iola::application::iapplication* g_pkApplicationInstance;
 
 /////////////////////////////////////////////////////////////////////////////
@@ -125,8 +129,10 @@ namespace application
 
 iapplication* get_instance()
 {
+	pthread_mutex_lock(&instance_mutex);
 	if (!g_pkApplicationInstance)
 		g_pkApplicationInstance = new application_implementation();
+	pthread_mutex_unlock(&instance_mutex);
 
 	return g_pkApplicationInstance;
 }
