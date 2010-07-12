@@ -303,12 +303,10 @@ void ProgramMonitor::on_program_marks_change()
 
 void ProgramMonitor::frame_shown(Mlt::Frame &frame)
 {
-	if (m_pkConsumer && !m_pkConsumer->is_stopped())
+	if (m_pkConsumer && !m_pkConsumer->is_stopped() && m_pkSlider)
 	{
-		Fl::lock();
+		//NOTE Do not use Fl::lock() here, it will deadlock when the consumer is stopping!
 		m_pkSlider->value(frame.get_int("_position"));
-		Fl::check();
-		Fl::unlock();
 	}
 }
 
@@ -323,9 +321,7 @@ void ProgramMonitor::on_program_producer_change()
 
 void ProgramMonitor::slider_callback()
 {
-	Fl::lock();
 	iola::application::get_instance()->get_project()->program_seek(m_pkSlider->value());
-	Fl::unlock();
 }
 
 void ProgramMonitor::mark_in()

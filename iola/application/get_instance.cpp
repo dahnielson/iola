@@ -104,7 +104,7 @@ public:
 private:
 	void execute()
 	{
-		Fl::wait();
+		Fl::wait(0); //NOTE The zero time makes the GUI really responsive
 	}
 
 	bool m_bRun;

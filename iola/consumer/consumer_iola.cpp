@@ -179,7 +179,12 @@ int consumer_stop(mlt_consumer parent)
 		self->joined = true;
 		self->running = false;
 		if (self->thread)
+		{
+			rDebug("%s: Waiting for consumer thread to join", __PRETTY_FUNCTION__);
 			pthread_join(self->thread, NULL);
+		}
+
+		rDebug("%s: Consumer joined main thread", __PRETTY_FUNCTION__);
 	}
 
 	return 0;
@@ -460,7 +465,7 @@ static void* consumer_thread(void *arg)
 			glXSwapBuffers(self->display, self->xid);
 
 			// Fire event
-			mlt_events_fire(self->properties, "consumer-frame-show", frame, NULL);
+			mlt_events_fire(self->properties, "consumer-frame-show", frame, NULL); //NOTE This will cause the thread to call functions (the listeners) in other threads (i.e. the main thread) and block.
 		}
 	}
 
