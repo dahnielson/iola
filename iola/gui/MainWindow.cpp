@@ -88,6 +88,7 @@ MainWindow::MainWindow() :
 
 	// Window
 	xclass("iola");
+	callback((Fl_Callback *)close_window, this);
 	resizable(pkMainGroup);
 	size_range(800, 750);
 	end();
@@ -145,6 +146,14 @@ void MainWindow::clear_project()
 
 void MainWindow::quit_application()
 {
+	iola::application::get_instance()->quit();
+}
+
+void MainWindow::close_window()
+{
+	if (Fl::event() == FL_SHORTCUT && Fl::event_key() == FL_Escape)
+		return;
+
 	iola::application::get_instance()->quit();
 }
 
