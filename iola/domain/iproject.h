@@ -70,9 +70,15 @@ public:
 	virtual void set_height(int height) = 0;
 	virtual int get_height() = 0;
 
+	// Display Aspect Ratio
+	virtual int get_dar_num() = 0;
+	virtual int get_dar_den() = 0;
+
 	// Pixel Aspect Ratio
 	virtual void set_par(par_t par) = 0;
 	virtual par_t get_par() = 0;
+	virtual int get_par_num() = 0;
+	virtual int get_par_den() = 0;
 
 	// Anamorphic
 	virtual void set_anamorphic(bool anamorphic) = 0;
@@ -81,12 +87,15 @@ public:
 	// Field Dominance
 	virtual void set_field_dominance(field_t dominance) = 0;
 	virtual field_t get_field_dominance() = 0;
+	virtual bool get_progressive() = 0;
 
 	// Frame Rate
 	virtual void set_fps_timebase(int timebase) = 0;
 	virtual int get_fps_timebase() = 0;
 	virtual void set_fps_ntsc(bool ntsc) = 0;
 	virtual bool get_fps_ntsc() = 0;
+	virtual int get_fps_num() = 0;
+	virtual int get_fps_den() = 0;
 
 	// Source
 	virtual void source_connect_consumer(Mlt::Consumer* consumer) = 0;
@@ -161,6 +170,12 @@ public:
 	// Signals
 	typedef boost::signals2::signal<void ()> signal_t;
 	typedef boost::signals2::signal<void (std::string)> msg_signal_t;
+
+	signal_t on_sar_change_signal;
+	signal_t on_dar_change_signal;
+	signal_t on_par_change_signal;
+	signal_t on_field_change_signal;
+	signal_t on_fps_change_signal;
 
 	signal_t on_source_load_signal;
 	signal_t on_source_playback_signal;

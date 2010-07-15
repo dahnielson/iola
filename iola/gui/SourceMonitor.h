@@ -55,10 +55,21 @@ private:
 	Fl_Hold_Browser* m_pkBrowser;
 	TimeRuler* m_pkSlider;
 
+	void on_sar_change();
+	void on_dar_change();
+	void on_par_change();
+	void on_field_change();
+	void on_fps_change();
+
 	void on_source_load();
 	void on_source_playback();
 	void on_source_marks_change();
 
+	boost::signals2::connection on_sar_change_connection;
+	boost::signals2::connection on_dar_change_connection;
+	boost::signals2::connection on_par_change_connection;
+	boost::signals2::connection on_field_change_connection;
+	boost::signals2::connection on_fps_change_connection;
 	boost::signals2::connection on_source_load_connection;
 	boost::signals2::connection on_source_playback_connection;
 	boost::signals2::connection on_source_marks_change_connection;

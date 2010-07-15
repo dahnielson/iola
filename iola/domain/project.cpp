@@ -88,169 +88,20 @@ Mlt::Profile& project::get_profile()
 	m_kProfile.get_profile()->width = m_iWidth;
 	m_kProfile.get_profile()->height = m_iHeight;
 
-	if (m_iWidth == 720 && m_iHeight == 480)
-	{
-		if (m_bAnamorphic)
-		{
-			m_kProfile.get_profile()->display_aspect_num = 16;
-			m_kProfile.get_profile()->display_aspect_den = 9;
-		}
-		else
-		{
-			m_kProfile.get_profile()->display_aspect_num = 4;
-			m_kProfile.get_profile()->display_aspect_den = 3;
-		}
-	}
-	else if (m_iWidth == 720 && m_iHeight == 576)
-	{
-		if (m_bAnamorphic)
-		{
-			m_kProfile.get_profile()->display_aspect_num = 16;
-			m_kProfile.get_profile()->display_aspect_den = 9;
-		}
-		else
-		{
-			m_kProfile.get_profile()->display_aspect_num = 4;
-			m_kProfile.get_profile()->display_aspect_den = 3;
-		}
-	}
-	else if (m_iWidth == 960 && m_iHeight == 720)
-	{
-		m_kProfile.get_profile()->display_aspect_num = 16;
-		m_kProfile.get_profile()->display_aspect_den = 9;
-	}
-	else if (m_iWidth == 1280 && m_iHeight == 720)
-	{
-		m_kProfile.get_profile()->display_aspect_num = 16;
-		m_kProfile.get_profile()->display_aspect_den = 9;
-	}
-	else if (m_iWidth == 1280 && m_iHeight == 1080)
-	{
-		m_kProfile.get_profile()->display_aspect_num = 16;
-		m_kProfile.get_profile()->display_aspect_den = 9;
-	}
-	else if (m_iWidth == 1440 && m_iHeight == 1080)
-	{
-		m_kProfile.get_profile()->display_aspect_num = 16;
-		m_kProfile.get_profile()->display_aspect_den = 9;
-	}
-	else if (m_iWidth == 1920 && m_iHeight == 1080)
-	{
-		m_kProfile.get_profile()->display_aspect_num = 16;
-		m_kProfile.get_profile()->display_aspect_den = 9;
-	}
-	else
-	{
-		m_kProfile.get_profile()->display_aspect_num = m_iWidth;
-		m_kProfile.get_profile()->display_aspect_den = m_iHeight;
-	}
+	// Display Aspect Ratio
+	m_kProfile.get_profile()->display_aspect_num = get_dar_num();
+	m_kProfile.get_profile()->display_aspect_den = get_dar_den();
 
 	// Pixel Aspect Ratio
-	switch (m_iPAR)
-	{
-	case SQUARE:
-		m_kProfile.get_profile()->sample_aspect_num = 1;
-		m_kProfile.get_profile()->sample_aspect_den = 1;
-		break;
-	case NTSC_601:
-		m_kProfile.get_profile()->sample_aspect_num = 8;
-		m_kProfile.get_profile()->sample_aspect_den = 9;
-		break;
-	case PAL_601:
-		m_kProfile.get_profile()->sample_aspect_num = 16;
-		m_kProfile.get_profile()->sample_aspect_den = 15;
-		break;
-	case HD_1280x1080:
-		m_kProfile.get_profile()->sample_aspect_num = 3;
-		m_kProfile.get_profile()->sample_aspect_den = 2;
-		break;
-	case HD_960x720:
-	case HD_1440x1080:
-		m_kProfile.get_profile()->sample_aspect_num = 4;
-		m_kProfile.get_profile()->sample_aspect_den = 3;
-		break;
-	};
+	m_kProfile.get_profile()->sample_aspect_num = get_par_num();
+	m_kProfile.get_profile()->sample_aspect_den = get_par_den();
 
-	if (m_bAnamorphic)
-	{
-		m_kProfile.get_profile()->sample_aspect_num *= 4;
-		m_kProfile.get_profile()->sample_aspect_den *= 3;
-	}
-
-	// Field Dominance
-	switch (m_iFieldDominance)
-	{
-	case NONE:
-		m_kProfile.get_profile()->progressive = 1;
-		break;
-	case EVEN:
-	case ODD:
-		m_kProfile.get_profile()->progressive = 0;
-		break;
-	};
+	// Progressive
+	m_kProfile.get_profile()->progressive = get_progressive();
 
 	// Frame Rate
-	switch (m_iTimebase)
-	{
-	case 24:
-		if (m_bNTSC)
-		{
-			m_kProfile.get_profile()->frame_rate_num = 24000;
-			m_kProfile.get_profile()->frame_rate_den = 1001;
-		}
-		else
-		{
-			m_kProfile.get_profile()->frame_rate_num = 24;
-			m_kProfile.get_profile()->frame_rate_den = 1;
-		}
-		break;
-	case 25:
-		if (m_bNTSC)
-			rError("%s: Invalid Timebase (%i) and NTSC flag combination",
-			       __PRETTY_FUNCTION__, m_iTimebase);
-		else
-		{
-			m_kProfile.get_profile()->frame_rate_num = 25;
-			m_kProfile.get_profile()->frame_rate_den = 1;
-		}
-		break;
-	case 30:
-		if (m_bNTSC)
-		{
-			m_kProfile.get_profile()->frame_rate_num = 30000;
-			m_kProfile.get_profile()->frame_rate_den = 1001;
-		}
-		else
-		{
-			m_kProfile.get_profile()->frame_rate_num = 30;
-			m_kProfile.get_profile()->frame_rate_den = 1;
-		}
-		break;
-	case 50:
-		if (m_bNTSC)
-			rError("%s: Invalid Timebase (%i) and NTSC flag combination",
-			       __PRETTY_FUNCTION__, m_iTimebase);
-		else
-		{
-			m_kProfile.get_profile()->frame_rate_num = 50;
-			m_kProfile.get_profile()->frame_rate_den = 1;
-		}
-		break;
-	case 60:
-		if (m_bNTSC)
-		{
-			m_kProfile.get_profile()->frame_rate_num = 60000;
-			m_kProfile.get_profile()->frame_rate_den = 1001;
-		}
-		else
-		{
-			m_kProfile.get_profile()->frame_rate_num = 60;
-			m_kProfile.get_profile()->frame_rate_den = 1;
-		}
-		break;
-	default:
-		rError("%s: Unknown Timebase %i", __PRETTY_FUNCTION__, m_iTimebase);
-	};
+	m_kProfile.get_profile()->frame_rate_num = get_fps_num();
+	m_kProfile.get_profile()->frame_rate_den = get_fps_den();
 
 	return m_kProfile;
 }
@@ -258,6 +109,7 @@ Mlt::Profile& project::get_profile()
 void project::set_width(int width)
 {
 	m_iWidth = width;
+	on_sar_change_signal();
 }
 
 int project::get_width()
@@ -268,6 +120,7 @@ int project::get_width()
 void project::set_height(int height)
 {
 	m_iHeight = height;
+	on_sar_change_signal();
 }
 
 int project::get_height()
@@ -275,9 +128,78 @@ int project::get_height()
 	return m_iHeight;
 }
 
+int project::get_dar_num()
+{
+	int iDARNum;
+
+	if (m_iWidth == 720 && m_iHeight == 480)
+	{
+		if (m_bAnamorphic)
+			iDARNum = 16;
+		else
+			iDARNum = 4;
+	}
+	else if (m_iWidth == 720 && m_iHeight == 576)
+	{
+		if (m_bAnamorphic)
+			iDARNum = 16;
+		else
+			iDARNum = 4;
+	}
+	else if (m_iWidth == 960 && m_iHeight == 720)
+		iDARNum = 16;
+	else if (m_iWidth == 1280 && m_iHeight == 720)
+		iDARNum = 16;
+	else if (m_iWidth == 1280 && m_iHeight == 1080)
+		iDARNum = 16;
+	else if (m_iWidth == 1440 && m_iHeight == 1080)
+		iDARNum = 16;
+	else if (m_iWidth == 1920 && m_iHeight == 1080)
+		iDARNum = 16;
+	else
+		iDARNum = m_iWidth;
+
+	return iDARNum;
+}
+
+int project::get_dar_den()
+{
+	int iDARDen;
+
+	if (m_iWidth == 720 && m_iHeight == 480)
+	{
+		if (m_bAnamorphic)
+			iDARDen = 9;
+		else
+			iDARDen = 3;
+	}
+	else if (m_iWidth == 720 && m_iHeight == 576)
+	{
+		if (m_bAnamorphic)
+			iDARDen = 9;
+		else
+			iDARDen = 3;
+	}
+	else if (m_iWidth == 960 && m_iHeight == 720)
+		iDARDen = 9;
+	else if (m_iWidth == 1280 && m_iHeight == 720)
+		iDARDen = 9;
+	else if (m_iWidth == 1280 && m_iHeight == 1080)
+		iDARDen = 9;
+	else if (m_iWidth == 1440 && m_iHeight == 1080)
+		iDARDen = 9;
+	else if (m_iWidth == 1920 && m_iHeight == 1080)
+		iDARDen = 9;
+	else
+		iDARDen = m_iHeight;
+
+	return iDARDen;
+}
+
 void project::set_par(iola::domain::iproject::par_t par)
 {
 	m_iPAR = par;
+	on_par_change_signal();
 }
 
 iola::domain::iproject::par_t project::get_par()
@@ -285,9 +207,71 @@ iola::domain::iproject::par_t project::get_par()
 	return m_iPAR;
 }
 
+int project::get_par_num()
+{
+	int iPARNum;
+
+	switch (m_iPAR)
+	{
+	case SQUARE:
+		iPARNum = 1;
+		break;
+	case NTSC_601:
+		iPARNum = 8;
+		break;
+	case PAL_601:
+		iPARNum = 16;
+		break;
+	case HD_1280x1080:
+		iPARNum = 3;
+		break;
+	case HD_960x720:
+	case HD_1440x1080:
+		iPARNum = 4;
+		break;
+	};
+
+	if (m_bAnamorphic)
+		iPARNum *= 4;
+
+	return iPARNum;
+}
+
+int project::get_par_den()
+{
+	int iPARDen;
+
+	switch (m_iPAR)
+	{
+	case SQUARE:
+		iPARDen = 1;
+		break;
+	case NTSC_601:
+		iPARDen = 9;
+		break;
+	case PAL_601:
+		iPARDen = 15;
+		break;
+	case HD_1280x1080:
+		iPARDen = 2;
+		break;
+	case HD_960x720:
+	case HD_1440x1080:
+		iPARDen = 3;
+		break;
+	};
+
+	if (m_bAnamorphic)
+		iPARDen *= 3;
+
+	return iPARDen;
+}
+
 void project::set_anamorphic(bool anamorphic)
 {
 	m_bAnamorphic = anamorphic;
+	on_dar_change_signal();
+	on_par_change_signal();
 }
 
 bool project::get_anamorphic()
@@ -298,6 +282,7 @@ bool project::get_anamorphic()
 void project::set_field_dominance(iola::domain::iproject::field_t dominance)
 {
 	m_iFieldDominance = dominance;
+	on_field_change_signal();
 }
 
 iola::domain::iproject::field_t project::get_field_dominance()
@@ -305,9 +290,22 @@ iola::domain::iproject::field_t project::get_field_dominance()
 	return m_iFieldDominance;
 }
 
+bool project::get_progressive()
+{
+	switch (m_iFieldDominance)
+	{
+	case NONE:
+		return true;
+	case EVEN:
+	case ODD:
+		return false;
+	};
+}
+
 void project::set_fps_timebase(int timebase)
 {
 	m_iTimebase = timebase;
+	on_fps_change_signal();
 }
 
 int project::get_fps_timebase()
@@ -318,11 +316,22 @@ int project::get_fps_timebase()
 void project::set_fps_ntsc(bool ntsc)
 {
 	m_bNTSC = ntsc;
+	on_fps_change_signal();
 }
 
 bool project::get_fps_ntsc()
 {
 	return m_bNTSC;
+}
+
+int project::get_fps_num()
+{
+	return m_bNTSC ? m_iTimebase * 1000 : m_iTimebase;
+}
+
+int project::get_fps_den()
+{
+	return m_bNTSC ? 1001 : 1;
 }
 
 ///////////////////////////////////////////

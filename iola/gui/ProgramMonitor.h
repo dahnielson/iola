@@ -54,10 +54,21 @@ private:
 	Fl_Window* m_pkDisplay;
 	TimeRuler* m_pkSlider;
 
+	void on_sar_change();
+	void on_dar_change();
+	void on_par_change();
+	void on_field_change();
+	void on_fps_change();
+
 	void on_program_load();
 	void on_program_playback();
 	void on_program_marks_change();
 
+	boost::signals2::connection on_sar_change_connection;
+	boost::signals2::connection on_dar_change_connection;
+	boost::signals2::connection on_par_change_connection;
+	boost::signals2::connection on_field_change_connection;
+	boost::signals2::connection on_fps_change_connection;
 	boost::signals2::connection on_program_load_connection;
 	boost::signals2::connection on_program_playback_connection;
 	boost::signals2::connection on_program_marks_change_connection;

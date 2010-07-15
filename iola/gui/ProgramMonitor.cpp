@@ -120,6 +120,21 @@ ProgramMonitor::ProgramMonitor(int x, int y, int w, int h, const char *label) :
 	iola::application::get_instance()->get_project()->program_connect_consumer(m_pkConsumer);
 
 	// Connect signals
+	on_sar_change_connection = iola::application::get_instance()->get_project()->on_sar_change_signal.connect(
+		boost::bind(&ProgramMonitor::on_sar_change, this)
+		);
+	on_dar_change_connection = iola::application::get_instance()->get_project()->on_dar_change_signal.connect(
+		boost::bind(&ProgramMonitor::on_dar_change, this)
+		);
+	on_par_change_connection = iola::application::get_instance()->get_project()->on_par_change_signal.connect(
+		boost::bind(&ProgramMonitor::on_par_change, this)
+		);
+	on_field_change_connection = iola::application::get_instance()->get_project()->on_field_change_signal.connect(
+		boost::bind(&ProgramMonitor::on_field_change, this)
+		);
+	on_fps_change_connection = iola::application::get_instance()->get_project()->on_fps_change_signal.connect(
+		boost::bind(&ProgramMonitor::on_fps_change, this)
+		);
 	on_program_load_connection = iola::application::get_instance()->get_project()->on_program_load_signal.connect(
 		boost::bind(&ProgramMonitor::on_program_load, this)
 		);
@@ -139,6 +154,11 @@ ProgramMonitor::ProgramMonitor(int x, int y, int w, int h, const char *label) :
 ProgramMonitor::~ProgramMonitor()
 {
 	delete m_pkFrameShowEvent;
+	on_sar_change_connection.disconnect();
+	on_dar_change_connection.disconnect();
+	on_par_change_connection.disconnect();
+	on_field_change_connection.disconnect();
+	on_fps_change_connection.disconnect();
 	on_program_load_connection.disconnect();
 	on_program_playback_connection.disconnect();
 	on_program_marks_change_connection.disconnect();
@@ -278,6 +298,35 @@ int ProgramMonitor::handle(int event)
 	default:
 		return Fl_Group::handle(event);
 	}
+}
+
+void ProgramMonitor::on_sar_change()
+{
+	m_pkConsumer->set("width", iola::application::get_instance()->get_project()->get_width());
+	m_pkConsumer->set("height", iola::application::get_instance()->get_project()->get_height());
+}
+
+void ProgramMonitor::on_dar_change()
+{
+	m_pkConsumer->set("display_aspect_num", iola::application::get_instance()->get_project()->get_dar_num());
+	m_pkConsumer->set("display_aspect_den", iola::application::get_instance()->get_project()->get_dar_den());
+}
+
+void ProgramMonitor::on_par_change()
+{
+	m_pkConsumer->set("sample_aspect_num", iola::application::get_instance()->get_project()->get_par_num());
+	m_pkConsumer->set("sample_aspect_den", iola::application::get_instance()->get_project()->get_par_den());
+}
+
+void ProgramMonitor::on_field_change()
+{
+	m_pkConsumer->set("progressive", iola::application::get_instance()->get_project()->get_progressive());
+}
+
+void ProgramMonitor::on_fps_change()
+{
+	m_pkConsumer->set("frame_rate_num", iola::application::get_instance()->get_project()->get_fps_num());
+	m_pkConsumer->set("frame_rate_den", iola::application::get_instance()->get_project()->get_fps_den());
 }
 
 void ProgramMonitor::on_program_load()

@@ -55,9 +55,15 @@ public:
 	void set_height(int height);
 	int get_height();
 
+	// Display Aspect Ratio
+	int get_dar_num();
+	int get_dar_den();
+
 	// Pixel Aspect Ratio
 	void set_par(iola::domain::iproject::par_t par);
 	iola::domain::iproject::par_t get_par();
+	int get_par_num();
+	int get_par_den();
 
 	// Anamorphic
 	void set_anamorphic(bool anamorphic);
@@ -66,12 +72,15 @@ public:
 	// Field Dominance
 	void set_field_dominance(iola::domain::iproject::field_t dominance);
 	iola::domain::iproject::field_t get_field_dominance();
+	bool get_progressive();
 
 	// Frame Rate
 	void set_fps_timebase(int timebase);
 	int get_fps_timebase();
 	void set_fps_ntsc(bool ntsc);
 	bool get_fps_ntsc();
+	int get_fps_num();
+	int get_fps_den();
 
 	// Source
 	void source_connect_consumer(Mlt::Consumer* consumer);
