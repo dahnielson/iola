@@ -242,8 +242,8 @@ namespace scheme
 
 		// These are used as default colors in widgets
 		Fl::set_color(FL_FOREGROUND_COLOR,  196, 196, 196);
-		Fl::set_color(FL_BACKGROUND2_COLOR, 107, 107, 107);
-		Fl::set_color(FL_INACTIVE_COLOR,    107, 107, 107);
+		Fl::set_color(FL_BACKGROUND2_COLOR,  96,  96,  96);
+		Fl::set_color(FL_INACTIVE_COLOR,     77,  77,  77);
 		Fl::set_color(FL_SELECTION_COLOR,   107, 107, 107);
 
 		// Boxtypes generally limit themselves to these colors

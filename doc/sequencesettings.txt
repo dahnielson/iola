@@ -1,0 +1,61 @@
+Sequence Settings
+
+Aspect Ratio
+------------
+
+Description		<width>		<height>
+
+NTSC (ITU-R 601)	 720		 480
+PAL (ITU-R 601)		 720		 576
+HD (960x720)		 960		 720
+HD (1280x720)		1280		 720
+HD (1280x1080)		1280		1080
+HD (1440x1080)		1440		1080
+HD (1920x1080)		1980		1080
+
+
+Pixel Aspect Ratio
+------------------
+
+Description		PAR	<pixelaspectratio>	
+
+Square			1:1	square
+NTSC (ITU-R 601)	8:9	NTSC-601
+PAL (ITU-R 601)		16:15	PAL-601
+HD (960x720) 		4:3	HD-(960x720) / DVCPROHD-720P
+HD (1280x1080)		3:2	HD-(1280x1080) / DVCPROHD-1080i60
+HD (1440x1080)		4:3	HD-(1440x1080) / DVCPROHD-1080i50
+
+
+Anamorphic
+----------
+
+xPAR	<anamorphic>
+
+4:3	TRUE
+1:1	FALSE
+
+
+Field Dominance
+---------------
+
+Description	<fielddominance>	Scan
+
+Progressive	none			p
+Lower (Even)	lower / even		i
+Upper (Odd)	upper / odd		i
+
+
+Frame Rates
+-----------
+
+Description	FPS		<timebase>	<ntsc>
+
+23.98 fps	24000:1001	24		true
+24 fps		24:1		24		false
+25 fps		25:1		25		false
+29.97 fps	30000:1001	30		true
+30 fps		30:1		30		false
+50 fps		50:1		50		false
+59.95 fps	60000:1001	60		true
+60 fps		60:1		60		false

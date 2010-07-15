@@ -46,7 +46,14 @@ namespace domain
 project::project() :
 	m_pkSource(new Mlt::Playlist),
 	m_pkProgram(new Mlt::Playlist),
-	m_kProfile(Mlt::Profile("dv_ntsc")),
+	m_kProfile(Mlt::Profile()),
+	m_iWidth(720),
+	m_iHeight(480),
+	m_iPAR(iola::domain::iproject::NTSC_601),
+	m_bAnamorphic(false),
+	m_iFieldDominance(iola::domain::iproject::EVEN),
+	m_iTimebase(30),
+	m_bNTSC(true),
 	m_pkSourceProducerChangeEvent(0),
 	m_pkProgramProducerChangeEvent(0)
 {
@@ -70,9 +77,252 @@ project::~project()
 	delete m_pkProgramProducerChangeEvent;
 }
 
+///////////////////////////////////////////
+// Profile
+
 Mlt::Profile& project::get_profile()
 {
+	rDebug("%s: Assembling MLT profile", __PRETTY_FUNCTION__);
+
+	// Storage Aspect Ratio
+	m_kProfile.get_profile()->width = m_iWidth;
+	m_kProfile.get_profile()->height = m_iHeight;
+
+	if (m_iWidth == 720 && m_iHeight == 480)
+	{
+		if (m_bAnamorphic)
+		{
+			m_kProfile.get_profile()->display_aspect_num = 16;
+			m_kProfile.get_profile()->display_aspect_den = 9;
+		}
+		else
+		{
+			m_kProfile.get_profile()->display_aspect_num = 4;
+			m_kProfile.get_profile()->display_aspect_den = 3;
+		}
+	}
+	else if (m_iWidth == 720 && m_iHeight == 576)
+	{
+		if (m_bAnamorphic)
+		{
+			m_kProfile.get_profile()->display_aspect_num = 16;
+			m_kProfile.get_profile()->display_aspect_den = 9;
+		}
+		else
+		{
+			m_kProfile.get_profile()->display_aspect_num = 4;
+			m_kProfile.get_profile()->display_aspect_den = 3;
+		}
+	}
+	else if (m_iWidth == 960 && m_iHeight == 720)
+	{
+		m_kProfile.get_profile()->display_aspect_num = 16;
+		m_kProfile.get_profile()->display_aspect_den = 9;
+	}
+	else if (m_iWidth == 1280 && m_iHeight == 720)
+	{
+		m_kProfile.get_profile()->display_aspect_num = 16;
+		m_kProfile.get_profile()->display_aspect_den = 9;
+	}
+	else if (m_iWidth == 1280 && m_iHeight == 1080)
+	{
+		m_kProfile.get_profile()->display_aspect_num = 16;
+		m_kProfile.get_profile()->display_aspect_den = 9;
+	}
+	else if (m_iWidth == 1440 && m_iHeight == 1080)
+	{
+		m_kProfile.get_profile()->display_aspect_num = 16;
+		m_kProfile.get_profile()->display_aspect_den = 9;
+	}
+	else if (m_iWidth == 1920 && m_iHeight == 1080)
+	{
+		m_kProfile.get_profile()->display_aspect_num = 16;
+		m_kProfile.get_profile()->display_aspect_den = 9;
+	}
+	else
+	{
+		m_kProfile.get_profile()->display_aspect_num = m_iWidth;
+		m_kProfile.get_profile()->display_aspect_den = m_iHeight;
+	}
+
+	// Pixel Aspect Ratio
+	switch (m_iPAR)
+	{
+	case SQUARE:
+		m_kProfile.get_profile()->sample_aspect_num = 1;
+		m_kProfile.get_profile()->sample_aspect_den = 1;
+		break;
+	case NTSC_601:
+		m_kProfile.get_profile()->sample_aspect_num = 8;
+		m_kProfile.get_profile()->sample_aspect_den = 9;
+		break;
+	case PAL_601:
+		m_kProfile.get_profile()->sample_aspect_num = 16;
+		m_kProfile.get_profile()->sample_aspect_den = 15;
+		break;
+	case HD_1280x1080:
+		m_kProfile.get_profile()->sample_aspect_num = 3;
+		m_kProfile.get_profile()->sample_aspect_den = 2;
+		break;
+	case HD_960x720:
+	case HD_1440x1080:
+		m_kProfile.get_profile()->sample_aspect_num = 4;
+		m_kProfile.get_profile()->sample_aspect_den = 3;
+		break;
+	};
+
+	if (m_bAnamorphic)
+	{
+		m_kProfile.get_profile()->sample_aspect_num *= 4;
+		m_kProfile.get_profile()->sample_aspect_den *= 3;
+	}
+
+	// Field Dominance
+	switch (m_iFieldDominance)
+	{
+	case NONE:
+		m_kProfile.get_profile()->progressive = 1;
+		break;
+	case EVEN:
+	case ODD:
+		m_kProfile.get_profile()->progressive = 0;
+		break;
+	};
+
+	// Frame Rate
+	switch (m_iTimebase)
+	{
+	case 24:
+		if (m_bNTSC)
+		{
+			m_kProfile.get_profile()->frame_rate_num = 24000;
+			m_kProfile.get_profile()->frame_rate_den = 1001;
+		}
+		else
+		{
+			m_kProfile.get_profile()->frame_rate_num = 24;
+			m_kProfile.get_profile()->frame_rate_den = 1;
+		}
+		break;
+	case 25:
+		if (m_bNTSC)
+			rError("%s: Invalid Timebase (%i) and NTSC flag combination",
+			       __PRETTY_FUNCTION__, m_iTimebase);
+		else
+		{
+			m_kProfile.get_profile()->frame_rate_num = 25;
+			m_kProfile.get_profile()->frame_rate_den = 1;
+		}
+		break;
+	case 30:
+		if (m_bNTSC)
+		{
+			m_kProfile.get_profile()->frame_rate_num = 30000;
+			m_kProfile.get_profile()->frame_rate_den = 1001;
+		}
+		else
+		{
+			m_kProfile.get_profile()->frame_rate_num = 30;
+			m_kProfile.get_profile()->frame_rate_den = 1;
+		}
+		break;
+	case 50:
+		if (m_bNTSC)
+			rError("%s: Invalid Timebase (%i) and NTSC flag combination",
+			       __PRETTY_FUNCTION__, m_iTimebase);
+		else
+		{
+			m_kProfile.get_profile()->frame_rate_num = 50;
+			m_kProfile.get_profile()->frame_rate_den = 1;
+		}
+		break;
+	case 60:
+		if (m_bNTSC)
+		{
+			m_kProfile.get_profile()->frame_rate_num = 60000;
+			m_kProfile.get_profile()->frame_rate_den = 1001;
+		}
+		else
+		{
+			m_kProfile.get_profile()->frame_rate_num = 60;
+			m_kProfile.get_profile()->frame_rate_den = 1;
+		}
+		break;
+	default:
+		rError("%s: Unknown Timebase %i", __PRETTY_FUNCTION__, m_iTimebase);
+	};
+
 	return m_kProfile;
+}
+
+void project::set_width(int width)
+{
+	m_iWidth = width;
+}
+
+int project::get_width()
+{
+	return m_iWidth;
+}
+
+void project::set_height(int height)
+{
+	m_iHeight = height;
+}
+
+int project::get_height()
+{
+	return m_iHeight;
+}
+
+void project::set_par(iola::domain::iproject::par_t par)
+{
+	m_iPAR = par;
+}
+
+iola::domain::iproject::par_t project::get_par()
+{
+	return m_iPAR;
+}
+
+void project::set_anamorphic(bool anamorphic)
+{
+	m_bAnamorphic = anamorphic;
+}
+
+bool project::get_anamorphic()
+{
+	return m_bAnamorphic;
+}
+
+void project::set_field_dominance(iola::domain::iproject::field_t dominance)
+{
+	m_iFieldDominance = dominance;
+}
+
+iola::domain::iproject::field_t project::get_field_dominance()
+{
+	return m_iFieldDominance;
+}
+
+void project::set_fps_timebase(int timebase)
+{
+	m_iTimebase = timebase;
+}
+
+int project::get_fps_timebase()
+{
+	return m_iTimebase;
+}
+
+void project::set_fps_ntsc(bool ntsc)
+{
+	m_bNTSC = ntsc;
+}
+
+bool project::get_fps_ntsc()
+{
+	return m_bNTSC;
 }
 
 ///////////////////////////////////////////
@@ -101,7 +351,7 @@ void project::source_load(boost::filesystem::path clip)
 	rDebug("%s: Load %s as source", __PRETTY_FUNCTION__, clip.string().c_str());
 	m_pkSource->lock();
 	m_pkSource->clear();
-	Mlt::Producer* pkClipSource = new Mlt::Producer(m_kProfile, clip.string().c_str());
+	Mlt::Producer* pkClipSource = new Mlt::Producer(get_profile(), clip.string().c_str());
 	m_pkSource->append(*pkClipSource);
 	m_pkSource->set_speed(0);
 	m_pkSource->seek(0);
@@ -793,7 +1043,7 @@ void project::program_insert(boost::filesystem::path resource, const int program
 		m_pkProgram->lock();
 		const int clip_index = m_pkProgram->get_clip_index_at(program_in);
 		m_pkProgram->split(clip_index, program_in - m_pkProgram->clip_start(clip_index));
-		Mlt::Producer* pkClipSource = new Mlt::Producer(m_kProfile, resource.string().c_str());
+		Mlt::Producer* pkClipSource = new Mlt::Producer(get_profile(), resource.string().c_str());
 		m_pkProgram->insert(*pkClipSource, clip_index+1, source_in, source_out);
 		m_pkProgram->unlock();
 
@@ -886,7 +1136,7 @@ void project::program_overwrite(boost::filesystem::path resource, const int prog
 
 		m_pkProgram->lock();
 		const int clip_index = m_pkProgram->remove_region(program_in, source_out - source_in);
-		Mlt::Producer* pkClipSource = new Mlt::Producer(m_kProfile, resource.string().c_str());
+		Mlt::Producer* pkClipSource = new Mlt::Producer(get_profile(), resource.string().c_str());
 		m_pkProgram->insert(*pkClipSource, clip_index, source_in, source_out);
 		m_pkProgram->unlock();
 

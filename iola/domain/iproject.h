@@ -46,7 +46,47 @@ class iproject :
 	public virtual iola::iunknown
 {
 public:
+	// Profile
 	virtual Mlt::Profile& get_profile() = 0;
+
+	enum par_t {
+		SQUARE,
+		NTSC_601,
+		PAL_601,
+		HD_960x720,
+		HD_1280x1080,
+		HD_1440x1080
+	};
+
+	enum field_t {
+		NONE,
+		EVEN,
+		ODD
+	};
+
+	// Storage Aspect Ratio
+	virtual void set_width(int width) = 0;
+	virtual int get_width() = 0;
+	virtual void set_height(int height) = 0;
+	virtual int get_height() = 0;
+
+	// Pixel Aspect Ratio
+	virtual void set_par(par_t par) = 0;
+	virtual par_t get_par() = 0;
+
+	// Anamorphic
+	virtual void set_anamorphic(bool anamorphic) = 0;
+	virtual bool get_anamorphic() = 0;
+
+	// Field Dominance
+	virtual void set_field_dominance(field_t dominance) = 0;
+	virtual field_t get_field_dominance() = 0;
+
+	// Frame Rate
+	virtual void set_fps_timebase(int timebase) = 0;
+	virtual int get_fps_timebase() = 0;
+	virtual void set_fps_ntsc(bool ntsc) = 0;
+	virtual bool get_fps_ntsc() = 0;
 
 	// Source
 	virtual void source_connect_consumer(Mlt::Consumer* consumer) = 0;

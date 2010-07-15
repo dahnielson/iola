@@ -26,6 +26,7 @@
 #include <iola/application/get_instance.h>
 #include "MainWindow.h"
 #include "ProgramMonitor.h"
+#include "SequenceSettings.h"
 #include "SourceMonitor.h"
 #include "theme.h"
 
@@ -51,12 +52,11 @@ MainWindow::MainWindow() :
 	pkMenuBar->clear();
 	pkMenuBar->box(FL_FLAT_BOX);
 	pkMenuBar->textsize(11);
-	pkMenuBar->textcolor(FL_FOREGROUND_COLOR);
-	pkMenuBar->color(FL_BACKGROUND_COLOR, FL_SELECTION_COLOR);
 	pkMenuBar->add("&File/&New", FL_CTRL+'n', (Fl_Callback *)new_project, this, 0);
 	pkMenuBar->add("&File/&Open...", FL_CTRL+'o', (Fl_Callback *)open_project, this, 0);
 	pkMenuBar->add("&File/&Save", FL_CTRL+'s', (Fl_Callback *)save_project, this, 0);
 	pkMenuBar->add("&File/_Save &As...", 0, (Fl_Callback *)save_as_project, this, 0);
+	pkMenuBar->add("&File/_Sequence settings", 0, (Fl_Callback *)sequence_settings, this, 0);
 	pkMenuBar->add("&File/&Quit", FL_CTRL+'q', (Fl_Callback *)quit_application, this, 0);
 //	pkMenuBar->add("&Edit/&Undo", FL_CTRL+'z', 0, this, 0);
 //	pkMenuBar->add("&Edit/&Redo", FL_CTRL+'y', 0, this, 0);
@@ -85,6 +85,9 @@ MainWindow::MainWindow() :
 	pkMainGroup->add(pkDesktopGroup);
 	pkMainGroup->resizable(pkDesktopGroup);
 	pkMainGroup->end();
+
+	// Dialogs
+	m_pkSequenceSettings = new SequenceSettings();
 
 	// Window
 	xclass("iola");
@@ -142,6 +145,11 @@ void MainWindow::clear_project()
 {
 	iola::application::get_instance()->get_project()->source_new();
 	iola::application::get_instance()->get_project()->program_new();
+}
+
+void MainWindow::sequence_settings()
+{
+	m_pkSequenceSettings->show();
 }
 
 void MainWindow::quit_application()

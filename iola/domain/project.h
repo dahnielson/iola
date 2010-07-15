@@ -46,7 +46,32 @@ public:
 	project();
 	~project();
 
+	// Profile
 	Mlt::Profile& get_profile();
+
+	// Storage Aspect Ratio
+	void set_width(int width);
+	int get_width();
+	void set_height(int height);
+	int get_height();
+
+	// Pixel Aspect Ratio
+	void set_par(iola::domain::iproject::par_t par);
+	iola::domain::iproject::par_t get_par();
+
+	// Anamorphic
+	void set_anamorphic(bool anamorphic);
+	bool get_anamorphic();
+
+	// Field Dominance
+	void set_field_dominance(iola::domain::iproject::field_t dominance);
+	iola::domain::iproject::field_t get_field_dominance();
+
+	// Frame Rate
+	void set_fps_timebase(int timebase);
+	int get_fps_timebase();
+	void set_fps_ntsc(bool ntsc);
+	bool get_fps_ntsc();
 
 	// Source
 	void source_connect_consumer(Mlt::Consumer* consumer);
@@ -123,6 +148,15 @@ private:
 	Mlt::Playlist* m_pkSource;
 	Mlt::Playlist* m_pkProgram;
 	Mlt::Profile m_kProfile;
+
+	// Sequence settings
+	int m_iWidth;
+	int m_iHeight;
+	iola::domain::iproject::par_t m_iPAR;
+	bool m_bAnamorphic;
+	iola::domain::iproject::field_t m_iFieldDominance;
+	int m_iTimebase;
+	bool m_bNTSC;
 
 	Mlt::Event* m_pkSourceProducerChangeEvent;
 	Mlt::Event* m_pkProgramProducerChangeEvent;
