@@ -3,7 +3,13 @@ Iola NLE
 Terminology
 ===========
 
-The user interface is split up into three panels: source monitor, program monitor and timeline. There are two types of assets: clips and sequences. Clips are the source material you will edit and assemble into an sequence. The source monitor is used to view clips and set in and out points in them for editing. The program monitor is used to view the sequence and edit clips into it. The timeline is used to get an oveview of the sequence and to edit clips into it.
+The user interface is split up into three panels: source monitor,
+program monitor and timeline. There are two types of assets: clips and
+sequences. Clips are the source material you will edit and assemble
+into a sequence. The source monitor is used to view clips and mark in
+and out points in them for editing. The program monitor is used to
+view the sequence and edit clips into it. The timeline is used to get
+an oveview of the sequence and to edit clips into it.
 
 
 Editing
@@ -14,6 +20,10 @@ Keyboard shortcuts
 
  Q	goto mark in
  W	goto mark out
+
+ E	set mark in
+ R	set mark out
+ T	mark clip / cut
 
  I  	set mark in
  O  	set mark out
@@ -29,52 +39,65 @@ Keyboard shortcuts
  K  	stop
  L  	play forward
 
- V	splice-in / insert
+ V	insert
  B	overwrite
 
+ Home	goto start
+ End	goto end
 
-Splice-in / insert
-------------------
 
-When you edit a clip into a sequence using insert edit, all sequence clips in all unlocked tracks are cut at the In point of your edit and pushed forward in the edited sequence by the duration of your source clip.
+Insert
+------
+
+When you edit a clip into a sequence using insert edit, all sequence
+clips in all unlocked tracks are cut at the In point of your edit and
+pushed forward in the edited sequence by the duration of your source
+clip.
 
 Overwrite
 ---------
 
-When you edit a clip into a sequence using overwrite edit, any portions of clips that are already in the destination tracks are replaced by the source clip.
+When you edit a clip into a sequence using overwrite edit, any
+portions of clips that are already in the destination tracks are
+replaced by the source clip.
 
 
 Container & codec
 =================
 
+Iola NLE use FFMPEG to read and write video files and is only limited
+by what FFMPEG can handle. But not all containers and video codecs are
+suitable for editing and video production.
+
 Containers
 ----------
           
-AVI       Audio Video Interleave
-GFX       General eXchange Format, SMPTE 360M
-MOV       QuickTime
-MXF       Material eXchange Format, SMPTE 377M
+ - AVI       Audio Video Interleave
+ - GFX       General eXchange Format, SMPTE 360M
+ - MOV       QuickTime
+ - MXF       Material eXchange Format, SMPTE 377M
 
 Video codecs
 ------------
 
 For editing:
 
-DNxHD     lossy intraframe high-definition video compression
-HuffYUV   lossless intraframe compression
-MJPEG     lossy intraframe compression
+ - DNxHD     lossy intraframe high-definition video compression
+ - HuffYUV   lossless intraframe compression
+ - MJPEG     lossy intraframe compression
 
 For aquiring media:
 
-H.264	  lossy interframe compression (eg. from DSLR)
-MPEG-2    lossy interframe compression (eg. from HDV)
+ - H.264     lossy interframe compression (eg. from DSLR)
+ - MPEG-2    lossy interframe compression (eg. from HDV)
 
 
 Conforming
 ==========
 
-To conform a sequence with another application it must be exported to an interchangable format.
+To conform a sequence with another application it must be exported to
+an interchangable format.
 
  - EDL (CMX 3600)
- - FCP XML (Final Cut Pro XML Interchange Format, version 3)
+ - FCP XML (Final Cut Pro XML Interchange Format, version 5)
  - ALE (Avid Log Exchange)
