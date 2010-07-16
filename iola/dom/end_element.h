@@ -1,6 +1,6 @@
 /* -*- Mode: C++ ; c-basic-offset: 8 -*- */
-#ifndef IOLA_DOM_CLIPITEM_ELEMENT_H
-#define IOLA_DOM_CLIPITEM_ELEMENT_H
+#ifndef IOLA_DOM_END_ELEMENT_H
+#define IOLA_DOM_END_ELEMENT_H
 
 // Iola NLE
 // Copyright (c) 2010, Anders Dahnielson
@@ -22,44 +22,24 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 // IOLA
-#include <iola/xml/ielement.h>
+#include "integer_terminal.h"
 
 namespace  iola
 {
 namespace dom
 {
 
-class pathurl_element;
-class in_element;
-class out_element;
-class start_element;
-class end_element;
-
 ////////////////////////////////////////////////////////////////////////////
-// class iola::dom::clipitem_element
+// class iola::dom::end_element
 
-class clipitem_element :
-	public iola::xml::ielement
+class end_element :
+	public integer_terminal
 {
 public:
-	clipitem_element(const std::string strName);
-	void child(iola::xml::ielement* pkElement);
-	void attribute(std::string strKey, std::string strValue);
-	void text(std::string strText);
-	void xml(std::ostream& osXML);
-	void restore();
-	void store();
-
-private:
-	const std::string m_strName; 
-	pathurl_element* m_pkPathURL;
-	in_element* m_pkIn;
-	out_element* m_pkOut;
-	start_element* m_pkStart;
-	end_element* m_pkEnd;
+	end_element(const std::string strName);
 };
 
 } // namespace dom
 } // namespace iola
 
-#endif // IOLA_DOM_CLIPITEM_ELEMENT_H
+#endif // IOLA_DOM_END_ELEMENT_H

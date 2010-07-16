@@ -24,6 +24,7 @@
 
 // IOLA
 #include "clipitem_element.h"
+#include "end_element.h"
 #include "pathurl_element.h"
 #include "in_element.h"
 #include "out_element.h"
@@ -44,7 +45,8 @@ clipitem_element::clipitem_element(const std::string strName) :
 	m_pkPathURL(0),
 	m_pkIn(0),
 	m_pkOut(0),
-	m_pkStart(0)
+	m_pkStart(0),
+	m_pkEnd(0)
 {}
 
 void
@@ -58,6 +60,8 @@ clipitem_element::child(iola::xml::ielement* pkElement)
 		m_pkOut = dynamic_cast<out_element*>(pkElement);
 	else if (dynamic_cast<start_element*>(pkElement))
 		m_pkStart = dynamic_cast<start_element*>(pkElement);
+	else if (dynamic_cast<end_element*>(pkElement))
+		m_pkEnd = dynamic_cast<end_element*>(pkElement);
 }
 
 void
@@ -84,18 +88,21 @@ clipitem_element::xml(std::ostream& osXML)
 		m_pkOut->xml(osXML);
 	if (m_pkStart)
 		m_pkStart->xml(osXML);
+	if (m_pkEnd)
+		m_pkEnd->xml(osXML);
 	osXML << "</" << m_strName << ">";
 }
 
 void
 clipitem_element::restore()
 {
-	if (m_pkPathURL && m_pkIn && m_pkOut && m_pkStart)
+	if (m_pkPathURL && m_pkIn && m_pkOut && m_pkStart && m_pkEnd)
 	{
 		boost::filesystem::path pathurl(m_pkPathURL->get());
 		const int in = m_pkIn->get();
 		const int out = m_pkOut->get();
 		const int start = m_pkStart->get();
+		const int end = m_pkEnd->get();
 		iola::application::get_instance()->get_project()->program_overwrite(pathurl, start, in, out);
 	}
 }

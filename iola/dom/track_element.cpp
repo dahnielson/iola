@@ -22,6 +22,7 @@
 #include <iola/application/get_instance.h>
 
 #include "clipitem_element.h"
+#include "end_element.h"
 #include "in_element.h"
 #include "out_element.h"
 #include "pathurl_element.h"
@@ -90,11 +91,19 @@ track_element::store()
 		in_element* pkIn = new in_element("in");
 		out_element* pkOut = new out_element("out");
 		start_element* pkStart = new start_element("start");
+		end_element* pkEnd = new end_element("end");
 
 		pkPathURL->set(pkInfo->resource);
 		pkIn->set(pkInfo->frame_in);
 		pkOut->set(pkInfo->frame_out);
 		pkStart->set(pkInfo->start);
+		pkEnd->set(pkInfo->start + pkInfo->frame_out - pkInfo->frame_in);
+
+		pkClipItem->child(pkPathURL);
+		pkClipItem->child(pkIn);
+		pkClipItem->child(pkOut);
+		pkClipItem->child(pkStart);
+		pkClipItem->child(pkEnd);
 
 		m_vpkClipItem.push_back(pkClipItem);
 

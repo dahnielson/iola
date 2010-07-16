@@ -24,6 +24,7 @@
 #include "audio_element.h"
 #include "clipitem_element.h"
 #include "duration_element.h"
+#include "end_element.h"
 #include "in_element.h"
 #include "iola_element.h"
 #include "media_element.h"
@@ -51,6 +52,8 @@ element_factory::factory(const std::string strElement)
 		return new clipitem_element(strElement);
 	else if (strElement == "duration")
 		return new duration_element(strElement);
+	else if (strElement == "end")
+		return new end_element(strElement);
 	else if (strElement == "in")
 		return new in_element(strElement);
 	else if (strElement == "iola")
