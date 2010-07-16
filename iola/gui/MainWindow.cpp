@@ -24,6 +24,7 @@
 
 // IOLA
 #include <iola/application/get_instance.h>
+#include "About.h"
 #include "MainWindow.h"
 #include "ProgramMonitor.h"
 #include "SequenceSettings.h"
@@ -60,7 +61,7 @@ MainWindow::MainWindow() :
 	pkMenuBar->add("&File/&Quit", FL_CTRL+'q', (Fl_Callback *)quit_application, this, 0);
 //	pkMenuBar->add("&Edit/&Undo", FL_CTRL+'z', 0, this, 0);
 //	pkMenuBar->add("&Edit/&Redo", FL_CTRL+'y', 0, this, 0);
-//	pkMenuBar->add("&Help/&About Iola...", 0, 0, this, 0);
+	pkMenuBar->add("&Help/&About Iola NLE", 0, (Fl_Callback *)about_iola, this, 0);
 
 	// Layout
 	Fl_Pack* pkMainGroup = new Fl_Pack(0, 25, w(), h()-25);
@@ -88,6 +89,7 @@ MainWindow::MainWindow() :
 
 	// Dialogs
 	m_pkSequenceSettings = new SequenceSettings();
+	m_pkAbout = new About();
 
 	// Window
 	xclass("iola");
@@ -155,6 +157,11 @@ void MainWindow::sequence_settings()
 void MainWindow::quit_application()
 {
 	iola::application::get_instance()->quit();
+}
+
+void MainWindow::about_iola()
+{
+	m_pkAbout->show();
 }
 
 void MainWindow::close_window()

@@ -36,6 +36,7 @@ namespace iola
 namespace gui
 {
 
+class About;
 class SequenceSettings;
 class ProgramMonitor;
 class SourceMonitor;
@@ -53,6 +54,7 @@ public:
 	void clear_project();
 	void sequence_settings();
 	void quit_application();
+	void about_iola();
 	void close_window();
 
 private:
@@ -60,6 +62,7 @@ private:
 	ProgramMonitor* m_pkProgramMonitor;
 
 	SequenceSettings* m_pkSequenceSettings;
+	About* m_pkAbout;
 
 	boost::filesystem::path m_kProjectPath;
 
@@ -73,6 +76,7 @@ private:
 	static void save_as_project(Fl_Widget*, void* v) { reinterpret_cast<MainWindow*>(v)->save_as_project(); }
 	static void sequence_settings(Fl_Widget*, void* v) { reinterpret_cast<MainWindow*>(v)->sequence_settings(); }
 	static void quit_application(Fl_Widget*, void* v) { reinterpret_cast<MainWindow*>(v)->quit_application(); }
+	static void about_iola(Fl_Widget*, void* v) { reinterpret_cast<MainWindow*>(v)->about_iola(); }
 	static void close_window(Fl_Widget*, void* v) { reinterpret_cast<MainWindow*>(v)->close_window(); }
 };
 
