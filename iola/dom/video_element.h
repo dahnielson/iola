@@ -29,6 +29,7 @@ namespace  iola
 namespace dom
 {
 
+class samplecharacteristics_element;
 class track_element;
 
 ////////////////////////////////////////////////////////////////////////////
@@ -48,6 +49,7 @@ public:
 
 private:
 	const std::string m_strName; 
+	samplecharacteristics_element* m_pkSampleCharacteristics;
 	track_element* m_pkTrack;
 };
 

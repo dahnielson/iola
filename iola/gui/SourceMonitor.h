@@ -60,6 +60,7 @@ private:
 	void on_par_change();
 	void on_field_change();
 	void on_fps_change();
+	void on_sample_change();
 
 	void on_source_load();
 	void on_source_playback();
@@ -70,6 +71,7 @@ private:
 	boost::signals2::connection on_par_change_connection;
 	boost::signals2::connection on_field_change_connection;
 	boost::signals2::connection on_fps_change_connection;
+	boost::signals2::connection on_sample_change_connection;
 	boost::signals2::connection on_source_load_connection;
 	boost::signals2::connection on_source_playback_connection;
 	boost::signals2::connection on_source_marks_change_connection;

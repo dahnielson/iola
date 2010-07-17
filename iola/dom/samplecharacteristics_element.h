@@ -1,6 +1,6 @@
 /* -*- Mode: C++ ; c-basic-offset: 8 -*- */
-#ifndef IOLA_DOM_AUDIO_ELEMENT_H
-#define IOLA_DOM_AUDIO_ELEMENT_H
+#ifndef IOLA_DOM_SAMPLECHARACTERISTICS_ELEMENT_H
+#define IOLA_DOM_SAMPLECHARACTERISTICS_ELEMENT_H
 
 // Iola NLE
 // Copyright (c) 2010, Anders Dahnielson
@@ -22,36 +22,50 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 // IOLA
-#include <iola/xml/ielement.h>
+#include "../xml/ielement.h"
 
 namespace  iola
 {
 namespace dom
 {
 
-class samplecharacteristics_element;
+class width_element;
+class height_element;
+class anamorphic_element;
+class pixelaspectratio_element;
+class fielddominance_element;
+class rate_element;
+class depth_element;
+class samplerate_element;
 
 ////////////////////////////////////////////////////////////////////////////
-// class iola::dom::audio_element
+// class iola::dom::samplecharacteristics_element
 
-class audio_element :
+class samplecharacteristics_element :
 	public iola::xml::ielement
 {
 public:
-	audio_element(const std::string strName);
+	samplecharacteristics_element(const std::string strName);
 	void child(iola::xml::ielement* pkElement);
 	void attribute(std::string strKey, std::string strValue);
 	void text(std::string strText);
 	void xml(std::ostream& osXML);
-	void restore();
 	void store();
+	void restore();
 
 private:
 	const std::string m_strName; 
-	samplecharacteristics_element* m_pkSampleCharacteristics;
+	width_element* m_pkWidth;
+	height_element* m_pkHeight;
+	anamorphic_element* m_pkAnamorphic;
+	pixelaspectratio_element* m_pkPixelAspectRatio;
+	fielddominance_element* m_pkFieldDominance;
+	rate_element* m_pkRate;
+	depth_element* m_pkDepth;
+	samplerate_element* m_pkSampleRate;
 };
 
 } // namespace dom
 } // namespace iola
 
-#endif // IOLA_DOM_AUDIO_ELEMENT_H
+#endif // IOLA_DOM_SAMPLECHARACTERISTICS_ELEMENT_H

@@ -135,6 +135,9 @@ ProgramMonitor::ProgramMonitor(int x, int y, int w, int h, const char *label) :
 	on_fps_change_connection = iola::application::get_instance()->get_project()->on_fps_change_signal.connect(
 		boost::bind(&ProgramMonitor::on_fps_change, this)
 		);
+	on_sample_change_connection = iola::application::get_instance()->get_project()->on_sample_change_signal.connect(
+		boost::bind(&ProgramMonitor::on_sample_change, this)
+		);
 	on_program_load_connection = iola::application::get_instance()->get_project()->on_program_load_signal.connect(
 		boost::bind(&ProgramMonitor::on_program_load, this)
 		);
@@ -159,6 +162,7 @@ ProgramMonitor::~ProgramMonitor()
 	on_par_change_connection.disconnect();
 	on_field_change_connection.disconnect();
 	on_fps_change_connection.disconnect();
+	on_sample_change_connection.disconnect();
 	on_program_load_connection.disconnect();
 	on_program_playback_connection.disconnect();
 	on_program_marks_change_connection.disconnect();
@@ -302,31 +306,49 @@ int ProgramMonitor::handle(int event)
 
 void ProgramMonitor::on_sar_change()
 {
+	m_pkConsumer->lock();
 	m_pkConsumer->set("width", iola::application::get_instance()->get_project()->get_width());
 	m_pkConsumer->set("height", iola::application::get_instance()->get_project()->get_height());
+	m_pkConsumer->unlock();
 }
 
 void ProgramMonitor::on_dar_change()
 {
+	m_pkConsumer->lock();
 	m_pkConsumer->set("display_aspect_num", iola::application::get_instance()->get_project()->get_dar_num());
 	m_pkConsumer->set("display_aspect_den", iola::application::get_instance()->get_project()->get_dar_den());
+	m_pkConsumer->unlock();
 }
 
 void ProgramMonitor::on_par_change()
 {
+	m_pkConsumer->lock();
 	m_pkConsumer->set("sample_aspect_num", iola::application::get_instance()->get_project()->get_par_num());
 	m_pkConsumer->set("sample_aspect_den", iola::application::get_instance()->get_project()->get_par_den());
+	m_pkConsumer->unlock();
 }
 
 void ProgramMonitor::on_field_change()
 {
+	m_pkConsumer->lock();
 	m_pkConsumer->set("progressive", iola::application::get_instance()->get_project()->get_progressive());
+	m_pkConsumer->unlock();
 }
 
 void ProgramMonitor::on_fps_change()
 {
+	m_pkConsumer->lock();
 	m_pkConsumer->set("frame_rate_num", iola::application::get_instance()->get_project()->get_fps_num());
 	m_pkConsumer->set("frame_rate_den", iola::application::get_instance()->get_project()->get_fps_den());
+	m_pkConsumer->unlock();
+}
+
+void ProgramMonitor::on_sample_change()
+{
+	m_pkConsumer->lock();
+	m_pkConsumer->set("audio_format", iola::application::get_instance()->get_project()->get_sample_depth());
+	m_pkConsumer->set("frequency", iola::application::get_instance()->get_project()->get_sample_rate());
+	m_pkConsumer->unlock();
 }
 
 void ProgramMonitor::on_program_load()

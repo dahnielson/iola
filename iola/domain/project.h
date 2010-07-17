@@ -82,6 +82,12 @@ public:
 	int get_fps_num();
 	int get_fps_den();
 
+	// Audio
+	void set_sample_depth(int depth);
+	int get_sample_depth();
+	void set_sample_rate(int rate);
+	int get_sample_rate();
+
 	// Source
 	void source_connect_consumer(Mlt::Consumer* consumer);
 
@@ -166,6 +172,8 @@ private:
 	iola::domain::iproject::field_t m_iFieldDominance;
 	int m_iTimebase;
 	bool m_bNTSC;
+	int m_iSampleDepth;
+	int m_iSampleRate;
 
 	Mlt::Event* m_pkSourceProducerChangeEvent;
 	Mlt::Event* m_pkProgramProducerChangeEvent;

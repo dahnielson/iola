@@ -54,6 +54,8 @@ project::project() :
 	m_iFieldDominance(iola::domain::iproject::EVEN),
 	m_iTimebase(30),
 	m_bNTSC(true),
+	m_iSampleDepth(16),
+	m_iSampleRate(48000),
 	m_pkSourceProducerChangeEvent(0),
 	m_pkProgramProducerChangeEvent(0)
 {
@@ -334,6 +336,28 @@ int project::get_fps_num()
 int project::get_fps_den()
 {
 	return m_bNTSC ? 1001 : 1;
+}
+
+void project::set_sample_depth(int depth)
+{
+	m_iSampleDepth = depth;
+	on_sample_change_signal();
+}
+
+int project::get_sample_depth()
+{
+	return m_iSampleDepth;
+}
+
+void project::set_sample_rate(int rate)
+{
+	m_iSampleRate = rate;
+	on_sample_change_signal();
+}
+
+int project::get_sample_rate()
+{
+	return m_iSampleRate;
 }
 
 ///////////////////////////////////////////
@@ -659,9 +683,27 @@ void project::program_save(boost::filesystem::path sequence)
 	isXML << "<iola version=\"0\">";
 	isXML << "  <sequence>";
 	isXML << "    <duration>0</duration>";
+	isXML << "    <rate>";
+	isXML << "      <timebase>30</timebase>";
+	isXML << "      <ntsc>TRUE</ntsc>";
+	isXML << "    </rate>";
 	isXML << "    <media>";
-	isXML << "      <video><track></track></video>";
-	isXML << "      <audio></audio>";
+	isXML << "      <video>";
+	isXML << "        <samplecharacteristics>";
+	isXML << "          <width>720</width>";
+	isXML << "          <height>480</height>";
+	isXML << "          <anamorphic>FALSE</anamorphic>";
+	isXML << "          <pixelaspectratio>NTSC-601</pixelaspectratio>";
+	isXML << "          <fielddominance>LOWER</fielddominance>";
+	isXML << "        </samplecharacteristics>";
+	isXML << "        <track></track>";
+	isXML << "      </video>";
+	isXML << "      <audio>";
+	isXML << "        <samplecharacteristics>";
+	isXML << "          <depth>16</depth>";
+	isXML << "          <samplerate>48000</samplerate>";
+	isXML << "        </samplecharacteristics>";
+	isXML << "      </audio>";
 	isXML << "    </media>";
 	isXML << "  </sequence>";
 	isXML << "</iola>";

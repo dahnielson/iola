@@ -1,6 +1,4 @@
 /* -*- Mode: C++ ; c-basic-offset: 8 -*- */
-#ifndef IOLA_DOM_AUDIO_ELEMENT_H
-#define IOLA_DOM_AUDIO_ELEMENT_H
 
 // Iola NLE
 // Copyright (c) 2010, Anders Dahnielson
@@ -21,37 +19,19 @@
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-// IOLA
-#include <iola/xml/ielement.h>
+#include "width_element.h"
 
-namespace  iola
+namespace iola
 {
 namespace dom
 {
 
-class samplecharacteristics_element;
-
 ////////////////////////////////////////////////////////////////////////////
-// class iola::dom::audio_element
+// class iola::dom::width_element
 
-class audio_element :
-	public iola::xml::ielement
-{
-public:
-	audio_element(const std::string strName);
-	void child(iola::xml::ielement* pkElement);
-	void attribute(std::string strKey, std::string strValue);
-	void text(std::string strText);
-	void xml(std::ostream& osXML);
-	void restore();
-	void store();
-
-private:
-	const std::string m_strName; 
-	samplecharacteristics_element* m_pkSampleCharacteristics;
-};
+width_element::width_element(const std::string strName) :
+	integer_terminal(strName)
+{}
 
 } // namespace dom
 } // namespace iola
-
-#endif // IOLA_DOM_AUDIO_ELEMENT_H

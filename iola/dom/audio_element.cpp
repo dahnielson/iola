@@ -20,6 +20,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "audio_element.h"
+#include "samplecharacteristics_element.h"
 
 namespace iola
 {
@@ -30,13 +31,15 @@ namespace dom
 // class iola::dom::audio_element
 
 audio_element::audio_element(const std::string strName) :
-        m_strName(strName)
+        m_strName(strName),
+	m_pkSampleCharacteristics(0)
 {}
 
 void
 audio_element::child(iola::xml::ielement* pkElement)
 {
-	// Append any legitimate children...
+	if (dynamic_cast<samplecharacteristics_element*>(pkElement))
+		m_pkSampleCharacteristics = dynamic_cast<samplecharacteristics_element*>(pkElement);
 }
 
 void
@@ -53,20 +56,23 @@ void
 audio_element::xml(std::ostream& osXML)
 {
 	osXML << "<" << m_strName << ">";
-	// Call xml(osXML) on any children...
+	if (m_pkSampleCharacteristics)
+		m_pkSampleCharacteristics->xml(osXML);
 	osXML << "</" << m_strName << ">";
 }
 
 void
 audio_element::restore()
 {
-	// Call restore() on any children...
+	if (m_pkSampleCharacteristics)
+		m_pkSampleCharacteristics->restore();
 }
 
 void
 audio_element::store()
 {
-	// Call store() on any children...
+	if (m_pkSampleCharacteristics)
+		m_pkSampleCharacteristics->store();
 }
 
 } // namespace dom

@@ -97,6 +97,12 @@ public:
 	virtual int get_fps_num() = 0;
 	virtual int get_fps_den() = 0;
 
+	// Audio
+	virtual void set_sample_depth(int depth) = 0;
+	virtual int get_sample_depth() = 0;
+	virtual void set_sample_rate(int rate) = 0;
+	virtual int get_sample_rate() = 0;
+
 	// Source
 	virtual void source_connect_consumer(Mlt::Consumer* consumer) = 0;
 
@@ -176,6 +182,7 @@ public:
 	signal_t on_par_change_signal;
 	signal_t on_field_change_signal;
 	signal_t on_fps_change_signal;
+	signal_t on_sample_change_signal;
 
 	signal_t on_source_load_signal;
 	signal_t on_source_playback_signal;

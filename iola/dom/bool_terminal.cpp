@@ -19,9 +19,7 @@
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-#include "video_element.h"
-#include "samplecharacteristics_element.h"
-#include "track_element.h"
+#include "bool_terminal.h"
 
 namespace iola
 {
@@ -29,60 +27,54 @@ namespace dom
 {
 
 ////////////////////////////////////////////////////////////////////////////
-// class iola::dom::video_element
+// class iola::dom::bool_terminal
 
-video_element::video_element(const std::string strName) :
-        m_strName(strName),
-	m_pkSampleCharacteristics(0),
-	m_pkTrack(0)
+bool_terminal::bool_terminal(const std::string strName) :
+        m_strName(strName)
 {}
 
 void
-video_element::child(iola::xml::ielement* pkElement)
+bool_terminal::child(iola::xml::ielement* pkElement)
 {
-	if (dynamic_cast<samplecharacteristics_element*>(pkElement))
-		m_pkSampleCharacteristics = dynamic_cast<samplecharacteristics_element*>(pkElement);
-	else if (dynamic_cast<track_element*>(pkElement))
-		m_pkTrack = dynamic_cast<track_element*>(pkElement);
+	// We're terminal. And we've had a vasectomy!
 }
 
 void
-video_element::attribute(std::string strKey, std::string strValue)
+bool_terminal::attribute(std::string strKey, std::string strValue)
 {
+	// No attributes.
 }
 
 void
-video_element::text(std::string strText)
+bool_terminal::text(std::string strText)
 {
+	if (strText == "TRUE" || strText == "true" || strText == "True")
+		m_bValue = true;
+	else if (strText == "FALSE" || strText == "false" || strText == "False")
+		m_bValue = false;
 }
 
 void
-video_element::xml(std::ostream& osXML)
+bool_terminal::xml(std::ostream& osXML)
 {
 	osXML << "<" << m_strName << ">";
-	if (m_pkSampleCharacteristics)
-		m_pkSampleCharacteristics->xml(osXML);
-	if (m_pkTrack)
-		m_pkTrack->xml(osXML);
+	if (m_bValue)
+		osXML << "TRUE";
+	else
+		osXML << "FALSE";
 	osXML << "</" << m_strName << ">";
 }
 
-void
-video_element::restore()
+bool
+bool_terminal::get()
 {
-	if (m_pkSampleCharacteristics)
-		m_pkSampleCharacteristics->restore();
-	if (m_pkTrack)
-		m_pkTrack->restore();
+	return m_bValue;
 }
 
 void
-video_element::store()
+bool_terminal::set(bool bValue)
 {
-	if (m_pkSampleCharacteristics)
-		m_pkSampleCharacteristics->store();
-	if (m_pkTrack)
-		m_pkTrack->store();
+	m_bValue = bValue;
 }
 
 } // namespace dom

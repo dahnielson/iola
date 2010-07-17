@@ -1,6 +1,6 @@
 /* -*- Mode: C++ ; c-basic-offset: 8 -*- */
-#ifndef IOLA_DOM_AUDIO_ELEMENT_H
-#define IOLA_DOM_AUDIO_ELEMENT_H
+#ifndef IOLA_DOM_PIXELASPECTRATIO_ELEMENT_H
+#define IOLA_DOM_PIXELASPECTRATIO_ELEMENT_H
 
 // Iola NLE
 // Copyright (c) 2010, Anders Dahnielson
@@ -22,36 +22,24 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 // IOLA
-#include <iola/xml/ielement.h>
+#include "string_terminal.h"
 
 namespace  iola
 {
 namespace dom
 {
 
-class samplecharacteristics_element;
-
 ////////////////////////////////////////////////////////////////////////////
-// class iola::dom::audio_element
+// class iola::dom::pixelaspectratio_element
 
-class audio_element :
-	public iola::xml::ielement
+class pixelaspectratio_element :
+	public string_terminal
 {
 public:
-	audio_element(const std::string strName);
-	void child(iola::xml::ielement* pkElement);
-	void attribute(std::string strKey, std::string strValue);
-	void text(std::string strText);
-	void xml(std::ostream& osXML);
-	void restore();
-	void store();
-
-private:
-	const std::string m_strName; 
-	samplecharacteristics_element* m_pkSampleCharacteristics;
+	pixelaspectratio_element(const std::string strName);
 };
 
 } // namespace dom
 } // namespace iola
 
-#endif // IOLA_DOM_AUDIO_ELEMENT_H
+#endif // IOLA_DOM_PIXELASPECTRATIO_ELEMENT_H

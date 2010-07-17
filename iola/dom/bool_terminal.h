@@ -1,6 +1,6 @@
 /* -*- Mode: C++ ; c-basic-offset: 8 -*- */
-#ifndef IOLA_DOM_AUDIO_ELEMENT_H
-#define IOLA_DOM_AUDIO_ELEMENT_H
+#ifndef IOLA_DOM_BOOL_TERMINAL_H
+#define IOLA_DOM_BOOL_TERMINAL_H
 
 // Iola NLE
 // Copyright (c) 2010, Anders Dahnielson
@@ -29,29 +29,27 @@ namespace  iola
 namespace dom
 {
 
-class samplecharacteristics_element;
-
 ////////////////////////////////////////////////////////////////////////////
-// class iola::dom::audio_element
+// class iola::dom::bool_terminal
 
-class audio_element :
+class bool_terminal :
 	public iola::xml::ielement
 {
 public:
-	audio_element(const std::string strName);
+	bool_terminal(const std::string strName);
 	void child(iola::xml::ielement* pkElement);
 	void attribute(std::string strKey, std::string strValue);
 	void text(std::string strText);
 	void xml(std::ostream& osXML);
-	void restore();
-	void store();
+	bool get();
+	void set(bool bValue);
 
 private:
 	const std::string m_strName; 
-	samplecharacteristics_element* m_pkSampleCharacteristics;
+	bool m_bValue;
 };
 
 } // namespace dom
 } // namespace iola
 
-#endif // IOLA_DOM_AUDIO_ELEMENT_H
+#endif // IOLA_DOM_BOOL_TERMINAL_H

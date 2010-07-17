@@ -31,6 +31,7 @@ namespace dom
 
 class duration_element;
 class media_element;
+class rate_element;
 
 ////////////////////////////////////////////////////////////////////////////
 // class iola::dom::sequence_element
@@ -50,6 +51,7 @@ public:
 private:
 	const std::string m_strName; 
 	duration_element* m_pkDuration;
+	rate_element* m_pkRate;
 	media_element* m_pkMedia;
 };
 
