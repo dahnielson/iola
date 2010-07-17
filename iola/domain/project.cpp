@@ -340,8 +340,13 @@ int project::get_fps_den()
 
 void project::set_sample_depth(int depth)
 {
-	m_iSampleDepth = depth;
-	on_sample_change_signal();
+	switch (depth)
+	{
+	case 16:
+		m_iSampleDepth = depth;
+		on_sample_change_signal();
+		break;
+	};
 }
 
 int project::get_sample_depth()
@@ -351,8 +356,15 @@ int project::get_sample_depth()
 
 void project::set_sample_rate(int rate)
 {
-	m_iSampleRate = rate;
-	on_sample_change_signal();
+	switch (rate)
+	{
+	case 32000:
+	case 44100:
+	case 48000:
+		m_iSampleRate = rate;
+		on_sample_change_signal();
+		break;
+	};
 }
 
 int project::get_sample_rate()

@@ -173,13 +173,25 @@ samplecharacteristics_element::restore()
 	if (m_pkDepth)
 	{
 		const int depth = m_pkDepth->get();
-		iola::application::get_instance()->get_project()->set_sample_depth(depth);
+		switch (depth)
+		{
+		case 16:
+			iola::application::get_instance()->get_project()->set_sample_depth(depth);
+			break;
+		};
 	}
 
 	if (m_pkSampleRate)
 	{
 		const int rate = m_pkSampleRate->get();
-		iola::application::get_instance()->get_project()->set_sample_rate(rate);
+		switch (rate)
+		{
+		case 32000:
+		case 44100:
+		case 48000:
+			iola::application::get_instance()->get_project()->set_sample_rate(rate);
+			break;
+		};
 	}
 }
 
@@ -255,13 +267,25 @@ samplecharacteristics_element::store()
 	if (m_pkDepth)
 	{
 		const int depth = iola::application::get_instance()->get_project()->get_sample_depth();
-		m_pkDepth->set(depth);
+		switch (depth)
+		{
+		case 16:
+			m_pkDepth->set(depth);
+			break;
+		};
 	}
 
 	if (m_pkSampleRate)
 	{
 		const int rate = iola::application::get_instance()->get_project()->get_sample_rate();
-		m_pkSampleRate->set(rate);
+		switch (rate)
+		{
+		case 32000:
+		case 44100:
+		case 48000:
+			m_pkSampleRate->set(rate);
+			break;
+		};
 	}
 }
 
