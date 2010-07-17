@@ -757,6 +757,7 @@ void project::program_set_duration(int duration)
 	if (m_pkProgram && m_pkProgram->get_length() != duration)
 	{
 		rDebug("%s: Set duration to %i", __PRETTY_FUNCTION__, duration);
+		m_pkProgram->lock();
 		if (m_pkProgram->get_length() > duration)
 		{
 			// Make shorter
@@ -766,10 +767,10 @@ void project::program_set_duration(int duration)
 		else
 		{
 			// Make longer
-			m_pkProgram->lock();
-			m_pkProgram->blank(duration);
-			m_pkProgram->unlock();
+			const int delta = duration - m_pkProgram->get_length();
+			m_pkProgram->blank(delta);
 		}
+		m_pkProgram->unlock();
 	}
 }
 
