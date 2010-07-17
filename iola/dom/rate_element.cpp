@@ -63,12 +63,12 @@ rate_element::text(std::string strText)
 void
 rate_element::xml(std::ostream& osXML)
 {
-	osXML << "<" << m_strName << ">";
+	osXML << "<" << m_strName << ">" << std::endl;
 	if (m_pkTimebase)
 		m_pkTimebase->xml(osXML);
 	if (m_pkNTSC)
 		m_pkNTSC->xml(osXML);
-	osXML << "</" << m_strName << ">";
+	osXML << "</" << m_strName << ">" << std::endl;
 }
 
 void

@@ -57,7 +57,7 @@ string_terminal::xml(std::ostream& osXML)
 {
 	osXML << "<" << m_strName << ">";
 	osXML << m_strValue;
-	osXML << "</" << m_strName << ">";
+	osXML << "</" << m_strName << ">"  << std::endl;
 }
 
 std::string

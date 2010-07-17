@@ -57,10 +57,10 @@ iola_element::text(std::string strText)
 void
 iola_element::xml(std::ostream& osXML)
 {
-	osXML << "<" << m_strName << " version=\"" << m_strVersion << "\">";
+	osXML << "<" << m_strName << " version=\"" << m_strVersion << "\">" << std::endl;
 	if (m_pkSequence)
 		m_pkSequence->xml(osXML);
-	osXML << "</" << m_strName << ">";
+	osXML << "</" << m_strName << ">" << std::endl;
 }
 
 void

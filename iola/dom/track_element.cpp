@@ -61,10 +61,10 @@ track_element::text(std::string strText)
 void
 track_element::xml(std::ostream& osXML)
 {
-	osXML << "<" << m_strName << ">";
+	osXML << "<" << m_strName << ">" << std::endl;
 	for (clipitem_iterator_t i = m_vpkClipItem.begin(); i != m_vpkClipItem.end(); i++)
 		(*i)->xml(osXML);
-	osXML << "</" << m_strName << ">";
+	osXML << "</" << m_strName << ">" << std::endl;
 }
 
 void

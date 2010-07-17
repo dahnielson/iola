@@ -59,12 +59,12 @@ video_element::text(std::string strText)
 void
 video_element::xml(std::ostream& osXML)
 {
-	osXML << "<" << m_strName << ">";
+	osXML << "<" << m_strName << ">" << std::endl;
 	if (m_pkSampleCharacteristics)
 		m_pkSampleCharacteristics->xml(osXML);
 	if (m_pkTrack)
 		m_pkTrack->xml(osXML);
-	osXML << "</" << m_strName << ">";
+	osXML << "</" << m_strName << ">" << std::endl;
 }
 
 void

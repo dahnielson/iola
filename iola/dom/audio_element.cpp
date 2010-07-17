@@ -55,10 +55,10 @@ audio_element::text(std::string strText)
 void
 audio_element::xml(std::ostream& osXML)
 {
-	osXML << "<" << m_strName << ">";
+	osXML << "<" << m_strName << ">" << std::endl;
 	if (m_pkSampleCharacteristics)
 		m_pkSampleCharacteristics->xml(osXML);
-	osXML << "</" << m_strName << ">";
+	osXML << "</" << m_strName << ">" << std::endl;
 }
 
 void

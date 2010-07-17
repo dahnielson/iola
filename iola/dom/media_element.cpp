@@ -59,12 +59,12 @@ media_element::text(std::string strText)
 void
 media_element::xml(std::ostream& osXML)
 {
-	osXML << "<" << m_strName << ">";
+	osXML << "<" << m_strName << ">" << std::endl;
 	if (m_pkVideo)
 		m_pkVideo->xml(osXML);
 	if (m_pkAudio)
 		m_pkAudio->xml(osXML);
-	osXML << "</" << m_strName << ">";
+	osXML << "</" << m_strName << ">" << std::endl;
 }
 
 void

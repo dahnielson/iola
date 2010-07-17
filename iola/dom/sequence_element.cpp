@@ -69,7 +69,7 @@ sequence_element::text(std::string strText)
 void
 sequence_element::xml(std::ostream& osXML)
 {
-	osXML << "<" << m_strName << ">";
+	osXML << "<" << m_strName << ">" << std::endl;
 	if (m_pkName)
 		m_pkName->xml(osXML);
 	if (m_pkDuration)
@@ -78,7 +78,7 @@ sequence_element::xml(std::ostream& osXML)
 		m_pkRate->xml(osXML);
 	if (m_pkMedia)
 		m_pkMedia->xml(osXML);
-	osXML << "</" << m_strName << ">";
+	osXML << "</" << m_strName << ">" << std::endl;
 }
 
 void

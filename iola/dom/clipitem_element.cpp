@@ -79,7 +79,7 @@ clipitem_element::text(std::string strText)
 void
 clipitem_element::xml(std::ostream& osXML)
 {
-	osXML << "<" << m_strName << ">";
+	osXML << "<" << m_strName << ">" << std::endl;
 	if (m_pkPathURL)
 		m_pkPathURL->xml(osXML);
 	if (m_pkIn)
@@ -90,7 +90,7 @@ clipitem_element::xml(std::ostream& osXML)
 		m_pkStart->xml(osXML);
 	if (m_pkEnd)
 		m_pkEnd->xml(osXML);
-	osXML << "</" << m_strName << ">";
+	osXML << "</" << m_strName << ">" << std::endl;
 }
 
 void

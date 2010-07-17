@@ -62,7 +62,7 @@ bool_terminal::xml(std::ostream& osXML)
 		osXML << "TRUE";
 	else
 		osXML << "FALSE";
-	osXML << "</" << m_strName << ">";
+	osXML << "</" << m_strName << ">" << std::endl;
 }
 
 bool

@@ -90,7 +90,7 @@ samplecharacteristics_element::text(std::string strText)
 void
 samplecharacteristics_element::xml(std::ostream& osXML)
 {
-	osXML << "<" << m_strName << ">";
+	osXML << "<" << m_strName << ">" << std::endl;
 	// Video
 	if (m_pkWidth)
 		m_pkWidth->xml(osXML);
@@ -109,7 +109,7 @@ samplecharacteristics_element::xml(std::ostream& osXML)
 		m_pkDepth->xml(osXML);
 	if (m_pkSampleRate)
 		m_pkSampleRate->xml(osXML);
-	osXML << "</" << m_strName << ">";
+	osXML << "</" << m_strName << ">" << std::endl;
 }
 
 void
