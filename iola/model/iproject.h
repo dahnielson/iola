@@ -1,6 +1,6 @@
 /* -*- Mode: C++ ; c-basic-offset: 8 -*- */
-#ifndef IOLA_DOMAIN_IPROJECT_H
-#define IOLA_DOMAIN_IPROJECT_H
+#ifndef IOLA_MODEL_IPROJECT_H
+#define IOLA_MODEL_IPROJECT_H
 
 // Iola NLE
 // Copyright (c) 2010, Anders Dahnielson
@@ -36,11 +36,11 @@
 
 namespace iola
 {
-namespace domain
+namespace model
 {
 
 ////////////////////////////////////////////////////////////////////////////
-// class iola::domain::iproject
+// class iola::model::iproject
 
 class iproject :
 	public virtual iola::iunknown
@@ -202,7 +202,7 @@ public:
 	msg_signal_t on_alert;
 };
 
-} // namespace domain
+} // namespace model
 } // namespace iola
 
-#endif // IOLA_DOMAIN_IPROJECT_H
+#endif // IOLA_MODEL_IPROJECT_H

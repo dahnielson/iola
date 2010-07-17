@@ -24,7 +24,7 @@
 
 // IOLA
 #include <iola/application/get_instance.h>
-#include <iola/domain/iproject.h>
+#include <iola/model/iproject.h>
 #include "SequenceSettings.h"
 
 namespace iola
@@ -185,22 +185,22 @@ void SequenceSettings::set_sequence_settings()
 	switch (m_pkPAR->value())
 	{
 	case 0: // Square
-		iola::application::get_instance()->get_project()->set_par(iola::domain::iproject::SQUARE);
+		iola::application::get_instance()->get_project()->set_par(iola::model::iproject::SQUARE);
 		break;
 	case 1: // NTSC (ITU-R 601)
-		iola::application::get_instance()->get_project()->set_par(iola::domain::iproject::NTSC_601);
+		iola::application::get_instance()->get_project()->set_par(iola::model::iproject::NTSC_601);
 		break;
 	case 2: // PAL (ITU-R 601)
-		iola::application::get_instance()->get_project()->set_par(iola::domain::iproject::PAL_601);
+		iola::application::get_instance()->get_project()->set_par(iola::model::iproject::PAL_601);
 		break;
 	case 3: // HD (920x720)
-		iola::application::get_instance()->get_project()->set_par(iola::domain::iproject::HD_960x720);
+		iola::application::get_instance()->get_project()->set_par(iola::model::iproject::HD_960x720);
 		break;
 	case 4: // HD (1280x1080)
-		iola::application::get_instance()->get_project()->set_par(iola::domain::iproject::HD_1280x1080);
+		iola::application::get_instance()->get_project()->set_par(iola::model::iproject::HD_1280x1080);
 		break;
 	case 5: // HD (1440x1080)
-		iola::application::get_instance()->get_project()->set_par(iola::domain::iproject::HD_1440x1080);
+		iola::application::get_instance()->get_project()->set_par(iola::model::iproject::HD_1440x1080);
 		break;
 	default:
 		rError("%s: Pixel Aspect Ratio choice #%i '%s' has not been implemented", 
@@ -214,13 +214,13 @@ void SequenceSettings::set_sequence_settings()
 	switch (m_pkFieldDominance->value())
 	{
 	case 0: // None
-		iola::application::get_instance()->get_project()->set_field_dominance(iola::domain::iproject::NONE);
+		iola::application::get_instance()->get_project()->set_field_dominance(iola::model::iproject::NONE);
 		break;
 	case 1: // Lower (Even)
-		iola::application::get_instance()->get_project()->set_field_dominance(iola::domain::iproject::EVEN);
+		iola::application::get_instance()->get_project()->set_field_dominance(iola::model::iproject::EVEN);
 		break;
 	case 2: // Upper (Odd)
-		iola::application::get_instance()->get_project()->set_field_dominance(iola::domain::iproject::ODD);
+		iola::application::get_instance()->get_project()->set_field_dominance(iola::model::iproject::ODD);
 		break;
 	default:
 		rError("%s: Field Dominance choice #%i '%s' has not been implemented", 
@@ -331,22 +331,22 @@ void SequenceSettings::get_sequence_settings()
 	// Pixel Aspect Ratio
 	switch (iola::application::get_instance()->get_project()->get_par())
 	{
-	case iola::domain::iproject::SQUARE:
+	case iola::model::iproject::SQUARE:
 		m_pkPAR->value(0);
 		break;
-	case iola::domain::iproject::NTSC_601:
+	case iola::model::iproject::NTSC_601:
 		m_pkPAR->value(1);
 		break;
-	case iola::domain::iproject::PAL_601:
+	case iola::model::iproject::PAL_601:
 		m_pkPAR->value(2);
 		break;
-	case iola::domain::iproject::HD_960x720:
+	case iola::model::iproject::HD_960x720:
 		m_pkPAR->value(3);
 		break;
-	case iola::domain::iproject::HD_1280x1080:
+	case iola::model::iproject::HD_1280x1080:
 		m_pkPAR->value(4);
 		break;
-	case iola::domain::iproject::HD_1440x1080:
+	case iola::model::iproject::HD_1440x1080:
 		m_pkPAR->value(5);
 		break;
 	default:
@@ -358,13 +358,13 @@ void SequenceSettings::get_sequence_settings()
 	// Field Dominance
 	switch (iola::application::get_instance()->get_project()->get_field_dominance())
 	{
-	case iola::domain::iproject::NONE:
+	case iola::model::iproject::NONE:
 		m_pkFieldDominance->value(0);
 		break;
-	case iola::domain::iproject::EVEN:
+	case iola::model::iproject::EVEN:
 		m_pkFieldDominance->value(1);
 		break;
-	case iola::domain::iproject::ODD:
+	case iola::model::iproject::ODD:
 		m_pkFieldDominance->value(2);
 		break;
 	default:

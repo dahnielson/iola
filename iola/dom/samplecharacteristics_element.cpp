@@ -21,7 +21,7 @@
 
 // IOLA
 #include <iola/application/get_instance.h>
-#include <iola/domain/iproject.h>
+#include <iola/model/iproject.h>
 #include "anamorphic_element.h"
 #include "depth_element.h"
 #include "fielddominance_element.h"
@@ -136,33 +136,33 @@ samplecharacteristics_element::restore()
 
 	if (m_pkPixelAspectRatio)
 	{
-		iola::domain::iproject::par_t par;
+		iola::model::iproject::par_t par;
 		const std::string strPAR = m_pkPixelAspectRatio->get();
 		if (strPAR == "SQUARE" || strPAR == "square")
-			par = iola::domain::iproject::SQUARE;
+			par = iola::model::iproject::SQUARE;
 		else if (strPAR == "NTSC-601")
-			par = iola::domain::iproject::NTSC_601;
+			par = iola::model::iproject::NTSC_601;
 		else if (strPAR == "PAL-601")
-			par = iola::domain::iproject::PAL_601;
+			par = iola::model::iproject::PAL_601;
 		else if (strPAR == "HD-(960x720)" || strPAR == "DVCPROHD-720p")
-			par = iola::domain::iproject::HD_960x720;
+			par = iola::model::iproject::HD_960x720;
 		else if (strPAR == "HD-(1280x1080)" || strPAR == "DVCPROHD-1080i60")
-			par = iola::domain::iproject::HD_1280x1080;
+			par = iola::model::iproject::HD_1280x1080;
 		else if (strPAR == "HD-(1440x1080)" || strPAR == "DVCPROHD-1080i50")
-			par = iola::domain::iproject::HD_1440x1080;
+			par = iola::model::iproject::HD_1440x1080;
 		iola::application::get_instance()->get_project()->set_par(par);
 	}
 
 	if (m_pkFieldDominance)
 	{
-		iola::domain::iproject::field_t field;
+		iola::model::iproject::field_t field;
 		const std::string strField = m_pkFieldDominance->get();
 		if (strField == "NONE" || strField == "none")
-			field = iola::domain::iproject::NONE;
+			field = iola::model::iproject::NONE;
 		else if (strField == "LOWER" || strField == "lower" || strField == "EVEN" || strField == "even")
-			field = iola::domain::iproject::EVEN;
+			field = iola::model::iproject::EVEN;
 		else if (strField == "UPPER" || strField == "upper" || strField == "ODD" || strField == "odd")
-			field = iola::domain::iproject::ODD;
+			field = iola::model::iproject::ODD;
 		iola::application::get_instance()->get_project()->set_field_dominance(field);
 	}
 
@@ -219,25 +219,25 @@ samplecharacteristics_element::store()
 
 	if (m_pkPixelAspectRatio)
 	{
-		iola::domain::iproject::par_t par = iola::application::get_instance()->get_project()->get_par();
+		iola::model::iproject::par_t par = iola::application::get_instance()->get_project()->get_par();
 		switch (par)
 		{
-		case iola::domain::iproject::SQUARE:
+		case iola::model::iproject::SQUARE:
 			m_pkPixelAspectRatio->set("SQUARE");
 			break;
-		case iola::domain::iproject::NTSC_601:
+		case iola::model::iproject::NTSC_601:
 			m_pkPixelAspectRatio->set("NTSC-601");
 			break;
-		case iola::domain::iproject::PAL_601:
+		case iola::model::iproject::PAL_601:
 			m_pkPixelAspectRatio->set("PAL-601");
 			break;
-		case iola::domain::iproject::HD_960x720:
+		case iola::model::iproject::HD_960x720:
 			m_pkPixelAspectRatio->set("HD-(960x720)");
 			break;
-		case iola::domain::iproject::HD_1280x1080:
+		case iola::model::iproject::HD_1280x1080:
 			m_pkPixelAspectRatio->set("HD-(1280x1080)");
 			break;
-		case iola::domain::iproject::HD_1440x1080:
+		case iola::model::iproject::HD_1440x1080:
 			m_pkPixelAspectRatio->set("HD-(1440x1080)");
 			break;
 		};
@@ -245,16 +245,16 @@ samplecharacteristics_element::store()
 
 	if (m_pkFieldDominance)
 	{
-		iola::domain::iproject::field_t field  = iola::application::get_instance()->get_project()->get_field_dominance();
+		iola::model::iproject::field_t field  = iola::application::get_instance()->get_project()->get_field_dominance();
 		switch (field)
 		{
-		case iola::domain::iproject::NONE:
+		case iola::model::iproject::NONE:
 			m_pkFieldDominance->set("NONE");
 			break;
-		case iola::domain::iproject::EVEN:
+		case iola::model::iproject::EVEN:
 			m_pkFieldDominance->set("EVEN");
 			break;
-		case iola::domain::iproject::ODD:
+		case iola::model::iproject::ODD:
 			m_pkFieldDominance->set("ODD");
 			break;
 		};

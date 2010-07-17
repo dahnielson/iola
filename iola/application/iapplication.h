@@ -22,7 +22,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include <iola/iunknown.h>
-#include <iola/domain/iproject.h>
+#include <iola/model/iproject.h>
 
 namespace iola
 {
@@ -37,7 +37,7 @@ class iapplication :
 {
 public:
 	/// Return the project object
-	virtual iola::domain::iproject* get_project() = 0;
+	virtual iola::model::iproject* get_project() = 0;
 
 	/// Enter main loop
 	virtual void run() = 0;

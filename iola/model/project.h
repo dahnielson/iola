@@ -1,6 +1,6 @@
 /* -*- Mode: C++ ; c-basic-offset: 8 -*- */
-#ifndef IOLA_DOMAIN_PROJECT_H
-#define IOLA_DOMAIN_PROJECT_H
+#ifndef IOLA_MODEL_PROJECT_H
+#define IOLA_MODEL_PROJECT_H
 
 // Iola NLE
 // Copyright (c) 2010, Anders Dahnielson
@@ -33,14 +33,14 @@
 
 namespace iola
 {
-namespace domain
+namespace model
 {
 
 ////////////////////////////////////////////////////////////////////////////
-// class iola::domain::project
+// class iola::model::project
 
 class project :
-	public iola::domain::iproject
+	public iola::model::iproject
 {
 public:
 	project();
@@ -60,8 +60,8 @@ public:
 	int get_dar_den();
 
 	// Pixel Aspect Ratio
-	void set_par(iola::domain::iproject::par_t par);
-	iola::domain::iproject::par_t get_par();
+	void set_par(iola::model::iproject::par_t par);
+	iola::model::iproject::par_t get_par();
 	int get_par_num();
 	int get_par_den();
 
@@ -70,8 +70,8 @@ public:
 	bool get_anamorphic();
 
 	// Field Dominance
-	void set_field_dominance(iola::domain::iproject::field_t dominance);
-	iola::domain::iproject::field_t get_field_dominance();
+	void set_field_dominance(iola::model::iproject::field_t dominance);
+	iola::model::iproject::field_t get_field_dominance();
 	bool get_progressive();
 
 	// Frame Rate
@@ -170,9 +170,9 @@ private:
 	// Sequence settings
 	int m_iWidth;
 	int m_iHeight;
-	iola::domain::iproject::par_t m_iPAR;
+	iola::model::iproject::par_t m_iPAR;
 	bool m_bAnamorphic;
-	iola::domain::iproject::field_t m_iFieldDominance;
+	iola::model::iproject::field_t m_iFieldDominance;
 	int m_iTimebase;
 	bool m_bNTSC;
 	int m_iSampleDepth;
@@ -193,7 +193,7 @@ private:
 	}
 };
 
-} // namespace domain
+} // namespace model
 } // namespace iola
 
-#endif // IOLA_DOMAIN_PROJECT_H
+#endif // IOLA_MODEL_PROJECT_H

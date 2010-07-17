@@ -33,8 +33,8 @@
 
 // IOLA
 #include <iola/consumer/consumer_iola.h>
-#include <iola/domain/iproject.h>
-#include <iola/domain/project.h>
+#include <iola/model/iproject.h>
+#include <iola/model/project.h>
 #include <iola/gui/MainWindow.h>
 #include "get_instance.h"
 
@@ -64,7 +64,7 @@ public:
 	~application_implementation()
 	{}
 
-	iola::domain::iproject* get_project()
+	iola::model::iproject* get_project()
 	{
 		return m_pkProject;
 	}
@@ -79,7 +79,7 @@ public:
 		pkRepos->register_service(consumer_type, "iola", iola::consumer::consumer_iola_init);
 
 		// Instance project
-		m_pkProject = new iola::domain::project();
+		m_pkProject = new iola::model::project();
 
 		// Instance GUI
 		m_pkGUI = new iola::gui::MainWindow();
@@ -113,7 +113,7 @@ private:
 
 	bool m_bRun;
 	iola::gui::MainWindow* m_pkGUI;
-	iola::domain::iproject* m_pkProject;
+	iola::model::iproject* m_pkProject;
 };
 
 

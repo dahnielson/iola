@@ -37,11 +37,11 @@
 
 namespace iola
 {
-namespace domain
+namespace model
 {
 
 ////////////////////////////////////////////////////////////////////////////
-// class iola::domain::project
+// class iola::model::project
 
 project::project() :
 	m_pkSource(new Mlt::Playlist),
@@ -49,9 +49,9 @@ project::project() :
 	m_kProfile(Mlt::Profile()),
 	m_iWidth(720),
 	m_iHeight(480),
-	m_iPAR(iola::domain::iproject::NTSC_601),
+	m_iPAR(iola::model::iproject::NTSC_601),
 	m_bAnamorphic(false),
-	m_iFieldDominance(iola::domain::iproject::EVEN),
+	m_iFieldDominance(iola::model::iproject::EVEN),
 	m_iTimebase(30),
 	m_bNTSC(true),
 	m_iSampleDepth(16),
@@ -198,13 +198,13 @@ int project::get_dar_den()
 	return iDARDen;
 }
 
-void project::set_par(iola::domain::iproject::par_t par)
+void project::set_par(iola::model::iproject::par_t par)
 {
 	m_iPAR = par;
 	on_par_change_signal();
 }
 
-iola::domain::iproject::par_t project::get_par()
+iola::model::iproject::par_t project::get_par()
 {
 	return m_iPAR;
 }
@@ -283,13 +283,13 @@ bool project::get_anamorphic()
 	return m_bAnamorphic;
 }
 
-void project::set_field_dominance(iola::domain::iproject::field_t dominance)
+void project::set_field_dominance(iola::model::iproject::field_t dominance)
 {
 	m_iFieldDominance = dominance;
 	on_field_change_signal();
 }
 
-iola::domain::iproject::field_t project::get_field_dominance()
+iola::model::iproject::field_t project::get_field_dominance()
 {
 	return m_iFieldDominance;
 }
@@ -1241,5 +1241,5 @@ void project::program_overwrite(boost::filesystem::path resource, const int prog
 	}
 }
 
-} // namespace domain
+} // namespace model
 } // namespace iola
