@@ -655,7 +655,17 @@ void project::program_load(boost::filesystem::path sequence)
 	iola::dom::element_factory* pkFactory = new iola::dom::element_factory();
 	iola::dom::root* pkRoot = new iola::dom::root();
 	boost::filesystem::ifstream isXML(sequence);
-	iola::xml::parser(pkFactory, pkRoot, isXML);
+	try
+	{
+		iola::xml::parser(pkFactory, pkRoot, isXML);
+	}
+	catch (std::exception& e)
+	{
+		rError("%s: Caught exception: %s", __PRETTY_FUNCTION__, e.what());
+		delete pkFactory;
+		delete pkRoot;
+		return;
+	}
 	m_pkProgram->clear();
 	m_pkProgram->set_speed(0);
 	m_pkProgram->set("meta.iola.mark_in", -1);
@@ -709,7 +719,17 @@ void project::program_save(boost::filesystem::path sequence)
 	isXML << "</iola>";
 
 	// Parse the skeleton into an object
-	iola::xml::parser(pkFactory, pkRoot, isXML);
+	try
+	{
+		iola::xml::parser(pkFactory, pkRoot, isXML);
+	}
+	catch (std::exception& e)
+	{
+		rError("%s: Caught exception: %s", __PRETTY_FUNCTION__, e.what());
+		delete pkFactory;
+		delete pkRoot;
+		return;
+	}
 
 	// Then call store to populate it
 	pkRoot->store();
