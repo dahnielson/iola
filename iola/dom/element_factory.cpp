@@ -32,6 +32,7 @@
 #include "in_element.h"
 #include "iola_element.h"
 #include "media_element.h"
+#include "name_element.h"
 #include "ntsc_element.h"
 #include "out_element.h"
 #include "pathurl_element.h"
@@ -79,6 +80,8 @@ element_factory::factory(const std::string strElement)
 		return new iola_element(strElement);
 	else if (strElement == "media")
 		return new media_element(strElement);
+	else if (strElement == "name")
+		return new name_element(strElement);
 	else if (strElement == "ntsc")
 		return new ntsc_element(strElement);
 	else if (strElement == "out")

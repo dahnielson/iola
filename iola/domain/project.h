@@ -119,6 +119,9 @@ public:
 	// Program
 	void program_connect_consumer(Mlt::Consumer* consumer);
 
+	void program_set_name(std::string name);
+	std::string program_get_name();
+
 	void program_new();
 	void program_load(boost::filesystem::path sequence);
 	void program_save(boost::filesystem::path sequence);
@@ -174,6 +177,7 @@ private:
 	bool m_bNTSC;
 	int m_iSampleDepth;
 	int m_iSampleRate;
+	std::string m_strSequenceName;
 
 	Mlt::Event* m_pkSourceProducerChangeEvent;
 	Mlt::Event* m_pkProgramProducerChangeEvent;

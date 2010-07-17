@@ -644,6 +644,16 @@ void project::program_connect_consumer(Mlt::Consumer* consumer)
 	consumer->unlock();
 }
 
+void project::program_set_name(std::string name)
+{
+	m_strSequenceName = name;
+}
+
+std::string project::program_get_name()
+{
+	return m_strSequenceName;
+}
+
 void project::program_new()
 {
 	if (!m_pkProgram)
@@ -704,6 +714,7 @@ void project::program_save(boost::filesystem::path sequence)
 	isXML << "<!DOCTYPE iola>";
 	isXML << "<iola version=\"0\">";
 	isXML << "  <sequence>";
+	isXML << "    <name>Sequence</name>";
 	isXML << "    <duration>0</duration>";
 	isXML << "    <rate>";
 	isXML << "      <timebase>30</timebase>";

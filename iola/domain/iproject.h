@@ -134,6 +134,9 @@ public:
 	// Program
 	virtual void program_connect_consumer(Mlt::Consumer* consumer) = 0;
 
+	virtual void program_set_name(std::string name) = 0;
+	virtual std::string program_get_name() = 0;
+
 	virtual void program_new() = 0;
 	virtual void program_load(boost::filesystem::path sequence) = 0;
 	virtual void program_save(boost::filesystem::path sequence) = 0;

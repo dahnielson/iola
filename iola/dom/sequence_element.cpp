@@ -24,6 +24,7 @@
 #include "sequence_element.h"
 #include "duration_element.h"
 #include "media_element.h"
+#include "name_element.h"
 #include "rate_element.h"
 
 namespace iola
@@ -36,6 +37,7 @@ namespace dom
 
 sequence_element::sequence_element(const std::string strName) :
         m_strName(strName),
+	m_pkName(0),
 	m_pkDuration(0),
 	m_pkRate(0),
 	m_pkMedia(0)
@@ -44,7 +46,9 @@ sequence_element::sequence_element(const std::string strName) :
 void
 sequence_element::child(iola::xml::ielement* pkElement)
 {
-	if (dynamic_cast<duration_element*>(pkElement))
+	if (dynamic_cast<name_element*>(pkElement))
+		m_pkName = dynamic_cast<name_element*>(pkElement);
+	else if (dynamic_cast<duration_element*>(pkElement))
 		m_pkDuration = dynamic_cast<duration_element*>(pkElement);
 	else if (dynamic_cast<rate_element*>(pkElement))
 		m_pkRate = dynamic_cast<rate_element*>(pkElement);
@@ -66,6 +70,8 @@ void
 sequence_element::xml(std::ostream& osXML)
 {
 	osXML << "<" << m_strName << ">";
+	if (m_pkName)
+		m_pkName->xml(osXML);
 	if (m_pkDuration)
 		m_pkDuration->xml(osXML);
 	if (m_pkRate)
@@ -78,6 +84,12 @@ sequence_element::xml(std::ostream& osXML)
 void
 sequence_element::restore()
 {
+	if (m_pkName)
+	{
+		std::string name = m_pkName->get();
+		iola::application::get_instance()->get_project()->program_set_name(name);
+	}
+
 	if (m_pkDuration)
 	{
 		int duration = m_pkDuration->get();
@@ -94,6 +106,12 @@ sequence_element::restore()
 void
 sequence_element::store()
 {
+	if (m_pkName)
+	{
+		std::string name = iola::application::get_instance()->get_project()->program_get_name();
+		m_pkName->set(name);
+	}
+
 	if (m_pkDuration)
 	{
 		int duration = iola::application::get_instance()->get_project()->program_get_duration();

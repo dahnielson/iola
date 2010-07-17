@@ -1,6 +1,6 @@
 /* -*- Mode: C++ ; c-basic-offset: 8 -*- */
-#ifndef IOLA_DOM_SEQUENCE_ELEMENT_H
-#define IOLA_DOM_SEQUENCE_ELEMENT_H
+#ifndef IOLA_DOM_NAME_ELEMENT_H
+#define IOLA_DOM_NAME_ELEMENT_H
 
 // Iola NLE
 // Copyright (c) 2010, Anders Dahnielson
@@ -22,42 +22,24 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 // IOLA
-#include <iola/xml/ielement.h>
+#include "string_terminal.h"
 
 namespace  iola
 {
 namespace dom
 {
 
-class duration_element;
-class media_element;
-class name_element;
-class rate_element;
-
 ////////////////////////////////////////////////////////////////////////////
-// class iola::dom::sequence_element
+// class iola::dom::name_element
 
-class sequence_element :
-	public iola::xml::ielement
+class name_element :
+	public string_terminal
 {
 public:
-	sequence_element(const std::string strName);
-	void child(iola::xml::ielement* pkElement);
-	void attribute(std::string strKey, std::string strValue);
-	void text(std::string strText);
-	void xml(std::ostream& osXML);
-	void restore();
-	void store();
-
-private:
-	const std::string m_strName; 
-	name_element* m_pkName;
-	duration_element* m_pkDuration;
-	rate_element* m_pkRate;
-	media_element* m_pkMedia;
+	name_element(const std::string strName);
 };
 
 } // namespace dom
 } // namespace iola
 
-#endif // IOLA_DOM_SEQUENCE_ELEMENT_H
+#endif // IOLA_DOM_NAME_ELEMENT_H
