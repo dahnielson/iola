@@ -218,9 +218,13 @@ int project::get_par_num()
 		break;
 	case NTSC_601:
 		iPARNum = 8;
+		if (m_bAnamorphic)
+			iPARNum *= 4;
 		break;
 	case PAL_601:
 		iPARNum = 16;
+		if (m_bAnamorphic)
+			iPARNum *= 4;
 		break;
 	case HD_1280x1080:
 		iPARNum = 3;
@@ -230,9 +234,6 @@ int project::get_par_num()
 		iPARNum = 4;
 		break;
 	};
-
-	if (m_bAnamorphic)
-		iPARNum *= 4;
 
 	return iPARNum;
 }
@@ -248,9 +249,13 @@ int project::get_par_den()
 		break;
 	case NTSC_601:
 		iPARDen = 9;
+		if (m_bAnamorphic)
+			iPARDen *= 3;
 		break;
 	case PAL_601:
 		iPARDen = 15;
+		if (m_bAnamorphic)
+			iPARDen *= 3;
 		break;
 	case HD_1280x1080:
 		iPARDen = 2;
@@ -260,9 +265,6 @@ int project::get_par_den()
 		iPARDen = 3;
 		break;
 	};
-
-	if (m_bAnamorphic)
-		iPARDen *= 3;
 
 	return iPARDen;
 }
