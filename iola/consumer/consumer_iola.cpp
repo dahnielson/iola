@@ -25,6 +25,7 @@
 #include <cstring>
 #include <pthread.h>
 #include <sys/time.h>
+#include <cerrno>
 
 // RLOG
 #include <rlog/rlog.h>
@@ -369,16 +370,42 @@ static void* consumer_thread(void *arg)
 	// Internal intialization
 	mlt_frame frame = NULL;
 
-	// Audio device
+	// Audio format
 	self->audio_format.bits = 16;
 	self->audio_format.channels = mlt_properties_get_int(self->properties, "channels");
 	self->audio_format.rate = mlt_properties_get_int(self->properties, "frequency");
 	self->audio_format.byte_format = AO_FMT_NATIVE;
-	self->audio_driver = ao_default_driver_id();
-	self->audio_device = ao_open_live(self->audio_driver, &self->audio_format, NULL);
 
+	// Audio driver
+	self->audio_driver = ao_default_driver_id();
+	if (self->audio_driver == -1)
+		rWarning("%s: No usable audio output device found!", __PRETTY_FUNCTION__);
+
+	// Audio device
+	self->audio_device = ao_open_live(self->audio_driver, &self->audio_format, NULL);
 	if (!self->audio_device)
-		rError("%s: No audio device!", __PRETTY_FUNCTION__);
+	{
+		switch (errno)
+		{
+		case AO_ENODRIVER:
+			rError("%s: No audio driver corresponds to driver_id=%i",
+			       __PRETTY_FUNCTION__, self->audio_driver);
+		case AO_ENOTLIVE:
+			rError("%s: The selected audio driver is not a live output device.",
+			       __PRETTY_FUNCTION__);
+		case AO_EBADOPTION:
+			rError("%s: A valid option key to the audio device has an invalid value.",
+			       __PRETTY_FUNCTION__);
+		case AO_EOPENDEVICE:
+			rError("%s: Cannot open the audio device",
+			       __PRETTY_FUNCTION__);
+		case AO_EFAIL:
+			rError("%s: Opening of audio device failed",
+			       __PRETTY_FUNCTION__);
+		default:
+			rError("%s: No audio device", __PRETTY_FUNCTION__);
+		};
+	}
 
 	// Audio buffer
 	self->audio_buffer_fill = 0;
