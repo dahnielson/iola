@@ -24,6 +24,7 @@
 
 // BOOST
 #include <boost/filesystem/fstream.hpp>
+#include <boost/rational.hpp>
 
 // STD
 #include <iostream>
@@ -132,76 +133,28 @@ int project::get_height()
 
 int project::get_dar_num()
 {
+	//NOTE This is the DAR of the PA not the CA
+
 	int iDARNum;
 
-	if (m_iWidth == 720 && m_iHeight == 486)
-	{
-		iDARNum = 400; //NOTE This is DAR of the PA not the CAs 4:3
-		if (m_bAnamorphic)
-			iDARNum *= 4;
-	}
-	else if (m_iWidth == 720 && m_iHeight == 480)
-	{
-		iDARNum = 15; //NOTE This is DAR of the PA not the CAs 4:3
-		if (m_bAnamorphic)
-			iDARNum *= 4;
-	}
-	else if (m_iWidth == 720 && m_iHeight == 576)
-	{
-		iDARNum = 295; //NOTE This is DAR of the PA not the CAs 4:3
-		if (m_bAnamorphic)
-			iDARNum *= 4;
-	}
-	else if (m_iWidth == 960 && m_iHeight == 720)
-		iDARNum = 16;
-	else if (m_iWidth == 1280 && m_iHeight == 720)
-		iDARNum = 16;
-	else if (m_iWidth == 1280 && m_iHeight == 1080)
-		iDARNum = 16;
-	else if (m_iWidth == 1440 && m_iHeight == 1080)
-		iDARNum = 16;
-	else if (m_iWidth == 1920 && m_iHeight == 1080)
-		iDARNum = 16;
-	else
-		iDARNum = m_iWidth;
+	int iGCD = boost::gcd(m_iWidth, m_iHeight);
+	iDARNum = m_iWidth / iGCD * get_par_num();
+
+	rDebug("%s: iDARNum=%i", __PRETTY_FUNCTION__, iDARNum);
 
 	return iDARNum;
 }
 
 int project::get_dar_den()
 {
+	//NOTE This is the DAR of the PA not the CA
+
 	int iDARDen;
 
-	if (m_iWidth == 720 && m_iHeight == 486)
-	{
-		iDARDen = 297; //NOTE This is DAR of the PA not the CAs 4:3
-		if (m_bAnamorphic)
-			iDARDen *= 3;
-	}
-	else if (m_iWidth == 720 && m_iHeight == 480)
-	{
-		iDARDen = 11; //NOTE This is DAR of the PA not the CAs 4:3
-		if (m_bAnamorphic)
-			iDARDen *= 3;
-	}
-	else if (m_iWidth == 720 && m_iHeight == 576)
-	{
-		iDARDen = 216; //NOTE This is DAR of the PA not the CAs 4:3
-		if (m_bAnamorphic)
-			iDARDen *= 3;
-	}
-	else if (m_iWidth == 960 && m_iHeight == 720)
-		iDARDen = 9;
-	else if (m_iWidth == 1280 && m_iHeight == 720)
-		iDARDen = 9;
-	else if (m_iWidth == 1280 && m_iHeight == 1080)
-		iDARDen = 9;
-	else if (m_iWidth == 1440 && m_iHeight == 1080)
-		iDARDen = 9;
-	else if (m_iWidth == 1920 && m_iHeight == 1080)
-		iDARDen = 9;
-	else
-		iDARDen = m_iHeight;
+	int iGCD = boost::gcd(m_iWidth, m_iHeight);
+	iDARDen = m_iHeight / iGCD * get_par_den();
+
+	rDebug("%s: iDARDen=%i", __PRETTY_FUNCTION__, iDARDen);
 
 	return iDARDen;
 }
