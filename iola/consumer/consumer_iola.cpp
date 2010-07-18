@@ -112,6 +112,9 @@ void* consumer_iola_init(mlt_profile profile, mlt_service_type type, const char 
 		// Set rescaling
 		mlt_properties_set(self->properties, "rescale", "none");
 
+		// Set fit to window
+		mlt_properties_set_int(self->properties, "fit_to_window", false);
+
 		// Default audio buffer
 		mlt_properties_set_int(self->properties, "audio_buffer", 512);
 
@@ -258,20 +261,22 @@ static int consumer_play_video(consumer_iola self, mlt_frame frame)
 		self->width = width;
 		self->height = height;
 
-		// Determine window's display aspect ratio
-		double window_aspect = (double)self->window_width / self->window_height;
-
-		// Determine the frame's display aspect ratio
-		double frame_aspect = mlt_frame_get_aspect_ratio(frame) * self->width / self->height;
+		double w = self->width;
+		double h = self->height;
 
 		// Fit frame into window
-		double w, h;
-		w = frame_aspect / window_aspect * self->window_width;
-		h = self->window_height;
-		if (w > self->window_width)
+		bool zoom = mlt_properties_get_int(self->properties, "fit_to_window");
+		if (zoom)
 		{
-			w = self->window_width;
-			h = window_aspect / frame_aspect * self->window_height;
+			double window_aspect = (double)self->window_width / self->window_height;
+			double frame_aspect = mlt_frame_get_aspect_ratio(frame) * self->width / self->height;
+			w = frame_aspect / window_aspect * self->window_width;
+			h = self->window_height;
+			if (w > self->window_width)
+			{
+				w = self->window_width;
+				h = window_aspect / frame_aspect * self->window_height;
+			}
 		}
 
 		// Center frame in window
