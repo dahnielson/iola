@@ -145,29 +145,20 @@ int consumer_start(mlt_consumer parent)
 	// Get the actual object
 	consumer_iola self = (consumer_iola_s*) parent->child;
 
-	// See if we're already running
-	if (self->running)
-		return 0;
+	// If we're not already running
+	if (!self->running)
+	{
+		consumer_stop(parent);
 
-	rDebug("%s: Starting iola consumer", __PRETTY_FUNCTION__);
+		rDebug("%s: Starting iola consumer", __PRETTY_FUNCTION__);
 
-	consumer_stop(parent);
+		// Create the thread
+		self->running = true;
+		self->joined = false;
+		pthread_create(&self->thread, NULL, consumer_thread, self);
 
-	// Get dimensions
-	if (mlt_properties_get_int(self->properties, "width") > 0)
-		self->width = mlt_properties_get_int(self->properties, "width");
-	if (mlt_properties_get_int(self->properties, "height") > 0)
-		self->height = mlt_properties_get_int(self->properties, "height");
-
-	// Default window size
-	double display_ratio = mlt_properties_get_double(self->properties, "display_ratio");
-	self->window_width = self->height * display_ratio;
-	self->window_height = self->height;
-
-	// Create thread
-	self->running = true;
-	self->joined = false;
-	pthread_create(&self->thread, NULL, consumer_thread, self);
+		rDebug("%s: Consumer thread created", __PRETTY_FUNCTION__);
+	}
 
 	return 0;
 }
@@ -178,18 +169,16 @@ int consumer_stop(mlt_consumer parent)
 	// Get the actual object
 	consumer_iola self = (consumer_iola_s*) parent->child;
 
+	// If we've not already joined
 	if (!self->joined)
 	{
 		rDebug("%s: Stopping iola consumer", __PRETTY_FUNCTION__);
 
-		// Kill the thread and clean up
+		// Kill the thread
 		self->joined = true;
 		self->running = false;
 		if (self->thread)
-		{
-			rDebug("%s: Waiting for consumer thread to join", __PRETTY_FUNCTION__);
 			pthread_join(self->thread, NULL);
-		}
 
 		rDebug("%s: Consumer joined main thread", __PRETTY_FUNCTION__);
 	}
