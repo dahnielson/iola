@@ -134,7 +134,13 @@ int project::get_dar_num()
 {
 	int iDARNum;
 
-	if (m_iWidth == 720 && m_iHeight == 480)
+	if (m_iWidth == 720 && m_iHeight == 486)
+	{
+		iDARNum = 400; //NOTE This is DAR of the PA not the CAs 4:3
+		if (m_bAnamorphic)
+			iDARNum *= 4;
+	}
+	else if (m_iWidth == 720 && m_iHeight == 480)
 	{
 		iDARNum = 15; //NOTE This is DAR of the PA not the CAs 4:3
 		if (m_bAnamorphic)
@@ -166,7 +172,13 @@ int project::get_dar_den()
 {
 	int iDARDen;
 
-	if (m_iWidth == 720 && m_iHeight == 480)
+	if (m_iWidth == 720 && m_iHeight == 486)
+	{
+		iDARDen = 297; //NOTE This is DAR of the PA not the CAs 4:3
+		if (m_bAnamorphic)
+			iDARDen *= 3;
+	}
+	else if (m_iWidth == 720 && m_iHeight == 480)
 	{
 		iDARDen = 11; //NOTE This is DAR of the PA not the CAs 4:3
 		if (m_bAnamorphic)
