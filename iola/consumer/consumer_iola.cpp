@@ -109,6 +109,9 @@ void* consumer_iola_init(mlt_profile profile, mlt_service_type type, const char 
 		// Set buffer to one frame for low latency
 		mlt_properties_set_int(self->properties, "buffer", 1);
 
+		// Set rescaling
+		mlt_properties_set(self->properties, "rescale", "none");
+
 		// Default audio buffer
 		mlt_properties_set_int(self->properties, "audio_buffer", 512);
 
