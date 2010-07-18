@@ -408,17 +408,17 @@ void SourceMonitor::browser_load()
 void SourceMonitor::browser_callback()
 {
 	int selected = m_pkBrowser->value();
-	if (selected)
+	if (selected && Fl::event_clicks())
 	{
+		Fl::event_clicks(0);
 		boost::filesystem::path selected_path(m_pkBrowser->text(selected));
 		if (boost::filesystem::is_directory(selected_path))
 		{
 			boost::filesystem::current_path(selected_path);
 			browser_load();
 		}
-		else if(Fl::event_clicks())
+		else
 		{
-			Fl::event_clicks(0);
 			iola::application::get_instance()->get_project()->source_load(
 				boost::filesystem::current_path() / selected_path
 				);
