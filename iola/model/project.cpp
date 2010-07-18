@@ -136,17 +136,15 @@ int project::get_dar_num()
 
 	if (m_iWidth == 720 && m_iHeight == 480)
 	{
+		iDARNum = 15; //NOTE This is DAR of the PA not the CAs 4:3
 		if (m_bAnamorphic)
-			iDARNum = 16;
-		else
-			iDARNum = 4;
+			iDARNum *= 4;
 	}
 	else if (m_iWidth == 720 && m_iHeight == 576)
 	{
+		iDARNum = 295; //NOTE This is DAR of the PA not the CAs 4:3
 		if (m_bAnamorphic)
-			iDARNum = 16;
-		else
-			iDARNum = 4;
+			iDARNum *= 4;
 	}
 	else if (m_iWidth == 960 && m_iHeight == 720)
 		iDARNum = 16;
@@ -170,17 +168,15 @@ int project::get_dar_den()
 
 	if (m_iWidth == 720 && m_iHeight == 480)
 	{
+		iDARDen = 11; //NOTE This is DAR of the PA not the CAs 4:3
 		if (m_bAnamorphic)
-			iDARDen = 9;
-		else
-			iDARDen = 3;
+			iDARDen *= 3;
 	}
 	else if (m_iWidth == 720 && m_iHeight == 576)
 	{
+		iDARDen = 216; //NOTE This is DAR of the PA not the CAs 4:3
 		if (m_bAnamorphic)
-			iDARDen = 9;
-		else
-			iDARDen = 3;
+			iDARDen *= 3;
 	}
 	else if (m_iWidth == 960 && m_iHeight == 720)
 		iDARDen = 9;
@@ -219,12 +215,12 @@ int project::get_par_num()
 		iPARNum = 1;
 		break;
 	case NTSC_601:
-		iPARNum = 8;
+		iPARNum = 10;
 		if (m_bAnamorphic)
 			iPARNum *= 4;
 		break;
 	case PAL_601:
-		iPARNum = 16;
+		iPARNum = 59;
 		if (m_bAnamorphic)
 			iPARNum *= 4;
 		break;
@@ -250,12 +246,12 @@ int project::get_par_den()
 		iPARDen = 1;
 		break;
 	case NTSC_601:
-		iPARDen = 9;
+		iPARDen = 11;
 		if (m_bAnamorphic)
 			iPARDen *= 3;
 		break;
 	case PAL_601:
-		iPARDen = 15;
+		iPARDen = 54;
 		if (m_bAnamorphic)
 			iPARDen *= 3;
 		break;
