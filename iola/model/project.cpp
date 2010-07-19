@@ -57,6 +57,7 @@ project::project() :
 	m_bNTSC(true),
 	m_iSampleDepth(16),
 	m_iSampleRate(48000),
+	m_pkSequenceStart(m_iTimebase),
 	m_pkSourceProducerChangeEvent(0),
 	m_pkProgramProducerChangeEvent(0)
 {
@@ -270,6 +271,7 @@ bool project::get_progressive()
 void project::set_fps_timebase(int timebase)
 {
 	m_iTimebase = timebase;
+	m_pkSequenceStart.set_timebase(m_iTimebase);
 	on_fps_change_signal();
 }
 
@@ -615,6 +617,16 @@ std::string project::program_get_name()
 	return m_strSequenceName;
 }
 
+void project::program_set_start_timecode(std::string strTimecode)
+{
+	m_pkSequenceStart.set_timecode(strTimecode);
+}
+
+std::string project::program_get_start_timecode()
+{
+	return m_pkSequenceStart.get_timecode(m_bNTSC);
+}
+
 void project::program_new()
 {
 	if (!m_pkProgram)
@@ -681,6 +693,9 @@ void project::program_save(boost::filesystem::path sequence)
 	isXML << "      <timebase>30</timebase>";
 	isXML << "      <ntsc>TRUE</ntsc>";
 	isXML << "    </rate>";
+	isXML << "    <timecode>";
+	isXML << "      <string>00:00:00;00</string>";
+	isXML << "    </timecode>";
 	isXML << "    <media>";
 	isXML << "      <video>";
 	isXML << "        <samplecharacteristics>";

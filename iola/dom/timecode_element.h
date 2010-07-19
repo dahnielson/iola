@@ -1,6 +1,6 @@
 /* -*- Mode: C++ ; c-basic-offset: 8 -*- */
-#ifndef IOLA_DOM_SEQUENCE_ELEMENT_H
-#define IOLA_DOM_SEQUENCE_ELEMENT_H
+#ifndef IOLA_DOM_TIMECODE_ELEMENT_H
+#define IOLA_DOM_TIMECODE_ELEMENT_H
 
 // Iola NLE
 // Copyright (c) 2010, Anders Dahnielson
@@ -29,20 +29,17 @@ namespace  iola
 namespace dom
 {
 
-class duration_element;
-class media_element;
-class name_element;
 class rate_element;
-class timecode_element;
+class string_element;
 
 ////////////////////////////////////////////////////////////////////////////
-// class iola::dom::sequence_element
+// class iola::dom::timecode_element
 
-class sequence_element :
+class timecode_element :
 	public iola::xml::ielement
 {
 public:
-	sequence_element(const std::string strName);
+	timecode_element(const std::string strName);
 	void child(iola::xml::ielement* pkElement);
 	void attribute(std::string strKey, std::string strValue);
 	void text(std::string strText);
@@ -52,14 +49,11 @@ public:
 
 private:
 	const std::string m_strName; 
-	name_element* m_pkName;
-	duration_element* m_pkDuration;
 	rate_element* m_pkRate;
-	timecode_element* m_pkTimecode;
-	media_element* m_pkMedia;
+	string_element* m_pkString;
 };
 
 } // namespace dom
 } // namespace iola
 
-#endif // IOLA_DOM_SEQUENCE_ELEMENT_H
+#endif // IOLA_DOM_TIMECODE_ELEMENT_H

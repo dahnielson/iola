@@ -30,6 +30,7 @@
 
 // IOLA
 #include "iproject.h"
+#include "timecode.h"
 
 namespace iola
 {
@@ -122,6 +123,9 @@ public:
 	void program_set_name(std::string name);
 	std::string program_get_name();
 
+	void program_set_start_timecode(std::string timecode);
+	std::string program_get_start_timecode();
+
 	void program_new();
 	void program_load(boost::filesystem::path sequence);
 	void program_save(boost::filesystem::path sequence);
@@ -182,6 +186,7 @@ private:
 	int m_iSampleDepth;
 	int m_iSampleRate;
 	std::string m_strSequenceName;
+	timecode m_pkSequenceStart;
 
 	Mlt::Event* m_pkSourceProducerChangeEvent;
 	Mlt::Event* m_pkProgramProducerChangeEvent;

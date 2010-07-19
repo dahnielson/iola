@@ -26,6 +26,7 @@
 #include "media_element.h"
 #include "name_element.h"
 #include "rate_element.h"
+#include "timecode_element.h"
 
 namespace iola
 {
@@ -40,6 +41,7 @@ sequence_element::sequence_element(const std::string strName) :
 	m_pkName(0),
 	m_pkDuration(0),
 	m_pkRate(0),
+	m_pkTimecode(0),
 	m_pkMedia(0)
 {}
 
@@ -52,6 +54,8 @@ sequence_element::child(iola::xml::ielement* pkElement)
 		m_pkDuration = dynamic_cast<duration_element*>(pkElement);
 	else if (dynamic_cast<rate_element*>(pkElement))
 		m_pkRate = dynamic_cast<rate_element*>(pkElement);
+	else if (dynamic_cast<timecode_element*>(pkElement))
+		m_pkTimecode = dynamic_cast<timecode_element*>(pkElement);
 	else if (dynamic_cast<media_element*>(pkElement))
 		m_pkMedia = dynamic_cast<media_element*>(pkElement);
 }
@@ -76,6 +80,8 @@ sequence_element::xml(std::ostream& osXML)
 		m_pkDuration->xml(osXML);
 	if (m_pkRate)
 		m_pkRate->xml(osXML);
+	if (m_pkTimecode)
+		m_pkTimecode->xml(osXML);
 	if (m_pkMedia)
 		m_pkMedia->xml(osXML);
 	osXML << "</" << m_strName << ">" << std::endl;
@@ -99,6 +105,9 @@ sequence_element::restore()
 	if (m_pkRate)
 		m_pkRate->restore();
 
+	if (m_pkTimecode)
+		m_pkTimecode->restore();
+
 	if (m_pkMedia)
 		m_pkMedia->restore();
 }
@@ -120,6 +129,9 @@ sequence_element::store()
 
 	if (m_pkRate)
 		m_pkRate->store();
+
+	if (m_pkTimecode)
+		m_pkTimecode->store();
 
 	if (m_pkMedia)
 		m_pkMedia->store();

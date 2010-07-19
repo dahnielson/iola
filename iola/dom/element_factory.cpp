@@ -42,7 +42,9 @@
 #include "samplerate_element.h"
 #include "sequence_element.h"
 #include "start_element.h"
+#include "string_element.h"
 #include "timebase_element.h"
+#include "timecode_element.h"
 #include "track_element.h"
 #include "video_element.h"
 #include "width_element.h"
@@ -100,8 +102,12 @@ element_factory::factory(const std::string strElement)
 		return new sequence_element(strElement);
 	else if (strElement == "start")
 		return new start_element(strElement);
+	else if (strElement == "string")
+		return new string_element(strElement);
 	else if (strElement == "timebase")
 		return new timebase_element(strElement);
+	else if (strElement == "timecode")
+		return new timecode_element(strElement);
 	else if (strElement == "track")
 		return new track_element(strElement);
 	else if (strElement == "video")
