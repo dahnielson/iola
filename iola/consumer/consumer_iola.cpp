@@ -259,7 +259,7 @@ static int consumer_play_video(consumer_iola self, mlt_frame frame)
 		// Scale to planar
 		bool planar = mlt_properties_get_int(self->properties, "planar");
 		if (planar)
-			w = w * mlt_frame_get_aspect_ratio(frame);
+			w = w * mlt_properties_get_double(self->properties, "aspect_ratio");
 
 		// Fit frame into window
 		bool zoom = mlt_properties_get_int(self->properties, "fit_to_window");
