@@ -19,9 +19,10 @@
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-#include "video_element.h"
+#include "duration_element.h"
 #include "samplecharacteristics_element.h"
 #include "track_element.h"
+#include "video_element.h"
 
 namespace iola
 {
@@ -33,6 +34,7 @@ namespace dom
 
 video_element::video_element(const std::string strName) :
         m_strName(strName),
+	m_pkDuration(0),
 	m_pkSampleCharacteristics(0),
 	m_pkTrack(0)
 {}
@@ -40,7 +42,9 @@ video_element::video_element(const std::string strName) :
 void
 video_element::child(iola::xml::ielement* pkElement)
 {
-	if (dynamic_cast<samplecharacteristics_element*>(pkElement))
+	if (dynamic_cast<duration_element*>(pkElement))
+		m_pkDuration = dynamic_cast<duration_element*>(pkElement);
+	else if (dynamic_cast<samplecharacteristics_element*>(pkElement))
 		m_pkSampleCharacteristics = dynamic_cast<samplecharacteristics_element*>(pkElement);
 	else if (dynamic_cast<track_element*>(pkElement))
 		m_pkTrack = dynamic_cast<track_element*>(pkElement);
@@ -60,6 +64,8 @@ void
 video_element::xml(std::ostream& osXML)
 {
 	osXML << "<" << m_strName << ">" << std::endl;
+	if (m_pkDuration)
+		m_pkDuration->xml(osXML);
 	if (m_pkSampleCharacteristics)
 		m_pkSampleCharacteristics->xml(osXML);
 	if (m_pkTrack)
@@ -70,6 +76,8 @@ video_element::xml(std::ostream& osXML)
 void
 video_element::restore()
 {
+	//FIXME duration element currently not used
+
 	if (m_pkSampleCharacteristics)
 		m_pkSampleCharacteristics->restore();
 	if (m_pkTrack)
@@ -79,6 +87,8 @@ video_element::restore()
 void
 video_element::store()
 {
+	//FIXME duration element currently not used
+
 	if (m_pkSampleCharacteristics)
 		m_pkSampleCharacteristics->store();
 	if (m_pkTrack)

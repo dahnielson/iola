@@ -23,14 +23,20 @@
 #include <boost/filesystem.hpp>
 
 // IOLA
-#include "clipitem_element.h"
-#include "end_element.h"
-#include "pathurl_element.h"
-#include "in_element.h"
-#include "out_element.h"
-#include "start_element.h"
-
 #include <iola/application/get_instance.h>
+#include "anamorphic_element.h"
+#include "clipitem_element.h"
+#include "duration_element.h"
+#include "end_element.h"
+#include "file_element.h"
+#include "fielddominance_element.h"
+#include "in_element.h"
+#include "name_element.h"
+#include "out_element.h"
+#include "pixelaspectratio_element.h"
+#include "rate_element.h"
+#include "start_element.h"
+#include "timecode_element.h"
 
 namespace iola
 {
@@ -42,18 +48,29 @@ namespace dom
 
 clipitem_element::clipitem_element(const std::string strName) :
         m_strName(strName),
-	m_pkPathURL(0),
+	m_pkName(0),
+	m_pkDuration(0),
+	m_pkFile(0),
 	m_pkIn(0),
 	m_pkOut(0),
 	m_pkStart(0),
-	m_pkEnd(0)
+	m_pkEnd(0),
+	m_pkRate(0),
+	m_pkTimecode(0),
+	m_pkAnamorphic(0),
+	m_pkPixelAspectRatio(0),
+	m_pkFieldDominance(0)
 {}
 
 void
 clipitem_element::child(iola::xml::ielement* pkElement)
 {
-	if (dynamic_cast<pathurl_element*>(pkElement))
-		m_pkPathURL = dynamic_cast<pathurl_element*>(pkElement);
+	if (dynamic_cast<name_element*>(pkElement))
+		m_pkName = dynamic_cast<name_element*>(pkElement);
+	else if (dynamic_cast<duration_element*>(pkElement))
+		m_pkDuration = dynamic_cast<duration_element*>(pkElement);
+	else if (dynamic_cast<file_element*>(pkElement))
+		m_pkFile = dynamic_cast<file_element*>(pkElement);
 	else if (dynamic_cast<in_element*>(pkElement))
 		m_pkIn = dynamic_cast<in_element*>(pkElement);
 	else if (dynamic_cast<out_element*>(pkElement))
@@ -62,12 +79,23 @@ clipitem_element::child(iola::xml::ielement* pkElement)
 		m_pkStart = dynamic_cast<start_element*>(pkElement);
 	else if (dynamic_cast<end_element*>(pkElement))
 		m_pkEnd = dynamic_cast<end_element*>(pkElement);
+	else if (dynamic_cast<rate_element*>(pkElement))
+		 m_pkRate = dynamic_cast<rate_element*>(pkElement);
+	else if (dynamic_cast<timecode_element*>(pkElement))
+		 m_pkTimecode = dynamic_cast<timecode_element*>(pkElement);
+	else if (dynamic_cast<anamorphic_element*>(pkElement))
+		 m_pkAnamorphic = dynamic_cast<anamorphic_element*>(pkElement);
+	else if (dynamic_cast<pixelaspectratio_element*>(pkElement))
+		 m_pkPixelAspectRatio = dynamic_cast<pixelaspectratio_element*>(pkElement);
+	else if (dynamic_cast<fielddominance_element*>(pkElement))
+		 m_pkFieldDominance = dynamic_cast<fielddominance_element*>(pkElement);
 }
 
 void
 clipitem_element::attribute(std::string strKey, std::string strValue)
 {
-	// No attributes.
+	if (strKey == "id")
+		m_strID = strValue;
 }
 
 void
@@ -80,8 +108,12 @@ void
 clipitem_element::xml(std::ostream& osXML)
 {
 	osXML << "<" << m_strName << ">" << std::endl;
-	if (m_pkPathURL)
-		m_pkPathURL->xml(osXML);
+	if (m_pkName)
+		m_pkName->xml(osXML);
+	if (m_pkDuration)
+		m_pkDuration->xml(osXML);
+	if (m_pkFile)
+		m_pkFile->xml(osXML);
 	if (m_pkIn)
 		m_pkIn->xml(osXML);
 	if (m_pkOut)
@@ -90,15 +122,33 @@ clipitem_element::xml(std::ostream& osXML)
 		m_pkStart->xml(osXML);
 	if (m_pkEnd)
 		m_pkEnd->xml(osXML);
+	if (m_pkRate)
+		m_pkRate->xml(osXML);
+	if (m_pkTimecode)
+		m_pkTimecode->xml(osXML);
+	if (m_pkAnamorphic)
+		m_pkAnamorphic->xml(osXML);
+	if (m_pkPixelAspectRatio)
+		m_pkPixelAspectRatio->xml(osXML);
+	if (m_pkFieldDominance)
+		m_pkFieldDominance->xml(osXML);
 	osXML << "</" << m_strName << ">" << std::endl;
 }
 
 void
 clipitem_element::restore()
 {
-	if (m_pkPathURL && m_pkIn && m_pkOut && m_pkStart && m_pkEnd)
+	//FIXME name element currently not used
+	//FIXME rate element currently not used
+	//FIXME timecode element currently not used
+	//FIXME anamorphic element currently not used
+	//FIXME pixelaspectratio element currently not used
+	//FIXME fielddominance element currently not used
+
+	if (m_pkFile && m_pkDuration && m_pkIn && m_pkOut && m_pkStart && m_pkEnd)
 	{
-		boost::filesystem::path pathurl(m_pkPathURL->get());
+		boost::filesystem::path pathurl = m_pkFile->get_pathurl(); //FIXME this is a bit fugly
+		const int duration = m_pkDuration->get();
 		const int in = m_pkIn->get();
 		const int out = m_pkOut->get();
 		const int start = m_pkStart->get();
@@ -110,7 +160,7 @@ clipitem_element::restore()
 void
 clipitem_element::store()
 {
-	// Has currently only terminal elements
+	//NOTE track_element::store() is used to populate the clipitem elements
 }
 
 } // namespace dom

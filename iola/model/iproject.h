@@ -122,7 +122,9 @@ public:
 	virtual int source_get_mark_in() = 0;
 	virtual int source_get_mark_out() = 0;
 	virtual void source_set_mark_in() = 0;
+	virtual void source_set_mark_in(int frame) = 0;
 	virtual void source_set_mark_out() = 0;
+	virtual void source_set_mark_out(int frame) = 0;
 	virtual void source_set_mark_clip() = 0;
 	virtual void source_clear_mark_in() = 0;
 	virtual void source_clear_mark_out() = 0;
@@ -162,7 +164,9 @@ public:
 	virtual int program_get_mark_in() = 0;
 	virtual int program_get_mark_out() = 0;
 	virtual void program_set_mark_in() = 0;
+	virtual void program_set_mark_in(int frame) = 0;
 	virtual void program_set_mark_out() = 0;
+	virtual void program_set_mark_out(int frame) = 0;
 	virtual void program_set_mark_cut() = 0;
 	virtual void program_clear_mark_in() = 0;
 	virtual void program_clear_mark_out() = 0;

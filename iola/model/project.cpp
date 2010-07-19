@@ -506,6 +506,18 @@ void project::source_set_mark_in()
 	}
 }
 
+void project::source_set_mark_in(int frame)
+{
+	if (m_pkSource)
+	{
+		m_pkSource->lock();
+		rDebug("%s: Set source mark in at %i", __PRETTY_FUNCTION__, frame);
+		m_pkSource->set("meta.iola.mark_in", frame);
+		m_pkSource->unlock();
+		on_source_marks_change_signal();
+	}
+}
+
 void project::source_set_mark_out()
 {
 	if (m_pkSource)
@@ -513,6 +525,18 @@ void project::source_set_mark_out()
 		m_pkSource->lock();
 		rDebug("%s: Set source mark out at %i", __PRETTY_FUNCTION__, m_pkSource->frame());
 		m_pkSource->set("meta.iola.mark_out", m_pkSource->frame());
+		m_pkSource->unlock();
+		on_source_marks_change_signal();
+	}
+}
+
+void project::source_set_mark_out(int frame)
+{
+	if (m_pkSource)
+	{
+		m_pkSource->lock();
+		rDebug("%s: Set source mark out at %i", __PRETTY_FUNCTION__, frame);
+		m_pkSource->set("meta.iola.mark_out", frame);
 		m_pkSource->unlock();
 		on_source_marks_change_signal();
 	}
@@ -693,6 +717,8 @@ void project::program_save(boost::filesystem::path sequence)
 	isXML << "      <timebase>30</timebase>";
 	isXML << "      <ntsc>TRUE</ntsc>";
 	isXML << "    </rate>";
+	isXML << "    <in>-1</in>";
+	isXML << "    <out>-1</out>";
 	isXML << "    <timecode>";
 	isXML << "      <string>00:00:00;00</string>";
 	isXML << "    </timecode>";
@@ -919,6 +945,18 @@ void project::program_set_mark_in()
 	}
 }
 
+void project::program_set_mark_in(int frame)
+{
+	if (m_pkProgram)
+	{
+		m_pkProgram->lock();
+		rDebug("%s: Set program mark in at %i", __PRETTY_FUNCTION__, frame);
+		m_pkProgram->set("meta.iola.mark_in", frame);
+		m_pkProgram->unlock();
+		on_program_marks_change_signal();
+	}
+}
+
 void project::program_set_mark_out()
 {
 	if (m_pkProgram)
@@ -926,6 +964,18 @@ void project::program_set_mark_out()
 		m_pkProgram->lock();
 		rDebug("%s: Set program mark out at %i", __PRETTY_FUNCTION__, m_pkProgram->frame());
 		m_pkProgram->set("meta.iola.mark_out", m_pkProgram->frame());
+		m_pkProgram->unlock();
+		on_program_marks_change_signal();
+	}
+}
+
+void project::program_set_mark_out(int frame)
+{
+	if (m_pkProgram)
+	{
+		m_pkProgram->lock();
+		rDebug("%s: Set program mark out at %i", __PRETTY_FUNCTION__, frame);
+		m_pkProgram->set("meta.iola.mark_out", frame);
 		m_pkProgram->unlock();
 		on_program_marks_change_signal();
 	}

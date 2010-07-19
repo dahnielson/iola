@@ -29,11 +29,18 @@ namespace  iola
 namespace dom
 {
 
-class pathurl_element;
-class in_element;
-class out_element;
-class start_element;
+class anamorphic_element;
+class duration_element;
 class end_element;
+class file_element;
+class fielddominance_element;
+class in_element;
+class name_element;
+class out_element;
+class pixelaspectratio_element;
+class rate_element;
+class start_element;
+class timecode_element;
 
 ////////////////////////////////////////////////////////////////////////////
 // class iola::dom::clipitem_element
@@ -52,11 +59,19 @@ public:
 
 private:
 	const std::string m_strName; 
-	pathurl_element* m_pkPathURL;
+	std::string m_strID;
+	name_element* m_pkName;
+	file_element* m_pkFile;
+	duration_element* m_pkDuration;
 	in_element* m_pkIn;
 	out_element* m_pkOut;
 	start_element* m_pkStart;
 	end_element* m_pkEnd;
+	rate_element* m_pkRate;
+	timecode_element* m_pkTimecode;
+	anamorphic_element* m_pkAnamorphic;
+	pixelaspectratio_element* m_pkPixelAspectRatio;
+	fielddominance_element* m_pkFieldDominance;
 };
 
 } // namespace dom

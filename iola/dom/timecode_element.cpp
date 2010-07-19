@@ -54,6 +54,8 @@ timecode_element::child(iola::xml::ielement* pkElement)
 void
 timecode_element::attribute(std::string strKey, std::string strValue)
 {
+	if (strKey == "id")
+		m_strID = strValue;
 }
 
 void

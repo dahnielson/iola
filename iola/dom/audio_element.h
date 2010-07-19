@@ -29,6 +29,8 @@ namespace  iola
 namespace dom
 {
 
+class duration_element;
+class rate_element;
 class samplecharacteristics_element;
 
 ////////////////////////////////////////////////////////////////////////////
@@ -48,6 +50,8 @@ public:
 
 private:
 	const std::string m_strName; 
+	duration_element* m_pkDuration;
+	rate_element* m_pkRate;
 	samplecharacteristics_element* m_pkSampleCharacteristics;
 };
 

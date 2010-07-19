@@ -30,8 +30,11 @@ namespace dom
 {
 
 class duration_element;
+class in_element;
 class media_element;
 class name_element;
+class out_element;
+class pixelaspectratio_element;
 class rate_element;
 class timecode_element;
 
@@ -52,10 +55,14 @@ public:
 
 private:
 	const std::string m_strName; 
+	std::string m_strID;
 	name_element* m_pkName;
 	duration_element* m_pkDuration;
 	rate_element* m_pkRate;
+	pixelaspectratio_element* m_pkPixelAspectRatio;
 	timecode_element* m_pkTimecode;
+	in_element* m_pkIn;
+	out_element* m_pkOut;
 	media_element* m_pkMedia;
 };
 

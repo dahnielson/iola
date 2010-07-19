@@ -20,12 +20,15 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include <iola/application/get_instance.h>
-
 #include "clipitem_element.h"
+#include "duration_element.h"
 #include "end_element.h"
+#include "file_element.h"
 #include "in_element.h"
+#include "name_element.h"
 #include "out_element.h"
 #include "pathurl_element.h"
+#include "rate_element.h"
 #include "start_element.h"
 #include "track_element.h"
 
@@ -87,19 +90,30 @@ track_element::store()
 		Mlt::ClipInfo* pkInfo = iola::application::get_instance()->get_project()->program_get_clip_info(i);
 
 		clipitem_element* pkClipItem = new clipitem_element("clipitem");
+		name_element* pkName = new name_element("name");
+		duration_element* pkDuration = new duration_element("duration");
+		rate_element* pkRate = new rate_element("rate");
+		file_element* pkFile = new file_element("file");
 		pathurl_element* pkPathURL = new pathurl_element("pathurl");
 		in_element* pkIn = new in_element("in");
 		out_element* pkOut = new out_element("out");
 		start_element* pkStart = new start_element("start");
 		end_element* pkEnd = new end_element("end");
 
+		pkName->set("Clip");
 		pkPathURL->set(pkInfo->resource);
+		pkDuration->set(pkInfo->frame_out - pkInfo->frame_in);
 		pkIn->set(pkInfo->frame_in);
 		pkOut->set(pkInfo->frame_out);
 		pkStart->set(pkInfo->start);
 		pkEnd->set(pkInfo->start + pkInfo->frame_out - pkInfo->frame_in);
 
-		pkClipItem->child(pkPathURL);
+		pkFile->child(pkPathURL);
+
+		pkClipItem->child(pkName);
+		pkClipItem->child(pkDuration);
+		pkClipItem->child(pkRate);
+		pkClipItem->child(pkFile);
 		pkClipItem->child(pkIn);
 		pkClipItem->child(pkOut);
 		pkClipItem->child(pkStart);

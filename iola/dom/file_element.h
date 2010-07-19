@@ -1,6 +1,6 @@
 /* -*- Mode: C++ ; c-basic-offset: 8 -*- */
-#ifndef IOLA_DOM_TIMECODE_ELEMENT_H
-#define IOLA_DOM_TIMECODE_ELEMENT_H
+#ifndef IOLA_DOM_FILE_ELEMENT_H
+#define IOLA_DOM_FILE_ELEMENT_H
 
 // Iola NLE
 // Copyright (c) 2010, Anders Dahnielson
@@ -21,6 +21,9 @@
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+// BOOST
+#include <boost/filesystem.hpp>
+
 // IOLA
 #include <iola/xml/ielement.h>
 
@@ -29,32 +32,38 @@ namespace  iola
 namespace dom
 {
 
+class duration_element;
+class name_element;
+class pathurl_element;
 class rate_element;
-class string_element;
 
 ////////////////////////////////////////////////////////////////////////////
-// class iola::dom::timecode_element
+// class iola::dom::file_element
 
-class timecode_element :
+class file_element :
 	public iola::xml::ielement
 {
 public:
-	timecode_element(const std::string strName);
+	file_element(const std::string strName);
 	void child(iola::xml::ielement* pkElement);
 	void attribute(std::string strKey, std::string strValue);
 	void text(std::string strText);
 	void xml(std::ostream& osXML);
 	void restore();
 	void store();
+	boost::filesystem::path get_pathurl(); //FIXME this is a bit fugly (anti-pattern alert!)
+	void set_pathurl(boost::filesystem::path pathurl); //FIXME I don't like it at all...
 
 private:
 	const std::string m_strName; 
 	std::string m_strID;
+	duration_element* m_pkDuration;
 	rate_element* m_pkRate;
-	string_element* m_pkString;
+	name_element* m_pkName;
+	pathurl_element* m_pkPathURL;
 };
 
 } // namespace dom
 } // namespace iola
 
-#endif // IOLA_DOM_TIMECODE_ELEMENT_H
+#endif // IOLA_DOM_FILE_ELEMENT_H

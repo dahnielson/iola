@@ -27,6 +27,7 @@
 #include "depth_element.h"
 #include "duration_element.h"
 #include "end_element.h"
+#include "file_element.h"
 #include "fielddominance_element.h"
 #include "height_element.h"
 #include "in_element.h"
@@ -72,6 +73,8 @@ element_factory::factory(const std::string strElement)
 		return new duration_element(strElement);
 	else if (strElement == "end")
 		return new end_element(strElement);
+	else if (strElement == "file")
+		return new file_element(strElement);
 	else if (strElement == "fielddominance")
 		return new fielddominance_element(strElement);
 	else if (strElement == "height")
