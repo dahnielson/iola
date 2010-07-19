@@ -115,6 +115,9 @@ void* consumer_iola_init(mlt_profile profile, mlt_service_type type, const char 
 		// Set fit to window
 		mlt_properties_set_int(self->properties, "fit_to_window", false);
 
+		// Set planar
+		mlt_properties_set_int(self->properties, "planar", true);
+
 		// Default audio buffer
 		mlt_properties_set_int(self->properties, "audio_buffer", 512);
 
@@ -253,12 +256,17 @@ static int consumer_play_video(consumer_iola self, mlt_frame frame)
 		double w = self->width;
 		double h = self->height;
 
+		// Scale to planar
+		bool planar = mlt_properties_get_int(self->properties, "planar");
+		if (planar)
+			w = w * mlt_frame_get_aspect_ratio(frame);
+
 		// Fit frame into window
 		bool zoom = mlt_properties_get_int(self->properties, "fit_to_window");
 		if (zoom)
 		{
 			double window_aspect = (double)self->window_width / self->window_height;
-			double frame_aspect = mlt_frame_get_aspect_ratio(frame) * self->width / self->height;
+			double frame_aspect = w / self->height;
 			w = frame_aspect / window_aspect * self->window_width;
 			h = self->window_height;
 			if (w > self->window_width)
