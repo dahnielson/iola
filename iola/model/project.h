@@ -154,6 +154,10 @@ public:
 	void program_goto_next_edit();
 	void program_goto_start();
 	void program_goto_end();
+	void program_lift();
+	void program_lift(const int program_in, const int program_out);
+	void program_extract();
+	void program_extract(const int program_in, const int program_out);
 	void program_insert();
 	void program_insert(boost::filesystem::path resource, const int program_in,
 			    const int source_in, const int source_out);

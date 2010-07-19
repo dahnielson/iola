@@ -121,6 +121,9 @@ void* consumer_iola_init(mlt_profile profile, mlt_service_type type, const char 
 		// Default audio buffer
 		mlt_properties_set_int(self->properties, "audio_buffer", 512);
 
+		// Default test card (e.g. used for blanks)
+		mlt_properties_set(self->properties, "test_card", "colour:colour=black");
+
 		// Ensure we don't join on a non-running object
 		self->joined = true;
 

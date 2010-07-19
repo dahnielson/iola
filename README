@@ -39,12 +39,27 @@ Keyboard shortcuts
  K  	stop
  L  	play forward
 
+ Z	lift
+ X	extract
  V	insert
  B	overwrite
 
  Home	goto start
  End	goto end
 
+
+Lift
+----
+
+When you edit a sequence using lift edit, all sequence clips in all
+unlocked tracks are removed and is replaced with a black filler to
+fill the gap.
+
+Extract
+-------
+
+When you edit a sequence using extract edit, all sequence clips in all
+unlocked tracks are removed and the gap left by the removal is closed.
 
 Insert
 ------

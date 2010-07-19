@@ -278,6 +278,16 @@ int ProgramMonitor::handle(int event)
 				play_forward();
 			return 1;
 		}
+		else if (Fl::event_key() == 'z')
+		{
+			lift();
+			return 1;
+		}
+		else if (Fl::event_key() == 'x')
+		{
+			extract();
+			return 1;
+		}
 		else if (Fl::event_key() == 'v')
 		{
 			insert();
@@ -472,6 +482,16 @@ void ProgramMonitor::edit_previous_goto()
 void ProgramMonitor::edit_next_goto()
 {
 	iola::application::get_instance()->get_project()->program_goto_next_edit();
+}
+
+void ProgramMonitor::lift()
+{
+	iola::application::get_instance()->get_project()->program_lift();
+}
+
+void ProgramMonitor::extract()
+{
+	iola::application::get_instance()->get_project()->program_extract();
 }
 
 void ProgramMonitor::insert()

@@ -1015,6 +1015,110 @@ void project::program_goto_end()
 	}
 }
 
+void project::program_lift()
+{
+	if (m_pkProgram)
+	{
+		int program_in, program_out;
+		if (program_get_mark_in() != -1 && program_get_mark_out() != -1 &&
+		    program_get_mark_in() < program_get_mark_out())
+		{
+			program_in = program_get_mark_in();
+			program_out = program_get_mark_out();
+		}
+		else if (program_get_mark_in() != -1 && program_get_mark_out() == -1 &&
+			 program_get_mark_in() < program_get_mark_out())
+		{
+			const int duration = program_get_mark_out() - program_get_mark_in();
+			program_in = program_get_mark_in();
+			program_out = program_get_mark_in() + duration;
+		}
+		else if (program_get_mark_in() == -1 && program_get_mark_out() != -1 &&
+			 program_get_mark_in() < program_get_mark_out())
+		{
+			const int duration = program_get_mark_out() - program_get_mark_in();
+			program_in = program_get_mark_out() - duration;
+			program_out = program_get_mark_out();
+		}
+		else
+		{
+			rDebug("%s: Not good enough in/out points marked to perform lift edit", __PRETTY_FUNCTION__);
+			on_alert("Not good enough in/out points marked to perform lift edit");
+			return;
+		}
+
+		program_lift(program_in, program_out);
+	}
+}
+
+void project::program_lift(const int program_in, const int program_out)
+{
+	if (m_pkProgram)
+	{
+		rDebug("%s: Lift edit in playlist with %i clips: program_in=%i program_out=%i",
+		       __PRETTY_FUNCTION__, m_pkProgram->count(), program_in, program_out);
+
+		m_pkProgram->lock();
+		const int clip_index = m_pkProgram->remove_region(program_in, program_out - program_in);
+		m_pkProgram->insert_blank(clip_index, program_out - program_in);
+		m_pkProgram->unlock();
+
+		rDebug("%s: Playlist now contain %i clips", __PRETTY_FUNCTION__, m_pkProgram->count());
+	}
+}
+
+void project::program_extract()
+{
+	if (m_pkProgram)
+	{
+		int program_in, program_out;
+		if (program_get_mark_in() != -1 && program_get_mark_out() != -1 &&
+		    program_get_mark_in() < program_get_mark_out())
+		{
+			program_in = program_get_mark_in();
+			program_out = program_get_mark_out();
+		}
+		else if (program_get_mark_in() != -1 && program_get_mark_out() == -1 &&
+			 program_get_mark_in() < program_get_mark_out())
+		{
+			const int duration = program_get_mark_out() - program_get_mark_in();
+			program_in = program_get_mark_in();
+			program_out = program_get_mark_in() + duration;
+		}
+		else if (program_get_mark_in() == -1 && program_get_mark_out() != -1 &&
+			 program_get_mark_in() < program_get_mark_out())
+		{
+			const int duration = program_get_mark_out() - program_get_mark_in();
+			program_in = program_get_mark_out() - duration;
+			program_out = program_get_mark_out();
+		}
+		else
+		{
+			rDebug("%s: Not good enough in/out points marked to perform extract edit", __PRETTY_FUNCTION__);
+			on_alert("Not good enough in/out points marked to perform extract edit");
+			return;
+		}
+
+		program_extract(program_in, program_out);
+		program_clear_mark_out();
+	}
+}
+
+void project::program_extract(const int program_in, const int program_out)
+{
+	if (m_pkProgram)
+	{
+		rDebug("%s: Extract edit in playlist with %i clips: program_in=%i program_out=%i",
+		       __PRETTY_FUNCTION__, m_pkProgram->count(), program_in, program_out);
+
+		m_pkProgram->lock();
+		m_pkProgram->remove_region(program_in, program_out - program_in);
+		m_pkProgram->unlock();
+
+		rDebug("%s: Playlist now contain %i clips", __PRETTY_FUNCTION__, m_pkProgram->count());
+	}
+}
+
 void project::program_insert()
 {
 	if (!m_pkProgram)

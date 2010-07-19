@@ -169,6 +169,10 @@ public:
 	virtual void program_goto_next_edit() = 0;
 	virtual void program_goto_start() = 0;
 	virtual void program_goto_end() = 0;
+	virtual void program_lift() = 0;
+	virtual void program_lift(const int program_in, const int program_out) = 0;
+	virtual void program_extract() = 0;
+	virtual void program_extract(const int program_in, const int program_out) = 0;
 	virtual void program_insert() = 0;
 	virtual void program_insert(boost::filesystem::path resource, const int program_in,
 				    const int source_in, const int source_out) = 0;

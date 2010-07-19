@@ -115,6 +115,8 @@ private:
 	void edit_previous_goto();
 	void edit_next_goto();
 
+	void lift();
+	void extract();
 	void insert();
 	void overwrite();
 
