@@ -29,7 +29,6 @@
 #include "ProgramMonitor.h"
 #include "SequenceSettings.h"
 #include "SourceMonitor.h"
-#include "theme.h"
 
 namespace iola
 {
@@ -39,15 +38,6 @@ namespace gui
 MainWindow::MainWindow() :
 	Fl_Double_Window(Fl::w(), Fl::h(), "Iola NLE")
 {
-	// Disable visible keyboard focus
-	Fl::visible_focus(0);
-
-	// Select visual
-	Fl::visual(FL_DOUBLE|FL_RGB);
-
-	// Apply theme
-	iola::gui::scheme::theme();
-
 	// Menu
 	Fl_Menu_Bar* pkMenuBar = new Fl_Menu_Bar(0, 0, Fl::w(), 25);
 	pkMenuBar->clear();

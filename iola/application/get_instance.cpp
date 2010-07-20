@@ -22,9 +22,6 @@
 // STD
 #include <pthread.h>
 
-// FLTK
-#include <FL/Fl.H>
-
 // LIBAO
 #include <ao/ao.h>
 
@@ -34,7 +31,7 @@
 // IOLA
 #include <iola/consumer/consumer_iola.h>
 #include <iola/model/iproject.h>
-#include <iola/gui/MainWindow.h>
+#include <iola/gui/igui.h>
 #include "get_instance.h"
 
 namespace
@@ -54,7 +51,6 @@ class application_implementation :
 {
 public:
 	application_implementation() :
-		m_bRun(false),
 		m_pkGUI(0),
 		m_pkProject(0)
 	{
@@ -74,21 +70,17 @@ public:
 		ao_initialize();
 
 		// Initialize MLT
-		Mlt::Repository* pkRepos = Mlt::Factory::init(NULL);
-		pkRepos->register_service(consumer_type, "iola", iola::consumer::consumer_iola_init);
+		Mlt::Repository* pkRepository = Mlt::Factory::init(NULL);
+		pkRepository->register_service(consumer_type, "iola", iola::consumer::consumer_iola_init);
 
 		// Instance project
 		m_pkProject = iola::model::factory::project();
 
 		// Instance GUI
-		m_pkGUI = new iola::gui::MainWindow();
+		m_pkGUI = iola::gui::factory();
 
 		// Enter main loop
-		m_bRun = true;
 		m_pkGUI->show();
-
-		while(m_bRun)
-			execute();
 
 		// Clean up
 		delete m_pkGUI;
@@ -101,17 +93,12 @@ public:
 	// Actions
 	void quit()
 	{
-		m_bRun = false;
+		if (m_pkGUI)
+			m_pkGUI->stop();
 	}
 
 private:
-	void execute()
-	{
-		Fl::wait(0); //NOTE The zero time makes the GUI really responsive
-	}
-
-	bool m_bRun;
-	iola::gui::MainWindow* m_pkGUI;
+	iola::gui::igui* m_pkGUI;
 	iola::model::iproject* m_pkProject;
 };
 
