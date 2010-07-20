@@ -57,14 +57,12 @@ public:
 	int get_height();
 
 	// Display Aspect Ratio
-	int get_dar_num();
-	int get_dar_den();
+	boost::rational<int> dar();
 
 	// Pixel Aspect Ratio
 	void set_par(iola::model::iproject::par_t par);
 	iola::model::iproject::par_t get_par();
-	int get_par_num();
-	int get_par_den();
+	boost::rational<int> par();
 
 	// Anamorphic
 	void set_anamorphic(bool anamorphic);
@@ -80,8 +78,7 @@ public:
 	int get_fps_timebase();
 	void set_fps_ntsc(bool ntsc);
 	bool get_fps_ntsc();
-	int get_fps_num();
-	int get_fps_den();
+	boost::rational<int> fps();
 
 	// Audio
 	void set_sample_depth(int depth);

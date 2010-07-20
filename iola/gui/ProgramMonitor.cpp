@@ -325,16 +325,16 @@ void ProgramMonitor::on_sar_change()
 void ProgramMonitor::on_dar_change()
 {
 	m_pkConsumer->lock();
-	m_pkConsumer->set("display_aspect_num", iola::application::get_instance()->get_project()->get_dar_num());
-	m_pkConsumer->set("display_aspect_den", iola::application::get_instance()->get_project()->get_dar_den());
+	m_pkConsumer->set("display_aspect_num", iola::application::get_instance()->get_project()->dar().numerator());
+	m_pkConsumer->set("display_aspect_den", iola::application::get_instance()->get_project()->dar().denominator());
 	m_pkConsumer->unlock();
 }
 
 void ProgramMonitor::on_par_change()
 {
 	m_pkConsumer->lock();
-	m_pkConsumer->set("sample_aspect_num", iola::application::get_instance()->get_project()->get_par_num());
-	m_pkConsumer->set("sample_aspect_den", iola::application::get_instance()->get_project()->get_par_den());
+	m_pkConsumer->set("sample_aspect_num", iola::application::get_instance()->get_project()->par().numerator());
+	m_pkConsumer->set("sample_aspect_den", iola::application::get_instance()->get_project()->par().denominator());
 	m_pkConsumer->unlock();
 }
 
@@ -348,8 +348,8 @@ void ProgramMonitor::on_field_change()
 void ProgramMonitor::on_fps_change()
 {
 	m_pkConsumer->lock();
-	m_pkConsumer->set("frame_rate_num", iola::application::get_instance()->get_project()->get_fps_num());
-	m_pkConsumer->set("frame_rate_den", iola::application::get_instance()->get_project()->get_fps_den());
+	m_pkConsumer->set("frame_rate_num", iola::application::get_instance()->get_project()->fps().numerator());
+	m_pkConsumer->set("frame_rate_den", iola::application::get_instance()->get_project()->fps().denominator());
 	m_pkConsumer->unlock();
 }
 

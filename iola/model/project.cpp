@@ -25,7 +25,6 @@
 // BOOST
 #include <boost/filesystem/fstream.hpp>
 #include <boost/format.hpp>
-#include <boost/rational.hpp>
 
 // STD
 #include <iostream>
@@ -94,19 +93,19 @@ Mlt::Profile& project::get_profile()
 	m_kProfile.get_profile()->height = m_iHeight;
 
 	// Display Aspect Ratio
-	m_kProfile.get_profile()->display_aspect_num = get_dar_num();
-	m_kProfile.get_profile()->display_aspect_den = get_dar_den();
+	m_kProfile.get_profile()->display_aspect_num = dar().numerator();
+	m_kProfile.get_profile()->display_aspect_den = dar().denominator();
 
 	// Pixel Aspect Ratio
-	m_kProfile.get_profile()->sample_aspect_num = get_par_num();
-	m_kProfile.get_profile()->sample_aspect_den = get_par_den();
+	m_kProfile.get_profile()->sample_aspect_num = par().numerator();
+	m_kProfile.get_profile()->sample_aspect_den = par().denominator();
 
 	// Progressive
 	m_kProfile.get_profile()->progressive = get_progressive();
 
 	// Frame Rate
-	m_kProfile.get_profile()->frame_rate_num = get_fps_num();
-	m_kProfile.get_profile()->frame_rate_den = get_fps_den();
+	m_kProfile.get_profile()->frame_rate_num = fps().numerator();
+	m_kProfile.get_profile()->frame_rate_den = fps().denominator();
 
 	return m_kProfile;
 }
@@ -133,32 +132,12 @@ int project::get_height()
 	return m_iHeight;
 }
 
-int project::get_dar_num()
+boost::rational<int> project::dar()
 {
 	//NOTE This is the DAR of the PA not the CA
-
-	int iDARNum;
-
-	int iGCD = boost::gcd(m_iWidth, m_iHeight);
-	iDARNum = m_iWidth / iGCD * get_par_num();
-
-	rDebug("%s: iDARNum=%i", __PRETTY_FUNCTION__, iDARNum);
-
-	return iDARNum;
-}
-
-int project::get_dar_den()
-{
-	//NOTE This is the DAR of the PA not the CA
-
-	int iDARDen;
-
-	int iGCD = boost::gcd(m_iWidth, m_iHeight);
-	iDARDen = m_iHeight / iGCD * get_par_den();
-
-	rDebug("%s: iDARDen=%i", __PRETTY_FUNCTION__, iDARDen);
-
-	return iDARDen;
+	boost::rational<int> SAR(m_iWidth, m_iHeight);
+	boost::rational<int> DAR = SAR / boost::gcd(m_iWidth, m_iHeight);
+	return DAR;
 }
 
 void project::set_par(iola::model::iproject::par_t par)
@@ -172,66 +151,35 @@ iola::model::iproject::par_t project::get_par()
 	return m_iPAR;
 }
 
-int project::get_par_num()
+boost::rational<int> project::par()
 {
-	int iPARNum;
+	boost::rational<int> PAR;
 
 	switch (m_iPAR)
 	{
 	case SQUARE:
-		iPARNum = 1;
+		PAR = boost::rational<int>(1, 1);
 		break;
 	case NTSC_601:
-		iPARNum = 10;
+		PAR = boost::rational<int>(10, 11);
 		if (m_bAnamorphic)
-			iPARNum *= 4;
+			PAR *= 4;
 		break;
 	case PAL_601:
-		iPARNum = 59;
+		PAR = boost::rational<int>(59, 54);
 		if (m_bAnamorphic)
-			iPARNum *= 4;
+			PAR *= 4;
 		break;
 	case HD_1280x1080:
-		iPARNum = 3;
+		PAR = boost::rational<int>(3, 2);
 		break;
 	case HD_960x720:
 	case HD_1440x1080:
-		iPARNum = 4;
+		PAR = boost::rational<int>(4, 3);
 		break;
 	};
 
-	return iPARNum;
-}
-
-int project::get_par_den()
-{
-	int iPARDen;
-
-	switch (m_iPAR)
-	{
-	case SQUARE:
-		iPARDen = 1;
-		break;
-	case NTSC_601:
-		iPARDen = 11;
-		if (m_bAnamorphic)
-			iPARDen *= 3;
-		break;
-	case PAL_601:
-		iPARDen = 54;
-		if (m_bAnamorphic)
-			iPARDen *= 3;
-		break;
-	case HD_1280x1080:
-		iPARDen = 2;
-		break;
-	case HD_960x720:
-	case HD_1440x1080:
-		iPARDen = 3;
-		break;
-	};
-
-	return iPARDen;
+	return PAR;
 }
 
 void project::set_anamorphic(bool anamorphic)
@@ -292,14 +240,14 @@ bool project::get_fps_ntsc()
 	return m_bNTSC;
 }
 
-int project::get_fps_num()
+boost::rational<int> project::fps()
 {
-	return m_bNTSC ? m_iTimebase * 1000 : m_iTimebase;
-}
-
-int project::get_fps_den()
-{
-	return m_bNTSC ? 1001 : 1;
+	boost::rational<int> FPS;
+	if (m_bNTSC)
+		FPS = boost::rational<int>(m_iTimebase * 1000, 1001);
+	else
+		FPS = boost::rational<int>(m_iTimebase, 1);
+	return FPS;
 }
 
 void project::set_sample_depth(int depth)

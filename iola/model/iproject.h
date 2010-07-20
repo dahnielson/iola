@@ -26,6 +26,7 @@
 
 // BOOST
 #include <boost/filesystem.hpp>
+#include <boost/rational.hpp>
 #include <boost/signals2.hpp>
 
 // MLT
@@ -71,14 +72,12 @@ public:
 	virtual int get_height() = 0;
 
 	// Display Aspect Ratio
-	virtual int get_dar_num() = 0;
-	virtual int get_dar_den() = 0;
+	virtual boost::rational<int> dar() = 0;
 
 	// Pixel Aspect Ratio
 	virtual void set_par(par_t par) = 0;
 	virtual par_t get_par() = 0;
-	virtual int get_par_num() = 0;
-	virtual int get_par_den() = 0;
+	virtual boost::rational<int> par() = 0;
 
 	// Anamorphic
 	virtual void set_anamorphic(bool anamorphic) = 0;
@@ -94,8 +93,7 @@ public:
 	virtual int get_fps_timebase() = 0;
 	virtual void set_fps_ntsc(bool ntsc) = 0;
 	virtual bool get_fps_ntsc() = 0;
-	virtual int get_fps_num() = 0;
-	virtual int get_fps_den() = 0;
+	virtual boost::rational<int> fps() = 0;
 
 	// Audio
 	virtual void set_sample_depth(int depth) = 0;
