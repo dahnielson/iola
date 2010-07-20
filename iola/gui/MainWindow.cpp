@@ -57,6 +57,7 @@ MainWindow::MainWindow() :
 	pkMenuBar->add("&File/&Open...", FL_CTRL+'o', (Fl_Callback *)open_project, this, 0);
 	pkMenuBar->add("&File/&Save", FL_CTRL+'s', (Fl_Callback *)save_project, this, 0);
 	pkMenuBar->add("&File/_Save &As...", 0, (Fl_Callback *)save_as_project, this, 0);
+	pkMenuBar->add("&File/Export/Sequence as EDL...", 0, (Fl_Callback *)export_edl, this, 0);
 	pkMenuBar->add("&File/_Sequence settings", 0, (Fl_Callback *)sequence_settings, this, 0);
 	pkMenuBar->add("&File/&Quit", FL_CTRL+'q', (Fl_Callback *)quit_application, this, 0);
 //	pkMenuBar->add("&Edit/&Undo", FL_CTRL+'z', 0, this, 0);
@@ -147,6 +148,16 @@ void MainWindow::clear_project()
 {
 	iola::application::get_instance()->get_project()->source_new();
 	iola::application::get_instance()->get_project()->program_new();
+}
+
+void MainWindow::export_edl()
+{
+	char* filename = fl_file_chooser("Export", "EDL (*.edl)", NULL);
+	if (filename)
+	{
+		boost::filesystem::path kEDLPath(filename);
+		iola::application::get_instance()->get_project()->program_export_edl(kEDLPath);
+	}
 }
 
 void MainWindow::sequence_settings()

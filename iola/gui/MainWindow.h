@@ -52,6 +52,7 @@ public:
 	void save_project();
 	void save_as_project();
 	void clear_project();
+	void export_edl();
 	void sequence_settings();
 	void quit_application();
 	void about_iola();
@@ -74,6 +75,7 @@ private:
 	static void open_project(Fl_Widget*, void* v) { reinterpret_cast<MainWindow*>(v)->open_project(); }
 	static void save_project(Fl_Widget*, void* v) { reinterpret_cast<MainWindow*>(v)->save_project(); }
 	static void save_as_project(Fl_Widget*, void* v) { reinterpret_cast<MainWindow*>(v)->save_as_project(); }
+	static void export_edl(Fl_Widget*, void* v) { reinterpret_cast<MainWindow*>(v)->export_edl(); }
 	static void sequence_settings(Fl_Widget*, void* v) { reinterpret_cast<MainWindow*>(v)->sequence_settings(); }
 	static void quit_application(Fl_Widget*, void* v) { reinterpret_cast<MainWindow*>(v)->quit_application(); }
 	static void about_iola(Fl_Widget*, void* v) { reinterpret_cast<MainWindow*>(v)->about_iola(); }

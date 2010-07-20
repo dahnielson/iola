@@ -24,6 +24,7 @@
 
 // BOOST
 #include <boost/filesystem/fstream.hpp>
+#include <boost/format.hpp>
 #include <boost/rational.hpp>
 
 // STD
@@ -765,6 +766,54 @@ void project::program_save(boost::filesystem::path sequence)
 
 	delete pkFactory;
 	delete pkRoot;
+}
+
+void project::program_export_edl(boost::filesystem::path edl)
+{
+	if (!m_pkProgram)
+		return;
+
+	boost::filesystem::ofstream osEDL(edl);
+
+	osEDL << "TITLE: " << m_strSequenceName << std::endl;
+
+	if (m_bNTSC)
+		osEDL << "FCM: DROP FRAME" << std::endl;
+	else
+		osEDL << "FCM: NON-DROP FRAME" << std::endl;
+
+	const int number_of_clips = program_get_clip_count();
+	for (int i = 0; i < number_of_clips; ++i)
+	{
+		Mlt::ClipInfo* pkInfo = program_get_clip_info(i);
+
+		int iEvent = i + 1;
+
+		timecode pkInTC(m_iTimebase, pkInfo->frame_in);
+		timecode pkOutTC(m_iTimebase, pkInfo->frame_out);
+		timecode pkStartTC(m_iTimebase, pkInfo->start);
+		timecode pkEndTC(m_iTimebase,pkInfo->start +  pkInfo->frame_out - pkInfo->frame_in);
+
+		try
+		{
+			osEDL << boost::format("%03d %07d %s %s %s %s %s %s")
+				% iEvent % iEvent % "AA/V" % "C"
+				% pkInTC.get_timecode(m_bNTSC)
+				% pkOutTC.get_timecode(m_bNTSC)
+				% pkStartTC.get_timecode(m_bNTSC)
+				% pkEndTC.get_timecode(m_bNTSC);
+			osEDL << std::endl;
+
+			boost::filesystem::path clip(pkInfo->resource);
+			osEDL << "* FROM CLIP NAME: " << clip.filename() << std::endl;
+		}
+		catch (std::exception& e)
+		{
+			rError("%s: Caught exception: %s", __PRETTY_FUNCTION__, e.what());
+		}
+
+		Mlt::Playlist::delete_clip_info(pkInfo);
+	}
 }
 
 int project::program_get_start()

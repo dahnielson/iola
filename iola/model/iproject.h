@@ -145,6 +145,7 @@ public:
 	virtual void program_new() = 0;
 	virtual void program_load(boost::filesystem::path sequence) = 0;
 	virtual void program_save(boost::filesystem::path sequence) = 0;
+	virtual void program_export_edl(boost::filesystem::path edl) = 0;
 	virtual int program_get_start() = 0;
 	virtual int program_get_end() = 0;
 	virtual void program_set_duration(int duration) = 0;

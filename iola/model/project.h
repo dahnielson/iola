@@ -131,6 +131,7 @@ public:
 	void program_new();
 	void program_load(boost::filesystem::path sequence);
 	void program_save(boost::filesystem::path sequence);
+	void program_export_edl(boost::filesystem::path edl);
 	int program_get_start();
 	int program_get_end();
 	void program_set_duration(int duration);
