@@ -212,6 +212,15 @@ public:
 	msg_signal_t on_alert;
 };
 
+namespace factory
+{
+
+////////////////////////////////////////////////////////////////////////////
+// function iola::model::factory::project
+
+iola::model::iproject* project();
+
+} // namespace factory
 } // namespace model
 } // namespace iola
 

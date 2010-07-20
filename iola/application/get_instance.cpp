@@ -34,7 +34,6 @@
 // IOLA
 #include <iola/consumer/consumer_iola.h>
 #include <iola/model/iproject.h>
-#include <iola/model/project.h>
 #include <iola/gui/MainWindow.h>
 #include "get_instance.h"
 
@@ -79,7 +78,7 @@ public:
 		pkRepos->register_service(consumer_type, "iola", iola::consumer::consumer_iola_init);
 
 		// Instance project
-		m_pkProject = new iola::model::project();
+		m_pkProject = iola::model::factory::project();
 
 		// Instance GUI
 		m_pkGUI = new iola::gui::MainWindow();
