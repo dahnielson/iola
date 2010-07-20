@@ -65,13 +65,18 @@ MainWindow::MainWindow() :
 	pkMenuBar->add("&Help/&About Iola NLE", 0, (Fl_Callback *)about_iola, this, 0);
 
 	// Layout
-	Fl_Pack* pkMainGroup = new Fl_Pack(0, 25, w(), h()-25);
+	Fl_Pack* pkMainGroup = new Fl_Pack(0, 25, w(), h()-45);
 	Fl_Tile* pkDesktopGroup = new Fl_Tile(0, 0, w(), pkMainGroup->h());
 	Fl_Group* pkMonitorGroup = new Fl_Group(0, 0, pkDesktopGroup->w(), pkDesktopGroup->h()/5*3);
 
 	m_pkSourceMonitor = new SourceMonitor(0, 0, pkMonitorGroup->w()/2, pkMonitorGroup->h());
 	m_pkProgramMonitor = new ProgramMonitor(pkMonitorGroup->w()/2, 0, pkMonitorGroup->w()/2, pkMonitorGroup->h());
 	Fl_Box* timeline = new Fl_Box(FL_THIN_UP_BOX, 0, pkMonitorGroup->h(), w(), pkDesktopGroup->h()-pkMonitorGroup->h(), "");
+
+	m_pkStatusbar = new Fl_Output(0, 0, w(), 20);
+	m_pkStatusbar->color(FL_BACKGROUND_COLOR);
+	m_pkStatusbar->textsize(10);
+	m_pkStatusbar->textcolor(FL_LIGHT3);
 
 	pkMonitorGroup->type(Fl_Pack::HORIZONTAL);
 	pkMonitorGroup->box(FL_NO_BOX);
@@ -85,6 +90,7 @@ MainWindow::MainWindow() :
 	pkDesktopGroup->end();
 
 	pkMainGroup->add(pkDesktopGroup);
+	pkMainGroup->add(m_pkStatusbar);
 	pkMainGroup->resizable(pkDesktopGroup);
 	pkMainGroup->end();
 
@@ -111,8 +117,9 @@ MainWindow::~MainWindow()
 	rDebug("%s: Application window demolished", __PRETTY_FUNCTION__);
 }
 
-void MainWindow::on_alert(std::string)
+void MainWindow::on_alert(std::string strMessage)
 {
+	m_pkStatusbar->value(strMessage.c_str());
 	fl_beep();
 }
 

@@ -61,13 +61,14 @@ public:
 private:
 	SourceMonitor* m_pkSourceMonitor;
 	ProgramMonitor* m_pkProgramMonitor;
+	Fl_Output* m_pkStatusbar;
 
 	SequenceSettings* m_pkSequenceSettings;
 	About* m_pkAbout;
 
 	boost::filesystem::path m_kProjectPath;
 
-	void on_alert(std::string);
+	void on_alert(std::string strMessage);
 
 	boost::signals2::connection on_alert_connection;
 
