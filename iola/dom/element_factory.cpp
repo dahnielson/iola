@@ -21,6 +21,8 @@
 
 #include "element_factory.h"
 
+#include "dummy.h"
+
 #include "anamorphic_element.h"
 #include "audio_element.h"
 #include "clipitem_element.h"
@@ -118,7 +120,7 @@ element_factory::factory(const std::string strElement)
 	else if (strElement == "width")
 		return new width_element(strElement);
 	else
-		return 0;
+		return new dummy(strElement);
 }
 
 } // namespace dom
