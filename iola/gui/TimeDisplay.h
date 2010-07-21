@@ -1,6 +1,6 @@
 /* -*- Mode: C++ ; c-basic-offset: 8 -*- */
-#ifndef IOLA_MODEL_TIMECODE_H
-#define IOLA_MODEL_TIMECODE_H
+#ifndef IOLA_GUI_TIMEDISPLAY_H
+#define IOLA_GUI_TIMEDISPLAY_H
 
 // Iola NLE
 // Copyright (c) 2010, Anders Dahnielson
@@ -21,50 +21,41 @@
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-// STD
-#include <string>
-#include <pthread.h>
+// FLTK
+#include <Fl/Fl_Widget.H>
+
+// IOLA
+#include <iola/model/timecode.h>
 
 namespace iola
 {
-namespace model
+namespace gui
 {
-
 
 /////////////////////////////////////////////////////////////////////////////
-// class iola::model::timecode
+// class iola::gui::TimeDisplay
 
-/// Class encapsulating timecode
-class timecode
+/// Time display widget
+class TimeDisplay :
+	public Fl_Widget
 {
 public:
-	timecode(int iTimebase);
-	timecode(int iTimebase, int iFrameCount);
-	timecode(int iTimebase, std::string strTimecode);
-	~timecode();
-
-	/// Set timebase (e.g. 24, 25, 30, etc.)
-	void set_timebase(int iTimebase);
-	/// Get timebase
-	int get_timebase();
-
-	/// Set time in frames
-	void set_framecount(int iFramesCount);
-	/// Get time in frames
-	int get_framecount();
-
-	/// Set time in timecode
-	void set_timecode(std::string strTimecode);
-	/// Get time in timecode
-	std::string get_timecode(bool bDropFrame);
+	TimeDisplay(int x, int y, int w, int h, const char *label = 0);
+	/// Set time base (24, 25, 30, etc.)
+	void set_timebase(const int timebase);
+	/// Set drop frame
+	void set_dropframe(const bool dropframe);
+	/// Set value in frames
+	void value(const int v);
+	/// FLTK draw handler
+	void draw();
 
 private:
-	pthread_mutex_t mutex;
-	int m_iTimebase;
-	int m_iFrameCount;
+	bool m_bDropFrame;
+	iola::model::timecode m_kTimecode;
 };
 
-} // namespace model
+} // namespace gui
 } // namespace iola
 
-#endif // IOLA_MODEL_TIMECODE_H
+#endif // IOLA_GUI_TIMEDISPLAY_H

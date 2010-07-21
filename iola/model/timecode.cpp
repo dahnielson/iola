@@ -40,40 +40,57 @@ namespace model
 timecode::timecode(int iTimebase) :
 	m_iFrameCount(0),
 	m_iTimebase(iTimebase)
-{}
+{
+	pthread_mutex_init(&mutex, NULL);
+}
 
-	timecode::timecode(int iTimebase, int iFrameCount) :
+timecode::timecode(int iTimebase, int iFrameCount) :
 	m_iFrameCount(iFrameCount),
 	m_iTimebase(iTimebase)
-{}
+{
+	pthread_mutex_init(&mutex, NULL);
+}
 
 timecode::timecode(int iTimebase, std::string strTimecode) :
 	m_iTimebase(iTimebase)
 {
+	pthread_mutex_init(&mutex, NULL);
 	set_timecode(strTimecode);
 }
 
 timecode::~timecode()
-{}
+{
+	pthread_mutex_destroy(&mutex);
+}
 
 void timecode::set_timebase(int iTimebase)
 {
+	pthread_mutex_lock(&mutex);
 	m_iTimebase = iTimebase;
+	pthread_mutex_unlock(&mutex);
 }
 
 int timecode::get_timebase()
 {
-	return m_iTimebase;
+	pthread_mutex_lock(&mutex);
+	int timebase = m_iTimebase;
+	pthread_mutex_unlock(&mutex);
+	return timebase;
 }
 
 void timecode::set_framecount(int iFramesCount)
 {
+	pthread_mutex_lock(&mutex);
 	m_iFrameCount = iFramesCount;
+	pthread_mutex_unlock(&mutex);
 }
 
 int timecode::get_framecount()
 {
-	return m_iFrameCount;
+	pthread_mutex_lock(&mutex);
+	int framecount = m_iFrameCount;
+	pthread_mutex_unlock(&mutex);
+	return framecount;
 }
 
 void timecode::set_timecode(std::string strTimecode)
@@ -98,6 +115,8 @@ void timecode::set_timecode(std::string strTimecode)
 	}
 
 	// Convert timecode to frame count
+	pthread_mutex_lock(&mutex);
+
 	const int iFramesPerSecond = m_iTimebase;
 	const int iFramesPerMinute = m_iTimebase * 60;
 	const int iFramesPerHour = m_iTimebase * 60 * 60;
@@ -114,10 +133,13 @@ void timecode::set_timecode(std::string strTimecode)
 		const int iTotalMinutes = 60 * iHours + iMinutes;
 		m_iFrameCount -= iDropFrames * (iTotalMinutes - iTotalMinutes / 10);
 	}
+
+	pthread_mutex_unlock(&mutex);
 }
 
 std::string timecode::get_timecode(bool bDropFrame)
 {
+	pthread_mutex_lock(&mutex);
 	int iFrameCount = m_iFrameCount;
 
 	// Convert frame count to timecode
@@ -148,6 +170,7 @@ std::string timecode::get_timecode(bool bDropFrame)
 	else
 		strTimecode = str( boost::format("%02d:%02d:%02d:%02d") % iHours % iMinutes % iSeconds % iFrames );
 
+	pthread_mutex_unlock(&mutex);
 	return strTimecode;
 }
 

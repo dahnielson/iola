@@ -28,6 +28,7 @@
 #include <mlt++/Mlt.h>
 
 // IOLA
+#include "TimeDisplay.h"
 #include "TimeRuler.h"
 
 namespace iola
@@ -61,6 +62,7 @@ private:
 
 	Fl_Window* m_pkDisplay;
 	TimeRuler* m_pkSlider;
+	TimeDisplay* m_pkTimecode;
 
 	void on_sar_change();
 	void on_dar_change();

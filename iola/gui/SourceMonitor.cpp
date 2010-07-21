@@ -55,7 +55,8 @@ SourceMonitor::SourceMonitor(int x, int y, int w, int h, const char *label) :
 	Fl_Group(x, y, w, h, label),
 	m_pkConsumer(0),
 	m_pkFrameShowEvent(0),
-	m_pkSlider(0)
+	m_pkSlider(0),
+	m_pkTimecode(0)
 {
 	// Transport Slider
 	m_pkSlider = new TimeRuler(x+4, y+h-50, w-8, 19);
@@ -64,9 +65,11 @@ SourceMonitor::SourceMonitor(int x, int y, int w, int h, const char *label) :
 	m_pkSlider->callback((Fl_Callback *)slider_callback, this);
 	
 	// Transport Button Group
-	Fl_Pack *pkTransportGroup = new Fl_Pack(x+w/2-137, y+h-28, 275, 25);
+	Fl_Pack *pkTransportGroup = new Fl_Pack(x+4, y+h-28, w-8, 25);
 	pkTransportGroup->box(FL_NO_BOX);
 	pkTransportGroup->type(Fl_Pack::HORIZONTAL);
+
+	Fl_Box* pkLeftFiller = new Fl_Box(0, 0, (w-275)/2, 25);
 
 	Fl_Bitmap* xbmGotoIn = new Fl_Bitmap(goto_mark_in_bits, goto_mark_in_width, goto_mark_in_height);
 	Fl_Button* pkGotoIn = new Fl_Button(0, 0, 25, 25);
@@ -133,6 +136,10 @@ SourceMonitor::SourceMonitor(int x, int y, int w, int h, const char *label) :
 	pkGotoOut->image(xbmGotoOut);
 	pkGotoOut->type(FL_NORMAL_BUTTON);
 	pkGotoOut->callback((Fl_Callback *)goto_mark_out, this);
+
+	Fl_Box* pkRightFiller = new Fl_Box(0, 0, ((w-275)/2)-98, 25);
+
+	m_pkTimecode = new TimeDisplay(0, 0, 90, 20);
 
 	pkTransportGroup->end();
 
@@ -391,6 +398,9 @@ void SourceMonitor::on_fps_change()
 	m_pkConsumer->set("frame_rate_num", iola::application::get_instance()->get_project()->fps().numerator());
 	m_pkConsumer->set("frame_rate_den", iola::application::get_instance()->get_project()->fps().denominator());
 	m_pkConsumer->unlock();
+
+	m_pkTimecode->set_timebase(iola::application::get_instance()->get_project()->get_fps_timebase());
+	m_pkTimecode->set_dropframe(iola::application::get_instance()->get_project()->get_fps_ntsc());
 }
 
 void SourceMonitor::on_sample_change()
@@ -423,10 +433,12 @@ void SourceMonitor::on_source_marks_change()
 
 void SourceMonitor::frame_shown(Mlt::Frame &frame)
 {
-	if (m_pkConsumer && !m_pkConsumer->is_stopped() && m_pkSlider)
+	if (m_pkConsumer && !m_pkConsumer->is_stopped() && m_pkSlider && m_pkTimecode)
 	{
 		//NOTE Do not use Fl::lock() here, it will deadlock when the consumer is stopping!
-		m_pkSlider->value(frame.get_int("_position"));
+		int position = frame.get_int("_position");
+		m_pkSlider->value(position);
+		m_pkTimecode->value(position);
 	}
 }
 
