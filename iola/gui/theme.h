@@ -126,7 +126,7 @@ namespace rgb
 	// White
 	inline void white()          { fl_color(255, 255, 255); } // #FFFFFF
 
-	// Theme
+	/// Apply theme "RGB"
 	void theme()
 	{
 		// Set basic color scheme
@@ -221,7 +221,7 @@ namespace scheme
 	// White
 	inline void white()          { fl_color(255, 255, 255); } // #FFFFFF HSV:   0,   0, 255
 
-	// Theme
+	// Apply theme "Scheme"
 	void theme()
 	{
 		// Set basic color scheme

@@ -29,6 +29,10 @@ namespace iola
 namespace gui
 {
 
+/////////////////////////////////////////////////////////////////////////////
+// class iola::gui::SequenceSettings
+
+/// Sequence settings dialog
 class SequenceSettings :
 	public Fl_Double_Window
 {
@@ -36,6 +40,7 @@ public:
 	SequenceSettings();
 	~SequenceSettings();
 
+	/// FLTK event handler
 	int handle(int event);
 
 private:

@@ -28,16 +28,24 @@ namespace iola
 namespace gui
 {
 
+/////////////////////////////////////////////////////////////////////////////
+// class iola::gui::TimeRuler
+
+/// Time ruler widget
 class TimeRuler :
 	public Fl_Valuator
 {
 public:
 	TimeRuler(int x, int y, int w, int h, const char *label = 0);
 
+	/// FLTK draw handler
 	void draw();
+	/// FLTK event handler
 	int handle(int event);
 
+	/// Set bounds (in frames)
 	void bounds(double min, double max);
+	/// Set mark in/out (in frames)
 	void marks(double in, double out);
 
 private:

@@ -29,6 +29,7 @@ namespace iola
 namespace gui
 {
 
+/// About dialog
 class About :
 	public Fl_Double_Window
 {

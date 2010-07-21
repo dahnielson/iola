@@ -41,6 +41,10 @@ class SequenceSettings;
 class ProgramMonitor;
 class SourceMonitor;
 
+/////////////////////////////////////////////////////////////////////////////
+// class iola::gui::MainWindow
+
+/// Application main window
 class MainWindow :
 	public Fl_Double_Window
 {
@@ -48,14 +52,23 @@ public:
 	MainWindow();
 	~MainWindow();
 
+	/// Open (show file dialog)
 	void open_project();
+	/// Save
 	void save_project();
+	/// Save as (show file dialog)
 	void save_as_project();
+	/// New
 	void clear_project();
+	/// Export EDL (show file dialog)
 	void export_edl();
+	/// Open sequence settings dialog
 	void sequence_settings();
+	/// Quit
 	void quit_application();
+	/// Show about dialog
 	void about_iola();
+	/// Close window
 	void close_window();
 
 private:

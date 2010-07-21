@@ -36,11 +36,12 @@ namespace xml
 ////////////////////////////////////////////////////////////////////////////
 // class iola::xml::ifactory
 
+/// Abstract interface of XML element factory
 class ifactory :
 	public virtual iola::iunknown
 {
 public:
-	/// Return a element instance matching the supplied element name.
+	/// Return a element instance matching the supplied element name
 	virtual ielement* factory(const std::string strElement) = 0;
 
 protected:

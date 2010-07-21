@@ -35,6 +35,10 @@ namespace iola
 namespace gui
 {
 
+/////////////////////////////////////////////////////////////////////////////
+// class iola::gui::ProgramMonitor
+
+/// Program monitor to display and edit sequences
 class ProgramMonitor :
 	public Fl_Group
 {
@@ -42,9 +46,13 @@ public:
 	ProgramMonitor(int x, int y, int w, int h, const char *label = 0);
 	~ProgramMonitor();
 
+	/// FLTK event handler
 	int handle(int event);
+	/// Stop the program monitor consumer
 	void stop();
+	/// Restart the program monitor consumer
         bool restart();
+	/// Refresh the program monitor consumer
 	void refresh();
 
 private:

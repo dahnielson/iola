@@ -36,6 +36,7 @@ namespace xml
 ////////////////////////////////////////////////////////////////////////////
 // class iola::xml::element
 
+/// Simple concrete implementation of xml::ielement
 class element :
 	public ielement
 {

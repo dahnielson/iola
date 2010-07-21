@@ -37,3 +37,4 @@ FIND_PACKAGE(EXPAT REQUIRED)
 
 # Set up subdirectories...
 ADD_SUBDIRECTORY(iola)
+ADD_SUBDIRECTORY(doc)

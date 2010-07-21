@@ -31,7 +31,7 @@ namespace application
 /////////////////////////////////////////////////////////////////////////////
 // function iola::application::get_instance
 
-/// Factory for the application singleton
+/// Factory for the iapplication singleton
 iapplication* get_instance();
 
 } // namespace application

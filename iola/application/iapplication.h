@@ -32,6 +32,7 @@ namespace application
 /////////////////////////////////////////////////////////////////////////////
 // class iola::application::iapplication
 
+/// Abstract interface for the application
 class iapplication :
 	public virtual iola::iunknown
 {

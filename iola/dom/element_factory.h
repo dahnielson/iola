@@ -31,6 +31,7 @@ namespace dom
 ////////////////////////////////////////////////////////////////////////////
 // class iola::dom::element_factory
 
+/// Concrete implementation of the xml::ifactory interface
 class element_factory :
 	public iola::xml::ifactory
 {

@@ -29,6 +29,11 @@ namespace iola
 namespace model
 {
 
+
+/////////////////////////////////////////////////////////////////////////////
+// class iola::model::timecode
+
+/// Class encapsulating timecode
 class timecode
 {
 public:
@@ -37,13 +42,19 @@ public:
 	timecode(int iTimebase, std::string strTimecode);
 	~timecode();
 
+	/// Set timebase (e.g. 24, 25, 30, etc.)
 	void set_timebase(int iTimebase);
+	/// Get timebase
 	int get_timebase();
 
+	/// Set time in frames
 	void set_framecount(int iFramesCount);
+	/// Get time in frames
 	int get_framecount();
 
+	/// Set time in timecode
 	void set_timecode(std::string strTimecode);
+	/// Get time in timecode
 	std::string get_timecode(bool bDropFrame);
 
 private:

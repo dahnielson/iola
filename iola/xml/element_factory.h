@@ -33,6 +33,7 @@ namespace xml
 ////////////////////////////////////////////////////////////////////////////
 // class iola::xml::element_factory
 
+/// Simple concrete implementation of xml::ifactory
 class element_factory :
 	public ifactory
 {

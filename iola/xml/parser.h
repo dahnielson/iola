@@ -36,7 +36,7 @@ namespace xml
 ////////////////////////////////////////////////////////////////////////////
 // function iola::xml::parser
 
-/// Parse the XML input stream into the root element using the supplied factory.
+/// Parse the XML input stream into the root element using the supplied factory
 void parser(ifactory* pkFactory, ielement* pkRoot, std::istream& isXML);
 
 } // namespace xml

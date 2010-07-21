@@ -29,6 +29,7 @@ namespace iola
 namespace consumer
 {
 
+/// Custom Iola consumer init hook
 void* consumer_iola_init(mlt_profile profile, mlt_service_type type, const char *id, const void *arg);
 
 } // namespace consumer

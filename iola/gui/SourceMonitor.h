@@ -35,6 +35,10 @@ namespace iola
 namespace gui
 {
 
+/////////////////////////////////////////////////////////////////////////////
+// class iola::gui::ProgramMonitor
+
+/// Source monitor to display and edit clips
 class SourceMonitor :
 	public Fl_Group
 {
@@ -42,9 +46,13 @@ public:
 	SourceMonitor(int x, int y, int w, int h, const char *label = 0);
 	~SourceMonitor();
 
+	/// FLTK event handler
 	int handle(int event);
+	/// Stop the source monitor consumer
 	void stop();
+	/// Restart the source monitor consumer
         bool restart();
+	/// Refresh the source monitor consumer
 	void refresh();
 
 private:

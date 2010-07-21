@@ -43,6 +43,7 @@ namespace model
 ////////////////////////////////////////////////////////////////////////////
 // class iola::model::iproject
 
+/// Abstract interface of project
 class iproject :
 	public virtual iola::iunknown
 {
@@ -218,6 +219,7 @@ namespace factory
 ////////////////////////////////////////////////////////////////////////////
 // function iola::model::factory::project
 
+/// Factory for project
 iola::model::iproject* project();
 
 } // namespace factory

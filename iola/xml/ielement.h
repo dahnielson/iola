@@ -36,6 +36,7 @@ namespace xml
 ////////////////////////////////////////////////////////////////////////////
 // class iola::xml::ielement
 
+/// Abstract interface of XML element
 class ielement :
 	public virtual iola::iunknown
 {

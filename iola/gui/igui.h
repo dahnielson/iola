@@ -32,17 +32,21 @@ namespace gui
 /////////////////////////////////////////////////////////////////////////////
 // class iola::gui::igui
 
+/// Abstract interface of gui
 class igui :
 	public virtual iola::iunknown
 {
 public:
+	/// Show the user interface and enter main loop
 	virtual bool show() = 0;
+	/// Stop the main loop
 	virtual void stop() = 0;
 };
 
 /////////////////////////////////////////////////////////////////////////////
 // function iola::gui::factory
 
+/// Factory function for the GUI
 igui* factory();
 
 } // namespace gui
