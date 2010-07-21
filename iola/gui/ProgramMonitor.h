@@ -88,9 +88,18 @@ private:
 
 	static void mark_in(Fl_Widget*, void* v) { reinterpret_cast<ProgramMonitor*>(v)->mark_in(); }
 	static void mark_out(Fl_Widget*, void* v) { reinterpret_cast<ProgramMonitor*>(v)->mark_out(); }
+	static void clear_in(Fl_Widget*, void* v) { reinterpret_cast<ProgramMonitor*>(v)->mark_in_clear(); }
+	static void clear_out(Fl_Widget*, void* v) { reinterpret_cast<ProgramMonitor*>(v)->mark_out_clear(); }
+	static void step_backward(Fl_Widget*, void* v) { reinterpret_cast<ProgramMonitor*>(v)->step_backward(); }
+	static void step_forward(Fl_Widget*, void* v) { reinterpret_cast<ProgramMonitor*>(v)->step_forward(); }
 	static void play_backward(Fl_Widget*, void* v) { reinterpret_cast<ProgramMonitor*>(v)->play_backward(); }
 	static void play_forward(Fl_Widget*, void* v) { reinterpret_cast<ProgramMonitor*>(v)->play_forward(); }
 	static void stop_playback(Fl_Widget*, void* v) { reinterpret_cast<ProgramMonitor*>(v)->stop_playback(); }
+
+	static void goto_previous_edit(Fl_Widget*, void* v) { reinterpret_cast<ProgramMonitor*>(v)->goto_previous_edit(); }
+	static void goto_next_edit(Fl_Widget*, void* v) { reinterpret_cast<ProgramMonitor*>(v)->goto_next_edit(); }
+	static void goto_mark_in(Fl_Widget*, void* v) { reinterpret_cast<ProgramMonitor*>(v)->mark_in_goto(); }
+	static void goto_mark_out(Fl_Widget*, void* v) { reinterpret_cast<ProgramMonitor*>(v)->mark_out_goto(); }
 
 	static void frame_show_callback(mlt_consumer, ProgramMonitor* self, mlt_frame frame_ptr)
 	{
@@ -120,8 +129,8 @@ private:
 	void play_forward();
 	void stop_playback();
 
-	void edit_previous_goto();
-	void edit_next_goto();
+	void goto_previous_edit();
+	void goto_next_edit();
 
 	void lift();
 	void extract();

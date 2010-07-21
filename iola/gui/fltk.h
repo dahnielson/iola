@@ -22,6 +22,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include <FL/Fl.H>
+#include <FL/Fl_Bitmap.H>
 #include <FL/Fl_Box.H>
 #include <FL/Fl_Browser.H>
 #include <FL/Fl_Button.H>

@@ -30,6 +30,21 @@
 #include <iola/application/get_instance.h>
 #include "ProgramMonitor.h"
 
+// XBM
+#include "xbm/clear_in.xbm"
+#include "xbm/clear_out.xbm"
+#include "xbm/mark_in.xbm"
+#include "xbm/mark_out.xbm"
+#include "xbm/pause.xbm"
+#include "xbm/play_fwd.xbm"
+#include "xbm/play_rev.xbm"
+#include "xbm/step_fwd.xbm"
+#include "xbm/step_rev.xbm"
+#include "xbm/goto_next_edit.xbm"
+#include "xbm/goto_prev_edit.xbm"
+#include "xbm/goto_mark_in.xbm"
+#include "xbm/goto_mark_out.xbm"
+
 namespace iola
 {
 namespace gui
@@ -46,37 +61,90 @@ ProgramMonitor::ProgramMonitor(int x, int y, int w, int h, const char *label) :
 	m_pkSlider->bounds(0, 0);
 	m_pkSlider->precision(0);
 	m_pkSlider->callback((Fl_Callback *)slider_callback, this);
-	
-	// Transport Buttons
-	Fl_Button *pkMarkIn = new Fl_Button(0, 0, 25, 25, "[");
+
+	// Transport Button Group
+	Fl_Pack *pkTransportGroup = new Fl_Pack(x+w/2-162, y+h-28, 325, 25);
+	pkTransportGroup->box(FL_NO_BOX);
+	pkTransportGroup->type(Fl_Pack::HORIZONTAL);
+
+	Fl_Bitmap* xbmPrevEdit = new Fl_Bitmap(goto_prev_edit_bits, goto_prev_edit_width, goto_prev_edit_height);
+	Fl_Button* pkPrevEdit = new Fl_Button(0, 0, 25, 25);
+	pkPrevEdit->image(xbmPrevEdit);
+	pkPrevEdit->type(FL_NORMAL_BUTTON);
+	pkPrevEdit->callback((Fl_Callback *)goto_previous_edit, this);
+
+	Fl_Bitmap* xbmGotoIn = new Fl_Bitmap(goto_mark_in_bits, goto_mark_in_width, goto_mark_in_height);
+	Fl_Button* pkGotoIn = new Fl_Button(0, 0, 25, 25);
+	pkGotoIn->image(xbmGotoIn);
+	pkGotoIn->type(FL_NORMAL_BUTTON);
+	pkGotoIn->callback((Fl_Callback *)goto_mark_in, this);
+
+	Fl_Bitmap* xbmClearIn = new Fl_Bitmap(clear_in_bits, clear_in_width, clear_in_height);
+	Fl_Button* pkClearIn = new Fl_Button(0, 0, 25, 25);
+	pkClearIn->image(xbmClearIn);
+	pkClearIn->type(FL_NORMAL_BUTTON);
+	pkClearIn->callback((Fl_Callback *)clear_in, this);
+
+	Fl_Bitmap* xbmMarkIn = new Fl_Bitmap(mark_in_bits, mark_in_width, mark_in_height);
+	Fl_Button* pkMarkIn = new Fl_Button(0, 0, 25, 25);
+	pkMarkIn->image(xbmMarkIn);
 	pkMarkIn->type(FL_NORMAL_BUTTON);
 	pkMarkIn->callback((Fl_Callback *)mark_in, this);
 
-	Fl_Button *pkPlayBackward = new Fl_Button(0, 0, 25, 25, "@<|");
+	Fl_Bitmap* xbmPlayRev = new Fl_Bitmap(play_rev_bits, play_rev_width, play_rev_height);
+	Fl_Button* pkPlayBackward = new Fl_Button(0, 0, 25, 25);
+	pkPlayBackward->image(xbmPlayRev);
 	pkPlayBackward->type(FL_NORMAL_BUTTON);
 	pkPlayBackward->callback((Fl_Callback *)play_backward, this);
 
-	Fl_Button *pkStop = new Fl_Button(0, 0, 25, 25, "@||");
+	Fl_Bitmap* xbmStepRev = new Fl_Bitmap(step_rev_bits, step_rev_width, step_rev_height);
+	Fl_Button* pkStepBackward = new Fl_Button(0, 0, 25, 25);
+	pkStepBackward->image(xbmStepRev);
+	pkStepBackward->type(FL_NORMAL_BUTTON);
+	pkStepBackward->callback((Fl_Callback *)step_backward, this);
+
+	Fl_Bitmap* xbmPause = new Fl_Bitmap(pause_bits, pause_width, pause_height);
+	Fl_Button* pkStop = new Fl_Button(0, 0, 25, 25);
+	pkStop->image(xbmPause);
 	pkStop->type(FL_NORMAL_BUTTON);
 	pkStop->callback((Fl_Callback *)stop_playback, this);
 
-	Fl_Button *pkPlayForward = new Fl_Button(0, 0, 25, 25, "@|>");
+	Fl_Bitmap* xbmStepFwd = new Fl_Bitmap(step_fwd_bits, step_fwd_width, step_fwd_height);
+	Fl_Button* pkStepForward = new Fl_Button(0, 0, 25, 25);
+	pkStepForward->image(xbmStepFwd);
+	pkStepForward->type(FL_NORMAL_BUTTON);
+	pkStepForward->callback((Fl_Callback *)step_forward, this);
+
+	Fl_Bitmap* xbmPlayFwd = new Fl_Bitmap(play_fwd_bits, play_fwd_width, play_fwd_height);
+	Fl_Button* pkPlayForward = new Fl_Button(0, 0, 25, 25);
+	pkPlayForward->image(xbmPlayFwd);
 	pkPlayForward->type(FL_NORMAL_BUTTON);
 	pkPlayForward->callback((Fl_Callback *)play_forward, this);
 
-	Fl_Button *pkMarkOut = new Fl_Button(0, 0, 25, 25, "]");
+	Fl_Bitmap* xbmMarkOut = new Fl_Bitmap(mark_out_bits, mark_out_width, mark_out_height);
+	Fl_Button* pkMarkOut = new Fl_Button(0, 0, 25, 25);
+	pkMarkOut->image(xbmMarkOut);
 	pkMarkOut->type(FL_NORMAL_BUTTON);
 	pkMarkOut->callback((Fl_Callback *)mark_out, this);
-	
-	// Transport Button Group
-	Fl_Pack *pkTransportGroup = new Fl_Pack(x+w/2-62, y+h-28, 125, 25);
-	pkTransportGroup->box(FL_NO_BOX);
-	pkTransportGroup->type(Fl_Pack::HORIZONTAL);
-	pkTransportGroup->add(pkMarkIn);
-	pkTransportGroup->add(pkPlayBackward);
-	pkTransportGroup->add(pkStop);
-	pkTransportGroup->add(pkPlayForward);
-	pkTransportGroup->add(pkMarkOut);
+
+	Fl_Bitmap* xbmClearOut = new Fl_Bitmap(clear_out_bits, clear_out_width, clear_out_height);
+	Fl_Button* pkClearOut = new Fl_Button(0, 0, 25, 25);
+	pkClearOut->image(xbmClearOut);
+	pkClearOut->type(FL_NORMAL_BUTTON);
+	pkClearOut->callback((Fl_Callback *)clear_in, this);
+
+	Fl_Bitmap* xbmGotoOut = new Fl_Bitmap(goto_mark_out_bits, goto_mark_out_width, goto_mark_out_height);
+	Fl_Button* pkGotoOut = new Fl_Button(0, 0, 25, 25);
+	pkGotoOut->image(xbmGotoOut);
+	pkGotoOut->type(FL_NORMAL_BUTTON);
+	pkGotoOut->callback((Fl_Callback *)goto_mark_out, this);
+
+	Fl_Bitmap* xbmNextEdit = new Fl_Bitmap(goto_next_edit_bits, goto_next_edit_width, goto_next_edit_height);
+	Fl_Button* pkNextEdit = new Fl_Button(0, 0, 25, 25);
+	pkNextEdit->image(xbmNextEdit);
+	pkNextEdit->type(FL_NORMAL_BUTTON);
+	pkNextEdit->callback((Fl_Callback *)goto_next_edit, this);
+
 	pkTransportGroup->end();
 
 	// Main Group
@@ -233,12 +301,12 @@ int ProgramMonitor::handle(int event)
 		}
 		else if (Fl::event_key() == 'a')
 		{
-			edit_previous_goto();
+			goto_previous_edit();
 			return 1;
 		}
 		else if (Fl::event_key() == 's')
 		{
-			edit_next_goto();
+			goto_next_edit();
 			return 1;
 		}
 		else if (Fl::event_key() == 'd')
@@ -474,12 +542,12 @@ void ProgramMonitor::stop_playback()
 	iola::application::get_instance()->get_project()->program_pause();
 }
 
-void ProgramMonitor::edit_previous_goto()
+void ProgramMonitor::goto_previous_edit()
 {
 	iola::application::get_instance()->get_project()->program_goto_previous_edit();
 }
 
-void ProgramMonitor::edit_next_goto()
+void ProgramMonitor::goto_next_edit()
 {
 	iola::application::get_instance()->get_project()->program_goto_next_edit();
 }

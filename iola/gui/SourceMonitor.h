@@ -90,9 +90,15 @@ private:
 
 	static void mark_in(Fl_Widget*, void* v) { reinterpret_cast<SourceMonitor*>(v)->mark_in(); }
 	static void mark_out(Fl_Widget*, void* v) { reinterpret_cast<SourceMonitor*>(v)->mark_out(); }
+	static void clear_in(Fl_Widget*, void* v) { reinterpret_cast<SourceMonitor*>(v)->mark_in_clear(); }
+	static void clear_out(Fl_Widget*, void* v) { reinterpret_cast<SourceMonitor*>(v)->mark_out_clear(); }
+	static void step_backward(Fl_Widget*, void* v) { reinterpret_cast<SourceMonitor*>(v)->step_backward(); }
+	static void step_forward(Fl_Widget*, void* v) { reinterpret_cast<SourceMonitor*>(v)->step_forward(); }
 	static void play_backward(Fl_Widget*, void* v) { reinterpret_cast<SourceMonitor*>(v)->play_backward(); }
 	static void play_forward(Fl_Widget*, void* v) { reinterpret_cast<SourceMonitor*>(v)->play_forward(); }
 	static void stop_playback(Fl_Widget*, void* v) { reinterpret_cast<SourceMonitor*>(v)->stop_playback(); }
+	static void goto_mark_in(Fl_Widget*, void* v) { reinterpret_cast<SourceMonitor*>(v)->mark_in_goto(); }
+	static void goto_mark_out(Fl_Widget*, void* v) { reinterpret_cast<SourceMonitor*>(v)->mark_out_goto(); }
 
 	static void frame_show_callback(mlt_consumer, SourceMonitor* self, mlt_frame frame_ptr)
 	{
