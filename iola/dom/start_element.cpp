@@ -82,5 +82,11 @@ start_element::restore(iola::model::imarkers* object)
 	object->set_start_point(m_iValue);
 }
 
+void
+start_element::set(const int value)
+{
+	m_iValue = value;
+}
+
 } // namespace dom
 } // namespace iola
