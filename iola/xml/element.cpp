@@ -50,6 +50,9 @@ public:
 		osXML << m_strText;
 	}
 
+	void accept(iola::xml::ivisitor*)
+	{}
+
 private:
 	const std::string m_strText;
 };
@@ -102,6 +105,11 @@ element::xml(std::ostream& osXML)
 		(*i)->xml(osXML);
 
 	osXML << "</" << m_strName << ">";
+}
+
+void
+element::accept(iola::xml::ivisitor* visitor)
+{
 }
 
 } // namespace xml

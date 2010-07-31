@@ -41,6 +41,18 @@ file_element::file_element(const std::string strName) :
 	m_pkPathURL(0)
 {}
 
+file_element::~file_element()
+{
+	if (m_pkDuration)
+		delete m_pkDuration;
+	if (m_pkRate)
+		delete m_pkRate;
+	if (m_pkName)
+		delete m_pkName;
+	if (m_pkPathURL)
+		delete m_pkPathURL;
+}
+
 void
 file_element::child(iola::xml::ielement* pkElement)
 {
@@ -85,6 +97,20 @@ file_element::xml(std::ostream& osXML)
 }
 
 void
+file_element::accept(iola::xml::ivisitor* visitor)
+{
+	visitor->visit(this);
+	if (m_pkDuration)
+		m_pkDuration->accept(visitor);
+	if (m_pkRate)
+		m_pkRate->accept(visitor);
+	if (m_pkName)
+		m_pkName->accept(visitor);
+	if (m_pkPathURL)
+		m_pkPathURL->accept(visitor);
+}
+
+void
 file_element::restore(iola::model::iclip* object)
 {
 	if (m_pkDuration)
@@ -95,19 +121,6 @@ file_element::restore(iola::model::iclip* object)
 		m_pkName->restore(object);
 	if (m_pkPathURL)
 		m_pkPathURL->restore(object->file());
-}
-
-void
-file_element::store(ivisitor* visitor)
-{
-	if (m_pkDuration)
-		m_pkDuration->store(visitor);
-	if (m_pkRate)
-		m_pkRate->store(visitor);
-	if (m_pkName)
-		m_pkName->store(visitor);
-	if (m_pkPathURL)
-		m_pkPathURL->store(visitor);
 }
 
 } // namespace dom

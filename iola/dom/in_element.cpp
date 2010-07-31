@@ -71,15 +71,15 @@ in_element::xml(std::ostream& osXML)
 }
 
 void
-in_element::restore(iola::model::imarkers* object)
+in_element::accept(iola::xml::ivisitor* visitor)
 {
-	object->set_in_point(m_iValue);
+	visitor->visit(this);
 }
 
 void
-in_element::store(ivisitor* visitor)
+in_element::restore(iola::model::imarkers* object)
 {
-	visitor->visit(this);
+	object->set_in_point(m_iValue);
 }
 
 void

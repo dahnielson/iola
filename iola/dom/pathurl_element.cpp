@@ -60,15 +60,15 @@ pathurl_element::xml(std::ostream& osXML)
 }
 
 void
-pathurl_element::restore(iola::model::ifile* object)
+pathurl_element::accept(iola::xml::ivisitor* visitor)
 {
-	object->set_pathurl(m_strValue);
+	visitor->visit(this);
 }
 
 void
-pathurl_element::store(ivisitor* visitor)
+pathurl_element::restore(iola::model::ifile* object)
 {
-	visitor->visit(this);
+	object->set_pathurl(m_strValue);
 }
 
 void

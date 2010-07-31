@@ -22,9 +22,9 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 // IOLA
-#include <iola/dom/ivisitor.h>
 #include <iola/model/iclip.h>
 #include <iola/xml/ielement.h>
+#include <iola/xml/ivisitor.h>
 
 namespace  iola
 {
@@ -52,12 +52,14 @@ class clip_element :
 {
 public:
 	clip_element(const std::string strName);
+	~clip_element();
 	void child(iola::xml::ielement* pkElement);
 	void attribute(std::string strKey, std::string strValue);
 	void text(std::string strText);
 	void xml(std::ostream& osXML);
+	void accept(iola::xml::ivisitor* visitor);
+
 	void restore(iola::model::iclip* object);
-	void store(ivisitor* visitor);
 
 private:
 	const std::string m_strName;

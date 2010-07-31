@@ -39,6 +39,16 @@ audio_element::audio_element(const std::string strName) :
 	m_pkSampleCharacteristics(0)
 {}
 
+audio_element::~audio_element()
+{
+	if (m_pkDuration)
+		delete m_pkDuration;
+	if (m_pkRate)
+		delete m_pkRate;
+	if (m_pkSampleCharacteristics)
+		delete m_pkSampleCharacteristics;
+}
+
 void
 audio_element::child(iola::xml::ielement* pkElement)
 {
@@ -74,6 +84,18 @@ audio_element::xml(std::ostream& osXML)
 }
 
 void
+audio_element::accept(iola::xml::ivisitor* visitor)
+{
+	visitor->visit(this);
+	if (m_pkDuration)
+		m_pkDuration->accept(visitor);
+	if (m_pkRate)
+		m_pkRate->accept(visitor);
+	if (m_pkSampleCharacteristics)
+		m_pkSampleCharacteristics->accept(visitor);
+}
+
+void
 audio_element::restore(iola::model::iasset* object)
 {
 	if (m_pkDuration)
@@ -82,17 +104,6 @@ audio_element::restore(iola::model::iasset* object)
 		m_pkRate->restore(object->video_settings());
 	if (m_pkSampleCharacteristics)
 		m_pkSampleCharacteristics->restore(object);
-}
-
-void
-audio_element::store(ivisitor* visitor)
-{
-	if (m_pkDuration)
-		m_pkDuration->store(visitor);
-	if (m_pkRate)
-		m_pkRate->store(visitor);
-	if (m_pkSampleCharacteristics)
-		m_pkSampleCharacteristics->store(visitor);
 }
 
 } // namespace dom

@@ -25,9 +25,9 @@
 #include <boost/filesystem.hpp>
 
 // IOLA
-#include <iola/dom/ivisitor.h>
 #include <iola/model/iclip.h>
 #include <iola/xml/ielement.h>
+#include <iola/xml/ivisitor.h>
 
 namespace  iola
 {
@@ -47,12 +47,14 @@ class file_element :
 {
 public:
 	file_element(const std::string strName);
+	~file_element();
 	void child(iola::xml::ielement* pkElement);
 	void attribute(std::string strKey, std::string strValue);
 	void text(std::string strText);
 	void xml(std::ostream& osXML);
+	void accept(iola::xml::ivisitor* visitor);
+
 	void restore(iola::model::iclip* object);
-	void store(ivisitor* visitor);
 
 private:
 	const std::string m_strName; 

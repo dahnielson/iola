@@ -26,8 +26,8 @@
 #include <vector>
 
 // IOLA
-#include <iola/dom/ivisitor.h>
 #include <iola/xml/ielement.h>
+#include <iola/xml/ivisitor.h>
 
 namespace  iola
 {
@@ -46,8 +46,9 @@ public:
 	void attribute(std::string strKey, std::string strValue);
 	void text(std::string strText);
 	void xml(std::ostream& osXML);
+	void accept(iola::xml::ivisitor* visitor);
+
 	void restore(iola::iunknown* object);
-	void store(ivisitor* visitor);
 
 private:
 	const std::string m_strName; 

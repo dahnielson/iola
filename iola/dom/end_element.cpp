@@ -71,15 +71,15 @@ end_element::xml(std::ostream& osXML)
 }
 
 void
-end_element::restore(iola::model::imarkers* object)
+end_element::accept(iola::xml::ivisitor* visitor)
 {
-	object->set_end_point(m_iValue);
+	visitor->visit(this);
 }
 
 void
-end_element::store(ivisitor* visitor)
+end_element::restore(iola::model::imarkers* object)
 {
-	visitor->visit(this);
+	object->set_end_point(m_iValue);
 }
 
 void

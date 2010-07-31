@@ -65,15 +65,15 @@ anamorphic_element::xml(std::ostream& osXML)
 }
 
 void
-anamorphic_element::restore(iola::model::ivideo_settings* object)
+anamorphic_element::accept(iola::xml::ivisitor* visitor)
 {
-	object->set_anamorphic(m_bValue);
+	visitor->visit(this);
 }
 
 void
-anamorphic_element::store(ivisitor* visitor)
+anamorphic_element::restore(iola::model::ivideo_settings* object)
 {
-	visitor->visit(this);
+	object->set_anamorphic(m_bValue);
 }
 
 void

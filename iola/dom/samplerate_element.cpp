@@ -71,6 +71,12 @@ samplerate_element::xml(std::ostream& osXML)
 }
 
 void
+samplerate_element::accept(iola::xml::ivisitor* visitor)
+{
+	visitor->visit(this);
+}
+
+void
 samplerate_element::restore(iola::model::iaudio_settings* object)
 {
 	switch (m_iValue)
@@ -81,12 +87,6 @@ samplerate_element::restore(iola::model::iaudio_settings* object)
 		object->set_sample_rate(m_iValue);
 		break;
 	};
-}
-
-void
-samplerate_element::store(ivisitor* visitor)
-{
-	visitor->visit(this);
 }
 
 void

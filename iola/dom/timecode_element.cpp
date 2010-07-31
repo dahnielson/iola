@@ -41,6 +41,14 @@ timecode_element::timecode_element(const std::string strName) :
 	m_pkRate(0)
 {}
 
+timecode_element::~timecode_element()
+{
+	if (m_pkString)
+		delete m_pkString;
+	if (m_pkRate)
+		delete m_pkRate;
+}
+
 void
 timecode_element::child(iola::xml::ielement* pkElement)
 {
@@ -77,21 +85,22 @@ timecode_element::xml(std::ostream& osXML)
 }
 
 void
+timecode_element::accept(iola::xml::ivisitor* visitor)
+{
+	visitor->visit(this);
+	if (m_pkString)
+		m_pkString->accept(visitor);
+	if (m_pkRate)
+		m_pkRate->accept(visitor);
+}
+
+void
 timecode_element::restore(iola::model::iasset* object)
 {
 	if (m_pkString)
 		m_pkString->restore(object);
 	if (m_pkRate)
 		m_pkRate->restore(object->video_settings());
-}
-
-void
-timecode_element::store(ivisitor* visitor)
-{
-	if (m_pkString)
-		m_pkString->store(visitor);
-	if (m_pkRate)
-		m_pkRate->store(visitor);
 }
 
 } // namespace dom

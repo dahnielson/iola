@@ -62,15 +62,15 @@ uuid_element::xml(std::ostream& osXML)
 }
 
 void
-uuid_element::restore(iola::model::iasset* object)
+uuid_element::accept(iola::xml::ivisitor* visitor)
 {
-	object->set_uuid(m_strValue);
+	visitor->visit(this);
 }
 
 void
-uuid_element::store(ivisitor* visitor)
+uuid_element::restore(iola::model::iasset* object)
 {
-	visitor->visit(this);
+	object->set_uuid(m_strValue);
 }
 
 void

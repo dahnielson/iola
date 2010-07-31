@@ -1,6 +1,6 @@
 /* -*- Mode: C++ ; c-basic-offset: 8 -*- */
-#ifndef IOLA_XML_ELEMENT_H
-#define IOLA_XML_ELEMENT_H
+#ifndef IOLA_XML_IVISITOR_H
+#define IOLA_XML_IVISITOR_H
 
 // Iola NLE
 // Copyright (c) 2010, Anders Dahnielson
@@ -21,46 +21,26 @@
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-// STD
-#include <map>
-#include <vector>
-
-// IOLA
-#include "ielement.h"
+#include <iola/iunknown.h>
 
 namespace iola
 {
 namespace xml
 {
 
-////////////////////////////////////////////////////////////////////////////
-// class iola::xml::element
+class ielement;
 
-/// Simple concrete implementation of xml::ielement
-class element :
-	public ielement
+////////////////////////////////////////////////////////////////////////////
+// class iola::xml::ivisitor
+
+class ivisitor :
+	virtual public iola::iunknown
 {
 public:
-	element(const std::string strName);
-	virtual void child(ielement* pkElement);
-	virtual void attribute(std::string strKey, std::string strValue);
-	virtual void text(std::string strText);
-	virtual void xml(std::ostream& osXML);
-	virtual void accept(ivisitor* visitor);
-
-protected:
-	const std::string m_strName;
-
-	typedef std::vector<ielement*> children_t;
-	typedef children_t::iterator child_iterator_t;
-	children_t m_vpkChildren;
-
-	typedef std::map<std::string, std::string> attributes_t;
-	typedef attributes_t::iterator attribute_iterator_t;
-	attributes_t m_mapAttributes;
+	virtual void visit(ielement* element) = 0;
 };
 
 } // namespace xml
 } // namespace iola
 
-#endif // IOLA_XML_ELEMENT_H
+#endif // IOLA_XML_IVISITOR_H

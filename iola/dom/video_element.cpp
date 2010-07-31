@@ -41,6 +41,16 @@ video_element::video_element(const std::string strName) :
 	m_pkTrack(0)
 {}
 
+video_element::~video_element()
+{
+	if (m_pkDuration)
+		delete m_pkDuration;
+	if (m_pkSampleCharacteristics)
+		delete m_pkSampleCharacteristics;
+	if (m_pkTrack)
+		delete m_pkTrack;
+}
+
 void
 video_element::child(iola::xml::ielement* pkElement)
 {
@@ -76,6 +86,18 @@ video_element::xml(std::ostream& osXML)
 }
 
 void
+video_element::accept(iola::xml::ivisitor* visitor)
+{
+	visitor->visit(this);
+	if (m_pkDuration)
+		m_pkDuration->accept(visitor);
+	if (m_pkSampleCharacteristics)
+		m_pkSampleCharacteristics->accept(visitor);
+	if (m_pkTrack)
+		m_pkTrack->accept(visitor);
+}
+
+void
 video_element::restore(iola::model::iasset* object)
 {
 	if (m_pkDuration)
@@ -86,17 +108,6 @@ video_element::restore(iola::model::iasset* object)
 	iola::model::isequence* sequence = dynamic_cast<iola::model::isequence*>(object);
 	if (m_pkTrack && sequence)
 		m_pkTrack->restore(sequence);
-}
-
-void
-video_element::store(ivisitor* visitor)
-{
-	if (m_pkDuration)
-		m_pkDuration->store(visitor);
-	if (m_pkSampleCharacteristics)
-		m_pkSampleCharacteristics->store(visitor);
-	if (m_pkTrack)
-		m_pkTrack->store(visitor);
 }
 
 } // namespace dom

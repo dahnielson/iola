@@ -53,6 +53,9 @@ public:
 		osXML << m_strText;
 	}
 
+	void accept(iola::xml::ivisitor* visitor)
+	{}
+
 private:
 	const std::string m_strText;
 };
@@ -110,15 +113,15 @@ dummy::xml(std::ostream& osXML)
 }
 
 void
-dummy::restore(iola::iunknown* object)
+dummy::accept(iola::xml::ivisitor* visitor)
 {
-	rWarning("%s: Stand in dummy for element %s can't call restore()", __PRETTY_FUNCTION__, m_strName.c_str());
+	rWarning("%s: Stand in dummy for element %s can't call accept()", __PRETTY_FUNCTION__, m_strName.c_str());
 }
 
 void
-dummy::store(ivisitor* visitor)
+dummy::restore(iola::iunknown* object)
 {
-	rWarning("%s: Stand in dummy for element %s can't call store()", __PRETTY_FUNCTION__, m_strName.c_str());
+	rWarning("%s: Stand in dummy for element %s can't call restore()", __PRETTY_FUNCTION__, m_strName.c_str());
 }
 
 } // namespace dom

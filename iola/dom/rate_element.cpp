@@ -38,6 +38,14 @@ rate_element::rate_element(const std::string strName) :
 	m_pkNTSC(0)
 {}
 
+rate_element::~rate_element()
+{
+	if (m_pkTimebase)
+		delete m_pkTimebase;
+	if (m_pkNTSC)
+		delete m_pkNTSC;
+}
+
 void
 rate_element::child(iola::xml::ielement* pkElement)
 {
@@ -69,21 +77,22 @@ rate_element::xml(std::ostream& osXML)
 }
 
 void
+rate_element::accept(iola::xml::ivisitor* visitor)
+{
+	visitor->visit(this);
+	if (m_pkTimebase)
+		m_pkTimebase->accept(visitor);
+	if (m_pkNTSC)
+		m_pkNTSC->accept(visitor);
+}
+
+void
 rate_element::restore(iola::model::ivideo_settings* object)
 {
 	if (m_pkTimebase)
 		m_pkTimebase->restore(object);
 	if (m_pkNTSC)
 		m_pkNTSC->restore(object);
-}
-
-void
-rate_element::store(ivisitor* visitor)
-{
-	if (m_pkTimebase)
-		m_pkTimebase->store(visitor);
-	if (m_pkNTSC)
-		m_pkNTSC->store(visitor);
 }
 
 } // namespace dom

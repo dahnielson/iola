@@ -65,15 +65,15 @@ ntsc_element::xml(std::ostream& osXML)
 }
 
 void
-ntsc_element::restore(iola::model::ivideo_settings* object)
+ntsc_element::accept(iola::xml::ivisitor* visitor)
 {
-	object->set_fps_ntsc(m_bValue);
+	visitor->visit(this);
 }
 
 void
-ntsc_element::store(ivisitor* visitor)
+ntsc_element::restore(iola::model::ivideo_settings* object)
 {
-	visitor->visit(this);
+	object->set_fps_ntsc(m_bValue);
 }
 
 void

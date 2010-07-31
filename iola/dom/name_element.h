@@ -23,8 +23,8 @@
 
 // IOLA
 #include <iola/model/iasset.h>
-#include <iola/dom/ivisitor.h>
 #include <iola/xml/ielement.h>
+#include <iola/xml/ivisitor.h>
 
 namespace  iola
 {
@@ -43,8 +43,9 @@ public:
 	void attribute(std::string strKey, std::string strValue);
 	void text(std::string strText);
 	void xml(std::ostream& osXML);
+	void accept(iola::xml::ivisitor* visitor);
+
 	void restore(iola::model::iasset* object);
-	void store(ivisitor* visitor);
 	void set(const std::string value);
 
 private:

@@ -37,6 +37,14 @@ media_element::media_element(const std::string strName) :
 	m_pkAudio(0)
 {}
 
+media_element::~media_element()
+{
+	if (m_pkVideo)
+		delete m_pkVideo;
+	if (m_pkAudio)
+		delete m_pkAudio;
+}
+
 void
 media_element::child(iola::xml::ielement* pkElement)
 {
@@ -68,21 +76,22 @@ media_element::xml(std::ostream& osXML)
 }
 
 void
+media_element::accept(iola::xml::ivisitor* visitor)
+{
+	visitor->visit(this);
+	if (m_pkVideo)
+		m_pkVideo->accept(visitor);
+	if (m_pkAudio)
+		m_pkAudio->accept(visitor);
+}
+
+void
 media_element::restore(iola::model::iasset* object)
 {
 	if (m_pkVideo)
 		m_pkVideo->restore(object);
 	if (m_pkAudio)
 		m_pkAudio->restore(object);
-}
-
-void
-media_element::store(ivisitor* visitor)
-{
-	if (m_pkVideo)
-		m_pkVideo->store(visitor);
-	if (m_pkAudio)
-		m_pkAudio->store(visitor);
 }
 
 } // namespace dom

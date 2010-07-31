@@ -71,15 +71,15 @@ height_element::xml(std::ostream& osXML)
 }
 
 void
-height_element::restore(iola::model::ivideo_settings* object)
+height_element::accept(iola::xml::ivisitor* visitor)
 {
-	object->set_height(m_iValue);
+	visitor->visit(this);
 }
 
 void
-height_element::store(ivisitor* visitor)
+height_element::restore(iola::model::ivideo_settings* object)
 {
-	visitor->visit(this);
+	object->set_height(m_iValue);
 }
 
 void

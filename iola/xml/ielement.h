@@ -33,6 +33,8 @@ namespace iola
 namespace xml
 {
 
+class ivisitor;
+
 ////////////////////////////////////////////////////////////////////////////
 // class iola::xml::ielement
 
@@ -49,6 +51,8 @@ public:
 	virtual void text(std::string strText) = 0;
 	/// Write the element as XML to an output stream.
 	virtual void xml(std::ostream& osXML) = 0;
+	/// Accept visitor
+	virtual void accept(ivisitor* visitor) = 0;
 
 protected:
 	ielement()

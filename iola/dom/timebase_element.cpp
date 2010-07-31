@@ -71,15 +71,15 @@ timebase_element::xml(std::ostream& osXML)
 }
 
 void
-timebase_element::restore(iola::model::ivideo_settings* object)
+timebase_element::accept(iola::xml::ivisitor* visitor)
 {
-	object->set_fps_timebase(m_iValue);
+	visitor->visit(this);
 }
 
 void
-timebase_element::store(ivisitor* visitor)
+timebase_element::restore(iola::model::ivideo_settings* object)
 {
-	visitor->visit(this);
+	object->set_fps_timebase(m_iValue);
 }
 
 void

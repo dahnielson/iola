@@ -75,7 +75,7 @@ fielddominance_element::restore(iola::model::ivideo_settings* object)
 }
 
 void
-fielddominance_element::store(ivisitor* visitor)
+fielddominance_element::accept(iola::xml::ivisitor* visitor)
 {
 	visitor->visit(this);
 }

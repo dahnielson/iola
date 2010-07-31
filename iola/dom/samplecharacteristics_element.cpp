@@ -52,6 +52,28 @@ samplecharacteristics_element::samplecharacteristics_element(const std::string s
 	m_pkSampleRate(0)
 {}
 
+samplecharacteristics_element::~samplecharacteristics_element()
+{
+	// Video
+	if (m_pkWidth)
+		delete m_pkWidth;
+	if (m_pkHeight)
+		delete m_pkHeight;
+	if (m_pkAnamorphic)
+		delete m_pkAnamorphic;
+	if (m_pkPixelAspectRatio)
+		delete m_pkPixelAspectRatio;
+	if (m_pkFieldDominance)
+		delete m_pkFieldDominance;
+	if (m_pkRate)
+		delete m_pkRate;
+	// Audio
+	if (m_pkDepth)
+		delete m_pkDepth;
+	if (m_pkSampleRate)
+		delete m_pkSampleRate;
+}
+
 void
 samplecharacteristics_element::child(iola::xml::ielement* pkElement)
 {
@@ -111,6 +133,30 @@ samplecharacteristics_element::xml(std::ostream& osXML)
 }
 
 void
+samplecharacteristics_element::accept(iola::xml::ivisitor* visitor)
+{
+	visitor->visit(this);
+	// Video
+	if (m_pkWidth)
+		m_pkWidth->accept(visitor);
+	if (m_pkHeight)
+		m_pkHeight->accept(visitor);
+	if (m_pkAnamorphic)
+		m_pkAnamorphic->accept(visitor);
+	if (m_pkPixelAspectRatio)
+		m_pkPixelAspectRatio->accept(visitor);
+	if (m_pkFieldDominance)
+		m_pkFieldDominance->accept(visitor);
+	if (m_pkRate)
+		m_pkRate->accept(visitor);
+	// Audio
+	if (m_pkDepth)
+		m_pkDepth->accept(visitor);
+	if (m_pkSampleRate)
+		m_pkSampleRate->accept(visitor);
+}
+
+void
 samplecharacteristics_element::restore(iola::model::iasset* object)
 {
 	// Video
@@ -131,29 +177,6 @@ samplecharacteristics_element::restore(iola::model::iasset* object)
 		m_pkDepth->restore(object->audio_settings());
 	if (m_pkSampleRate)
 		m_pkSampleRate->restore(object->audio_settings());
-}
-
-void
-samplecharacteristics_element::store(ivisitor* visitor)
-{
-	// Video
-	if (m_pkWidth)
-		m_pkWidth->store(visitor);
-	if (m_pkHeight)
-		m_pkHeight->store(visitor);
-	if (m_pkAnamorphic)
-		m_pkAnamorphic->store(visitor);
-	if (m_pkPixelAspectRatio)
-		m_pkPixelAspectRatio->store(visitor);
-	if (m_pkFieldDominance)
-		m_pkFieldDominance->store(visitor);
-	if (m_pkRate)
-		m_pkRate->store(visitor);
-	// Audio
-	if (m_pkDepth)
-		m_pkDepth->store(visitor);
-	if (m_pkSampleRate)
-		m_pkSampleRate->store(visitor);
 }
 
 } // namespace dom

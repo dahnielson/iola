@@ -80,7 +80,7 @@ pixelaspectratio_element::restore(iola::model::ivideo_settings* object)
 }
 
 void
-pixelaspectratio_element::store(ivisitor* visitor)
+pixelaspectratio_element::accept(iola::xml::ivisitor* visitor)
 {
 	visitor->visit(this);
 }

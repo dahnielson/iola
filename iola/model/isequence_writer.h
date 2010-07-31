@@ -22,6 +22,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 // IOLA
+#include <iola/icommand.h>
 #include <iola/model/iaudio_settings.h>
 #include <iola/model/ivideo_settings.h>
 
@@ -37,12 +38,11 @@ class iclip;
 
 /// Abstract interface
 class isequence_writer :
+	public iola::icommand,
 	public ivideo_settings,
 	public iaudio_settings
 {
 public:
-	/// Execute write operation
-	virtual void execute() = 0;
 	/// Set name
 	virtual void set_name(const std::string name) = 0;
 	/// Set uuid

@@ -59,6 +59,34 @@ clip_element::clip_element(const std::string strName) :
 {
 }
 
+clip_element::~clip_element()
+{
+	if (m_pkName)
+		delete m_pkName;
+	if (m_pkDuration)
+		delete m_pkDuration;
+	if (m_pkFile)
+		delete m_pkFile;
+	if (m_pkIn)
+		delete m_pkIn;
+	if (m_pkOut)
+		delete m_pkOut;
+	if (m_pkStart)
+		delete m_pkStart;
+	if (m_pkEnd)
+		delete m_pkEnd;
+	if (m_pkRate)
+		delete m_pkRate;
+	if (m_pkTimecode)
+		delete m_pkTimecode;
+	if (m_pkAnamorphic)
+		delete m_pkAnamorphic;
+	if (m_pkPixelAspectRatio)
+		delete m_pkPixelAspectRatio;
+	if (m_pkFieldDominance)
+		delete m_pkFieldDominance;
+}
+
 void
 clip_element::child(iola::xml::ielement* pkElement)
 {
@@ -135,6 +163,36 @@ clip_element::xml(std::ostream& osXML)
 }
 
 void
+clip_element::accept(iola::xml::ivisitor* visitor)
+{
+	visitor->visit(this);
+	if (m_pkName)
+		m_pkName->accept(visitor);
+	if (m_pkDuration)
+		m_pkDuration->accept(visitor);
+	if (m_pkFile)
+		m_pkFile->accept(visitor);
+	if (m_pkIn)
+		m_pkIn->accept(visitor);
+	if (m_pkOut)
+		m_pkOut->accept(visitor);
+	if (m_pkStart)
+		m_pkStart->accept(visitor);
+	if (m_pkEnd)
+		m_pkEnd->accept(visitor);
+	if (m_pkRate)
+		m_pkRate->accept(visitor);
+	if (m_pkTimecode)
+		m_pkTimecode->accept(visitor);
+	if (m_pkAnamorphic)
+		m_pkAnamorphic->accept(visitor);
+	if (m_pkPixelAspectRatio)
+		m_pkPixelAspectRatio->accept(visitor);
+	if (m_pkFieldDominance)
+		m_pkFieldDominance->accept(visitor);
+}
+
+void
 clip_element::restore(iola::model::iclip* object)
 {
 	if (m_pkName)
@@ -161,35 +219,6 @@ clip_element::restore(iola::model::iclip* object)
 		m_pkPixelAspectRatio->restore(object->video_settings());
 	if (m_pkFieldDominance)
 		m_pkFieldDominance->restore(object->video_settings());
-}
-
-void
-clip_element::store(ivisitor* visitor)
-{
-	if (m_pkName)
-		m_pkName->store(visitor);
-	if (m_pkDuration)
-		m_pkDuration->store(visitor);
-	if (m_pkFile)
-		m_pkFile->store(visitor);
-	if (m_pkIn)
-		m_pkIn->store(visitor);
-	if (m_pkOut)
-		m_pkOut->store(visitor);
-	if (m_pkStart)
-		m_pkStart->store(visitor);
-	if (m_pkEnd)
-		m_pkEnd->store(visitor);
-	if (m_pkRate)
-		m_pkRate->store(visitor);
-	if (m_pkTimecode)
-		m_pkTimecode->store(visitor);
-	if (m_pkAnamorphic)
-		m_pkAnamorphic->store(visitor);
-	if (m_pkPixelAspectRatio)
-		m_pkPixelAspectRatio->store(visitor);
-	if (m_pkFieldDominance)
-		m_pkFieldDominance->store(visitor);
 }
 
 } // namespace dom

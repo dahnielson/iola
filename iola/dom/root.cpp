@@ -35,6 +35,12 @@ root::root() :
 	m_pkIola(0)
 {}
 
+root::~root()
+{
+	if (m_pkIola)
+		delete m_pkIola;
+}
+
 void
 root::child(iola::xml::ielement* pkElement)
 {
@@ -64,17 +70,18 @@ root::xml(std::ostream& osXML)
 }
 
 void
+root::accept(iola::xml::ivisitor* visitor)
+{
+	visitor->visit(this);
+	if (m_pkIola)
+		m_pkIola->accept(visitor);
+}
+
+void
 root::restore(iola::iunknown* object)
 {
 	if (m_pkIola)
 		m_pkIola->restore(object);
-}
-
-void
-root::store(ivisitor* visitor)
-{
-	if (m_pkIola)
-		m_pkIola->store(visitor);
 }
 
 } // namespace dom

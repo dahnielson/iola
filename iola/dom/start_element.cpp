@@ -71,15 +71,15 @@ start_element::xml(std::ostream& osXML)
 }
 
 void
-start_element::restore(iola::model::imarkers* object)
+start_element::accept(iola::xml::ivisitor* visitor)
 {
-	object->set_start_point(m_iValue);
+	visitor->visit(this);
 }
 
 void
-start_element::store(ivisitor* visitor)
+start_element::restore(iola::model::imarkers* object)
 {
-	visitor->visit(this);
+	object->set_start_point(m_iValue);
 }
 
 } // namespace dom

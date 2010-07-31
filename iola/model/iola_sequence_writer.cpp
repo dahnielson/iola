@@ -31,6 +31,7 @@
 
 // IOLA
 #include <iola/dom/anamorphic_element.h>
+#include <iola/dom/audio_element.h>
 #include <iola/dom/depth_element.h>
 #include <iola/dom/duration_element.h>
 #include <iola/dom/element_factory.h>
@@ -38,228 +39,32 @@
 #include <iola/dom/fielddominance_element.h>
 #include <iola/dom/height_element.h>
 #include <iola/dom/in_element.h>
-#include <iola/dom/ivisitor.h>
+#include <iola/dom/iola_element.h>
+#include <iola/dom/media_element.h>
 #include <iola/dom/name_element.h>
 #include <iola/dom/ntsc_element.h>
 #include <iola/dom/out_element.h>
 #include <iola/dom/pathurl_element.h>
 #include <iola/dom/pixelaspectratio_element.h>
+#include <iola/dom/rate_element.h>
 #include <iola/dom/root.h>
+#include <iola/dom/samplecharacteristics_element.h>
 #include <iola/dom/samplerate_element.h>
+#include <iola/dom/sequence_element.h>
 #include <iola/dom/start_element.h>
 #include <iola/dom/string_element.h>
 #include <iola/dom/timebase_element.h>
+#include <iola/dom/timecode_element.h>
+#include <iola/dom/track_element.h>
 #include <iola/dom/uuid_element.h>
 #include <iola/dom/width_element.h>
+#include <iola/dom/video_element.h>
 #include <iola/model/iclip.h>
 #include <iola/model/isequence_writer.h>
 #include <iola/model/ivideo_settings.h>
-#include <iola/xml/parser.h>
 
 namespace
 {
-
-////////////////////////////////////////////////////////////////////////////
-// class <unnamed>::iola_sequence_visitor
-
-class iola_sequence_visitor :
-	public iola::dom::ivisitor
-{
-public:
-	iola_sequence_visitor()
-	{
-	}
-
-	~iola_sequence_visitor()
-	{
-	}
-
-	///////////////////////////
-	// ivisitor
-
-	void visit(iola::dom::anamorphic_element* element)
-	{
-		element->set(m_bAnamorphic);
-	}
-
-	void visit(iola::dom::depth_element* element)
-	{
-		element->set(m_iSampleDepth);
-	}
-
-	void visit(iola::dom::duration_element* element)
-	{
-		element->set(m_iDuration);
-	}
-
-	void visit(iola::dom::end_element* element)
-	{
-		// part of clipitem
-	}
-
-	void visit(iola::dom::fielddominance_element* element)
-	{
-		element->set(m_iFieldDominance);
-	}
-
-	void visit(iola::dom::height_element* element)
-	{
-		element->set(m_iHeight);
-	}
-
-	void visit(iola::dom::in_element* element)
-	{
-		// part of clipitem
-	}
-
-	void visit(iola::dom::name_element* element)
-	{
-		element->set(m_strName);
-	}
-
-	void visit(iola::dom::ntsc_element* element)
-	{
-		element->set(m_bNTSC);
-	}
-
-	void visit(iola::dom::out_element* element)
-	{
-		// part of clipitem
-	}
-
-	void visit(iola::dom::pathurl_element* element)
-	{
-		// part of clipitem
-	}
-
-	void visit(iola::dom::pixelaspectratio_element* element)
-	{
-		element->set(m_iPAR);
-	}
-
-	void visit(iola::dom::samplerate_element* element)
-	{
-		element->set(m_iSampleRate);
-	}
-
-	void visit(iola::dom::start_element* element)
-	{
-		// part of clipitem
-	}
-
-	void visit(iola::dom::string_element* element)
-	{
-		element->set(m_strTimecode);
-	}
-
-	void visit(iola::dom::timebase_element* element)
-	{
-		element->set(m_iTimebase);
-	}
-	
-	void visit(iola::dom::uuid_element* element)
-	{
-		element->set(m_strUUID);
-	}
-
-	void visit(iola::dom::width_element* element)
-	{
-		element->set(m_iWidth);
-	}
-
-	///////////////////////////
-	// isequence_writer
-
-	void set_name(const std::string name)
-	{
-		m_strName = name;
-	}
-
-	void set_uuid(const std::string uuid)
-	{
-		m_strUUID = uuid;
-	}
-
-	void set_duration(const int duration)
-	{
-		m_iDuration = duration;
-	}
-
-	void set_timecode(const std::string timecode)
-	{
-		m_strTimecode = timecode;
-	}
-
-	void append_clipitem(iola::model::iclip* clipitem) //FIXME Implement!
-	{
-	}
-
-	///////////////////////////
-	// ivideo_settings
-
-	void set_width(const int width)
-	{
-		m_iWidth = width;
-	}
-
-	void set_height(const int height)
-	{
-		m_iHeight = height;
-	}
-
-	void set_par(const iola::model::ivideo_settings::par_t par)
-	{
-		m_iPAR = par;
-	}
-
-	void set_anamorphic(const bool anamorphic)
-	{
-		m_bAnamorphic = anamorphic;
-	}
-
-	void set_field_dominance(const iola::model::ivideo_settings::field_t field)
-	{
-		m_iFieldDominance = field;
-	}
-
-	void set_fps_timebase(const int timebase)
-	{
-		m_iTimebase = timebase;
-	}
-
-	void set_fps_ntsc(const bool ntsc)
-	{
-		m_bNTSC = ntsc;
-	}
-
-	///////////////////////////
-	// iaudio_settings
-
-	void set_sample_depth(const int depth)
-	{
-		m_iSampleDepth = depth;
-	}
-
-	void set_sample_rate(const int rate)
-	{
-		m_iSampleRate = rate;
-	}
-
-private:
-	std::string m_strName;
-	std::string m_strUUID;
-	int m_iDuration;
-	std::string m_strTimecode;
-	int m_iWidth;
-	int m_iHeight;
-	iola::model::ivideo_settings::par_t m_iPAR;
-	bool m_bAnamorphic;
-	iola::model::ivideo_settings::field_t m_iFieldDominance;
-	int m_iTimebase;
-	bool m_bNTSC;
-	int m_iSampleDepth;
-	int m_iSampleRate;
-};
 
 ////////////////////////////////////////////////////////////////////////////
 // class <unnamed>::iola_sequence_writer_implementation
@@ -269,84 +74,51 @@ class iola_sequence_writer_implementation :
 {
 public:
 	iola_sequence_writer_implementation(const boost::filesystem::path file) :
-		m_pkVisitor(new iola_sequence_visitor()),
-		m_kFile(file)
+		m_kFile(file),
+		m_pkRoot(new iola::dom::root()),
+		m_pkSequence(new iola::dom::sequence_element("sequence")),
+		m_pkRate(new iola::dom::rate_element("rate")),
+		m_pkVideoCharacteristics(new iola::dom::samplecharacteristics_element("samplecharacteristics")),
+		m_pkVideoTrack(new iola::dom::track_element("track")),
+		m_pkAudioCharacteristics(new iola::dom::samplecharacteristics_element("samplecharacteristics")),
+		m_pkAudioTrack(new iola::dom::track_element("track"))
 	{
-		assert(m_pkVisitor);
+		assert(m_pkRoot);
+		assert(m_pkSequence);
+		assert(m_pkRate);
+		assert(m_pkVideoCharacteristics);
+		assert(m_pkVideoTrack);
+		assert(m_pkAudioCharacteristics);
+		assert(m_pkAudioTrack);
+
+		iola::dom::iola_element* pkIola = new iola::dom::iola_element("iola");
+		iola::dom::media_element* pkMedia = new iola::dom::media_element("media");
+		iola::dom::video_element* pkVideo = new iola::dom::video_element("video");
+		iola::dom::audio_element* pkAudio = new iola::dom::audio_element("audio");
+
+		m_pkRoot->child(pkIola);
+		pkIola->child(m_pkSequence);
+		m_pkSequence->child(m_pkRate);
+		m_pkSequence->child(pkMedia);
+		pkMedia->child(pkVideo);
+		pkVideo->child(m_pkVideoCharacteristics);
+		pkVideo->child(m_pkVideoTrack);
+		pkMedia->child(pkAudio);
+		pkAudio->child(m_pkAudioCharacteristics);
+		pkAudio->child(m_pkAudioTrack);
 	}
 
 	~iola_sequence_writer_implementation()
 	{
-		assert(m_pkVisitor);
-		delete m_pkVisitor;
+		assert(m_pkRoot);
+		delete m_pkRoot;
 	}
 
 	void execute()
 	{
 		rDebug("%s: Save program as %s", __PRETTY_FUNCTION__, m_kFile.string().c_str());
-		iola::dom::element_factory* pkFactory = new iola::dom::element_factory();
-		iola::dom::root* pkRoot = new iola::dom::root();
-
-		// This is the easiest way to create a skeleton
-		std::stringstream isXML;
-		isXML << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
-		isXML << "<!DOCTYPE iola>";
-		isXML << "<iola version=\"0\">";
-		isXML << "  <sequence>";
-		isXML << "    <name>Sequence</name>";
-		isXML << "    <duration>0</duration>";
-		isXML << "    <rate>";
-		isXML << "      <timebase>30</timebase>";
-		isXML << "      <ntsc>TRUE</ntsc>";
-		isXML << "    </rate>";
-		isXML << "    <in>-1</in>";
-		isXML << "    <out>-1</out>";
-		isXML << "    <timecode>";
-		isXML << "      <string>00:00:00;00</string>";
-		isXML << "    </timecode>";
-		isXML << "    <media>";
-		isXML << "      <video>";
-		isXML << "        <samplecharacteristics>";
-		isXML << "          <width>720</width>";
-		isXML << "          <height>480</height>";
-		isXML << "          <anamorphic>FALSE</anamorphic>";
-		isXML << "          <pixelaspectratio>NTSC-601</pixelaspectratio>";
-		isXML << "          <fielddominance>LOWER</fielddominance>";
-		isXML << "        </samplecharacteristics>";
-		isXML << "        <track></track>";
-		isXML << "      </video>";
-		isXML << "      <audio>";
-		isXML << "        <samplecharacteristics>";
-		isXML << "          <depth>16</depth>";
-		isXML << "          <samplerate>48000</samplerate>";
-		isXML << "        </samplecharacteristics>";
-		isXML << "      </audio>";
-		isXML << "    </media>";
-		isXML << "  </sequence>";
-		isXML << "</iola>";
-
-		// Parse the skeleton into an object
-		try
-		{
-			iola::xml::parser(pkFactory, pkRoot, isXML);
-		}
-		catch (std::exception& e)
-		{
-			rError("%s: Caught exception: %s", __PRETTY_FUNCTION__, e.what());
-			delete pkFactory;
-			delete pkRoot;
-			return;
-		}
-
-		// Then call store to populate it
-		pkRoot->store(m_pkVisitor);
-
-		// Output it as XML
 		boost::filesystem::ofstream osXML(m_kFile);
-		pkRoot->xml(osXML);
-
-		delete pkFactory;
-		delete pkRoot;
+		m_pkRoot->xml(osXML);
 	}
 
 	///////////////////////////
@@ -354,27 +126,36 @@ public:
 
 	void set_name(const std::string name)
 	{
-		m_pkVisitor->set_name(name);
+		iola::dom::name_element* pkName = new iola::dom::name_element("name");
+		pkName->set(name);
+		m_pkSequence->child(pkName);
 	}
 
 	void set_uuid(const std::string uuid)
 	{
-		m_pkVisitor->set_uuid(uuid);
+		iola::dom::uuid_element* pkUUID = new iola::dom::uuid_element("uuid");
+		pkUUID->set(uuid);
+		m_pkSequence->child(pkUUID);
 	}
 
 	void set_duration(const int duration)
 	{
-		m_pkVisitor->set_duration(duration);
+		iola::dom::duration_element* pkDuration = new iola::dom::duration_element("duration");
+		pkDuration->set(duration);
+		m_pkSequence->child(pkDuration);
 	}
 
 	void set_timecode(const std::string timecode)
 	{
-		m_pkVisitor->set_timecode(timecode);
+		iola::dom::timecode_element* pkTimecode = new iola::dom::timecode_element("timecode");
+		iola::dom::string_element* pkString = new iola::dom::string_element("string");
+		pkString->set(timecode);
+		pkTimecode->child(pkString);
+		m_pkSequence->child(pkTimecode);
 	}
 
 	void append_clipitem(iola::model::iclip* clipitem)
 	{
-		m_pkVisitor->append_clipitem(clipitem);
 	}
 
 	///////////////////////////
@@ -392,37 +173,51 @@ public:
 
 	void set_width(const int width)
 	{
-		m_pkVisitor->set_width(width);
+		iola::dom::width_element* pkWidth = new iola::dom::width_element("width");
+		pkWidth->set(width);
+		m_pkVideoCharacteristics->child(pkWidth);
 	}
 
 	void set_height(const int height)
 	{
-		m_pkVisitor->set_height(height);
+		iola::dom::height_element* pkHeight = new iola::dom::height_element("height");
+		pkHeight->set(height);
+		m_pkVideoCharacteristics->child(pkHeight);
 	}
 
 	void set_par(const iola::model::ivideo_settings::par_t par)
 	{
-		m_pkVisitor->set_par(par);
+		iola::dom::pixelaspectratio_element* pkPAR = new iola::dom::pixelaspectratio_element("pixelaspectratio");
+		pkPAR->set(par);
+		m_pkVideoCharacteristics->child(pkPAR);
 	}
 
 	void set_anamorphic(const bool anamorphic)
 	{
-		m_pkVisitor->set_anamorphic(anamorphic);
+		iola::dom::anamorphic_element* pkAnamorphic =  new iola::dom::anamorphic_element("anamorphic");
+		pkAnamorphic->set(anamorphic);
+		m_pkVideoCharacteristics->child(pkAnamorphic);
 	}
 
 	void set_field_dominance(const iola::model::ivideo_settings::field_t field)
 	{
-		m_pkVisitor->set_field_dominance(field);
+		iola::dom::fielddominance_element* pkField = new iola::dom::fielddominance_element("fielddominance");
+		pkField->set(field);
+		m_pkVideoCharacteristics->child(pkField);
 	}
 
 	void set_fps_timebase(const int timebase)
 	{
-		m_pkVisitor->set_fps_timebase(timebase);
+		iola::dom::timebase_element* pkTimebase = new iola::dom::timebase_element("timebase");
+		pkTimebase->set(timebase);
+		m_pkRate->child(pkTimebase);
 	}
 
 	void set_fps_ntsc(const bool ntsc)
 	{
-		m_pkVisitor->set_fps_ntsc(ntsc);
+		iola::dom::ntsc_element* pkNTSC = new iola::dom::ntsc_element("ntsc");
+		pkNTSC->set(ntsc);
+		m_pkRate->child(pkNTSC);
 	}
 
 	///////////////////////////
@@ -440,17 +235,27 @@ public:
 
 	void set_sample_depth(const int depth)
 	{
-		m_pkVisitor->set_sample_depth(depth);
+		iola::dom::depth_element* pkDepth = new iola::dom::depth_element("depth");
+		pkDepth->set(depth);
+		m_pkAudioCharacteristics->child(pkDepth);
 	}
 
 	void set_sample_rate(const int rate)
 	{
-		m_pkVisitor->set_sample_rate(rate);
+		iola::dom::samplerate_element* pkRate = new iola::dom::samplerate_element("samplerate");
+		pkRate->set(rate);
+		m_pkAudioCharacteristics->child(pkRate);
 	}
 
 private:
-	iola_sequence_visitor* m_pkVisitor;
 	const boost::filesystem::path m_kFile;
+	iola::dom::root* m_pkRoot;
+	iola::dom::sequence_element* m_pkSequence;
+	iola::dom::rate_element* m_pkRate;
+	iola::dom::samplecharacteristics_element* m_pkVideoCharacteristics;
+	iola::dom::track_element* m_pkVideoTrack;
+	iola::dom::samplecharacteristics_element* m_pkAudioCharacteristics;
+	iola::dom::track_element* m_pkAudioTrack;
 };
 
 

@@ -71,6 +71,12 @@ depth_element::xml(std::ostream& osXML)
 }
 
 void
+depth_element::accept(iola::xml::ivisitor* visitor)
+{
+	visitor->visit(this);
+}
+
+void
 depth_element::restore(iola::model::iaudio_settings* object)
 {
 	switch (m_iValue)
@@ -79,12 +85,6 @@ depth_element::restore(iola::model::iaudio_settings* object)
 		object->set_sample_depth(m_iValue);
 		break;
 	};
-}
-
-void
-depth_element::store(ivisitor* visitor)
-{
-	visitor->visit(this);
 }
 
 void

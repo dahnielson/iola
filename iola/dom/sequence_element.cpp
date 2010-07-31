@@ -50,6 +50,26 @@ sequence_element::sequence_element(const std::string strName) :
 	m_pkMedia(0)
 {}
 
+sequence_element::~sequence_element()
+{
+	if (m_pkName)
+		delete m_pkName;
+	if (m_pkDuration)
+		delete m_pkDuration;
+	if (m_pkRate)
+		delete m_pkRate;
+	if (m_pkPixelAspectRatio)
+		delete m_pkPixelAspectRatio;
+	if (m_pkTimecode)
+		delete m_pkTimecode;
+	if (m_pkIn)
+		delete m_pkIn;
+	if (m_pkOut)
+		delete m_pkOut;
+	if (m_pkMedia)
+		delete m_pkMedia;
+}
+
 void
 sequence_element::child(iola::xml::ielement* pkElement)
 {
@@ -110,6 +130,28 @@ sequence_element::xml(std::ostream& osXML)
 }
 
 void
+sequence_element::accept(iola::xml::ivisitor* visitor)
+{
+	visitor->visit(this);
+	if (m_pkName)
+		m_pkName->accept(visitor);
+	if (m_pkDuration)
+		m_pkDuration->accept(visitor);
+	if (m_pkRate)
+		m_pkRate->accept(visitor);
+	if (m_pkPixelAspectRatio)
+		m_pkPixelAspectRatio->accept(visitor);
+	if (m_pkTimecode)
+		m_pkTimecode->accept(visitor);
+	if (m_pkIn)
+		m_pkIn->accept(visitor);
+	if (m_pkOut)
+		m_pkOut->accept(visitor);
+	if (m_pkMedia)
+		m_pkMedia->accept(visitor);
+}
+
+void
 sequence_element::restore(iola::model::isequence* object)
 {
 	if (m_pkName)
@@ -128,27 +170,6 @@ sequence_element::restore(iola::model::isequence* object)
 		m_pkTimecode->restore(object);
 	if (m_pkMedia)
 		m_pkMedia->restore(object);
-}
-
-void
-sequence_element::store(ivisitor* visitor)
-{
-	if (m_pkName)
-		m_pkName->store(visitor);
-	if (m_pkDuration)
-		m_pkDuration->store(visitor);
-	if (m_pkRate)
-		m_pkRate->store(visitor);
-	if (m_pkPixelAspectRatio)
-		m_pkPixelAspectRatio->store(visitor);
-	if (m_pkTimecode)
-		m_pkTimecode->store(visitor);
-	if (m_pkIn)
-		m_pkIn->store(visitor);
-	if (m_pkOut)
-		m_pkOut->store(visitor);
-	if (m_pkMedia)
-		m_pkMedia->store(visitor);
 }
 
 } // namespace dom

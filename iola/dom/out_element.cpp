@@ -77,7 +77,7 @@ out_element::restore(iola::model::imarkers* object)
 }
 
 void
-out_element::store(ivisitor* visitor)
+out_element::accept(iola::xml::ivisitor* visitor)
 {
 	visitor->visit(this);
 }

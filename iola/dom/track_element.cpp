@@ -38,6 +38,10 @@ track_element::track_element(const std::string strName) :
         m_strName(strName)
 {}
 
+track_element::~track_element()
+{
+}
+
 void
 track_element::child(iola::xml::ielement* pkElement)
 {
@@ -65,6 +69,14 @@ track_element::xml(std::ostream& osXML)
 }
 
 void
+track_element::accept(iola::xml::ivisitor* visitor)
+{
+	visitor->visit(this);
+	for (clipitem_iterator_t i = m_vpkClipItem.begin(); i != m_vpkClipItem.end(); i++)
+		(*i)->accept(visitor);
+}
+
+void
 track_element::restore(iola::model::isequence* object)
 {
 	for (clipitem_iterator_t i = m_vpkClipItem.begin(); i != m_vpkClipItem.end(); i++)
@@ -75,13 +87,6 @@ track_element::restore(iola::model::isequence* object)
 		object->insert_clip(clipitem);
 		delete clipitem;
 	}
-}
-
-void
-track_element::store(ivisitor* visitor)
-{
-	// for (clipitem_iterator_t i = m_vpkClipItem.begin(); i != m_vpkClipItem.end(); i++)
-	// 	(*i)->store(visitor);
 }
 
 } // namespace dom

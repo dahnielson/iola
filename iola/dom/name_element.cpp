@@ -60,15 +60,15 @@ name_element::xml(std::ostream& osXML)
 }
 
 void
-name_element::restore(iola::model::iasset* object)
+name_element::accept(iola::xml::ivisitor* visitor)
 {
-	object->set_name(m_strValue);
+	visitor->visit(this);
 }
 
 void
-name_element::store(ivisitor* visitor)
+name_element::restore(iola::model::iasset* object)
 {
-	visitor->visit(this);
+	object->set_name(m_strValue);
 }
 
 void

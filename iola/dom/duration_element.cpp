@@ -71,15 +71,15 @@ duration_element::xml(std::ostream& osXML)
 }
 
 void
-duration_element::restore(iola::model::iasset* object)
+duration_element::accept(iola::xml::ivisitor* visitor)
 {
-	object->set_duration(m_iValue);
+	visitor->visit(this);
 }
 
 void
-duration_element::store(ivisitor* visitor)
+duration_element::restore(iola::model::iasset* object)
 {
-	visitor->visit(this);
+	object->set_duration(m_iValue);
 }
 
 void

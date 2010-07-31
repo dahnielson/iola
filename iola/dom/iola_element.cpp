@@ -39,6 +39,12 @@ iola_element::iola_element(const std::string strName) :
 	m_pkSequence(0)
 {}
 
+iola_element::~iola_element()
+{
+	if (m_pkSequence)
+		delete m_pkSequence;
+}
+
 void
 iola_element::child(iola::xml::ielement* pkElement)
 {
@@ -72,6 +78,14 @@ iola_element::xml(std::ostream& osXML)
 }
 
 void
+iola_element::accept(iola::xml::ivisitor* visitor)
+{
+	visitor->visit(this);
+	if (m_pkSequence)
+		m_pkSequence->accept(visitor);
+}
+
+void
 iola_element::restore(iola::iunknown* object)
 {
 	if (m_pkClip)
@@ -89,13 +103,6 @@ iola_element::restore(iola::iunknown* object)
 			m_pkSequence->restore(sequence);
 		return;
 	}
-}
-
-void
-iola_element::store(ivisitor* visitor)
-{
-	if (m_pkSequence)
-		m_pkSequence->store(visitor);
 }
 
 } // namespace dom

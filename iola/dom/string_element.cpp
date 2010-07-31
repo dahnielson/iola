@@ -60,15 +60,15 @@ string_element::xml(std::ostream& osXML)
 }
 
 void
-string_element::restore(iola::model::iasset* object)
+string_element::accept(iola::xml::ivisitor* visitor)
 {
-	object->set_timecode(m_strValue);
+	visitor->visit(this);
 }
 
 void
-string_element::store(ivisitor* visitor)
+string_element::restore(iola::model::iasset* object)
 {
-	visitor->visit(this);
+	object->set_timecode(m_strValue);
 }
 
 void
