@@ -30,8 +30,46 @@ namespace dom
 // class iola::dom::template_element
 
 template_element::template_element(const std::string strName) :
-	integer_terminal(strName)
-{}
+        m_strName(strName)
+{
+}
+
+void
+template_element::child(iola::xml::ielement* pkElement)
+{
+	// We're terminal. And we've had a vasectomy!
+}
+
+void
+template_element::attribute(std::string strKey, std::string strValue)
+{
+	// No attributes.
+}
+
+void
+template_element::text(std::string strText)
+{
+	if (m_strValue.empty())
+		m_strValue = strText;
+}
+
+void
+template_element::xml(std::ostream& osXML)
+{
+	osXML << "<" << m_strName << ">";
+	osXML << m_strValue;
+	osXML << "</" << m_strName << ">"  << std::endl;
+}
+
+void
+template_element::restore(iola::model::iasset* object)
+{
+}
+
+void
+template_element::store()
+{
+}
 
 } // namespace dom
 } // namespace iola

@@ -1,4 +1,6 @@
 /* -*- Mode: C++ ; c-basic-offset: 8 -*- */
+#ifndef IOLA_DOM_TEMPLATE_ELEMENT_H
+#define IOLA_DOM_TEMPLATE_ELEMENT_H
 
 // Iola NLE
 // Copyright (c) 2010, Anders Dahnielson
@@ -19,9 +21,11 @@
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-#include "template_element.h"
+// IOLA
+#include <iola/model/iasset.h>
+#include <iola/xml/ielement.h>
 
-namespace iola
+namespace  iola
 {
 namespace dom
 {
@@ -29,9 +33,24 @@ namespace dom
 ////////////////////////////////////////////////////////////////////////////
 // class iola::dom::template_element
 
-template_element::template_element(const std::string strName) :
-	bool_terminal(strName)
-{}
+class template_element :
+	public iola::xml::ielement
+{
+public:
+	template_element(const std::string strName);
+	void child(iola::xml::ielement* pkElement);
+	void attribute(std::string strKey, std::string strValue);
+	void text(std::string strText);
+	void xml(std::ostream& osXML);
+	void restore(iola::model::iasset* object);
+	void store();
+
+private:
+	const std::string m_strName; 
+	std::string m_strValue;
+};
 
 } // namespace dom
 } // namespace iola
+
+#endif // IOLA_DOM_TEMPLATE_ELEMENT_H

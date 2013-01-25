@@ -1,6 +1,4 @@
 /* -*- Mode: C++ ; c-basic-offset: 8 -*- */
-#ifndef IOLA_DOM_TEMPLATE_ELEMENT_H
-#define IOLA_DOM_TEMPLATE_ELEMENT_H
 
 // Iola NLE
 // Copyright (c) 2010, Anders Dahnielson
@@ -21,10 +19,13 @@
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-// IOLA
-#include "string_terminal.h"
+// BOOST
+#include <boost/lexical_cast.hpp>
 
-namespace  iola
+// IOLA
+#include "template_element.h"
+
+namespace iola
 {
 namespace dom
 {
@@ -32,14 +33,54 @@ namespace dom
 ////////////////////////////////////////////////////////////////////////////
 // class iola::dom::template_element
 
-class template_element :
-	public string_terminal
+template_element::template_element(const std::string strName) :
+        m_strName(strName),
+	m_iValue(0)
 {
-public:
-	template_element(const std::string strName);
-};
+}
+
+void
+template_element::child(iola::xml::ielement* pkElement)
+{
+	// We're terminal. And we've had a vasectomy!
+}
+
+void
+template_element::attribute(std::string strKey, std::string strValue)
+{
+	// No attributes.
+}
+
+void
+template_element::text(std::string strText)
+{
+	try
+	{
+		m_iValue = boost::lexical_cast<int>(strText);
+	}
+	catch(boost::bad_lexical_cast &)
+        {
+		m_iValue = 0;
+	}
+}
+
+void
+template_element::xml(std::ostream& osXML)
+{
+	osXML << "<" << m_strName << ">";
+	osXML << m_iValue;
+	osXML << "</" << m_strName << ">" << std::endl;
+}
+
+void
+template_element::restore(iola::model::iasset* object)
+{
+}
+
+void
+template_element::store()
+{
+}
 
 } // namespace dom
 } // namespace iola
-
-#endif // IOLA_DOM_TEMPLATE_ELEMENT_H

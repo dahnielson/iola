@@ -31,18 +31,17 @@ namespace dom
 
 template_element::template_element(const std::string strName) :
         m_strName(strName)
-{}
+{
+}
 
 void
 template_element::child(iola::xml::ielement* pkElement)
 {
-	// Append any legitimate children...
 }
 
 void
 template_element::attribute(std::string strKey, std::string strValue)
 {
-	// Aquire attributes...
 }
 
 void
@@ -54,22 +53,18 @@ void
 template_element::xml(std::ostream& osXML)
 {
 	osXML << "<" << m_strName << ">" << std::endl;
-
 	// Call xml(osXML) on any children...
-
 	osXML << "</" << m_strName << ">" << std::endl;
 }
 
 void
 template_element::restore()
 {
-	// Call restore() on any children...
 }
 
 void
 template_element::store()
 {
-	// Call store() on any children...
 }
 
 } // namespace dom
