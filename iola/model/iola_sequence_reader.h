@@ -1,4 +1,4 @@
-/* -*- Mode: C++ ; c-basic-offset: 8 -*- */
+/* -*- Mode: C++ ; indent-tabs-mode: t ; c-basic-offset: 8 -*- */
 #ifndef IOLA_MODEL_IOLA_SEQUENCE_READER_H
 #define IOLA_MODEL_IOLA_SEQUENCE_READER_H
 

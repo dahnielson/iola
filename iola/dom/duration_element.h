@@ -1,4 +1,4 @@
-/* -*- Mode: C++ ; c-basic-offset: 8 -*- */
+/* -*- Mode: C++ ; indent-tabs-mode: t ; c-basic-offset: 8 -*- */
 #ifndef IOLA_DOM_DURATION_ELEMENT_H
 #define IOLA_DOM_DURATION_ELEMENT_H
 

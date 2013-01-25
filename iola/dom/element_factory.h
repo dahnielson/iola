@@ -1,4 +1,4 @@
-/* -*- Mode: C++ ; c-basic-offset: 8 -*- */
+/* -*- Mode: C++ ; indent-tabs-mode: t ; c-basic-offset: 8 -*- */
 #ifndef IOLA_DOM_ELEMENT_FACTORY_H
 #define IOLA_DOM_ELEMENT_FACTORY_H
 
