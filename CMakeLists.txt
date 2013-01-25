@@ -31,7 +31,7 @@ FIND_PACKAGE(LibAO REQUIRED)
 
 FIND_PACKAGE(Threads REQUIRED)
 
-FIND_PACKAGE(Boost 1.41.0 COMPONENTS filesystem program_options)
+FIND_PACKAGE(Boost 1.49.0 COMPONENTS filesystem program_options system)
 
 FIND_PACKAGE(EXPAT REQUIRED)
 

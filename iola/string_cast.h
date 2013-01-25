@@ -68,7 +68,7 @@ inline const std::string string_cast<std::string>(const std::string& RHS)
 template<>
 inline const std::string string_cast<boost::filesystem::path>(const boost::filesystem::path& RHS)
 {
-    return RHS.native_file_string();
+    return RHS.string();
 }
 
 /// Specialization of string_cast() for boost::format
