@@ -1,6 +1,6 @@
 /* -*- Mode: C++ ; c-basic-offset: 8 -*- */
-#ifndef IOLA_DOM_INTEGER_TERMINAL_H
-#define IOLA_DOM_INTEGER_TERMINAL_H
+#ifndef IOLA_DOM_CLIP_ELEMENT_H
+#define IOLA_DOM_CLIP_ELEMENT_H
 
 // Iola NLE
 // Copyright (c) 2010, Anders Dahnielson
@@ -22,6 +22,8 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 // IOLA
+#include <iola/dom/ivisitor.h>
+#include <iola/model/iclip.h>
 #include <iola/xml/ielement.h>
 
 namespace  iola
@@ -29,27 +31,52 @@ namespace  iola
 namespace dom
 {
 
-////////////////////////////////////////////////////////////////////////////
-// class iola::dom::integer_terminal
+class anamorphic_element;
+class duration_element;
+class end_element;
+class file_element;
+class fielddominance_element;
+class in_element;
+class name_element;
+class out_element;
+class pixelaspectratio_element;
+class rate_element;
+class start_element;
+class timecode_element;
 
-class integer_terminal :
+////////////////////////////////////////////////////////////////////////////
+// class iola::dom::clip_element
+
+class clip_element :
 	public iola::xml::ielement
 {
 public:
-	integer_terminal(const std::string strName);
+	clip_element(const std::string strName);
 	void child(iola::xml::ielement* pkElement);
 	void attribute(std::string strKey, std::string strValue);
 	void text(std::string strText);
 	void xml(std::ostream& osXML);
-	int get();
-	void set(int iValue);
+	void restore(iola::model::iclip* object);
+	void store(ivisitor* visitor);
 
 private:
-	const std::string m_strName; 
-	int m_iValue;
+	const std::string m_strName;
+	std::string m_strID;
+	name_element* m_pkName;
+	file_element* m_pkFile;
+	duration_element* m_pkDuration;
+	in_element* m_pkIn;
+	out_element* m_pkOut;
+	start_element* m_pkStart;
+	end_element* m_pkEnd;
+	rate_element* m_pkRate;
+	timecode_element* m_pkTimecode;
+	anamorphic_element* m_pkAnamorphic;
+	pixelaspectratio_element* m_pkPixelAspectRatio;
+	fielddominance_element* m_pkFieldDominance;
 };
 
 } // namespace dom
 } // namespace iola
 
-#endif // IOLA_DOM_INTEGER_TERMINAL_H
+#endif // IOLA_DOM_CLIP_ELEMENT_H

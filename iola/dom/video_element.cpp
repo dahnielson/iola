@@ -19,6 +19,8 @@
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+#include <iola/model/isequence.h>
+
 #include "duration_element.h"
 #include "samplecharacteristics_element.h"
 #include "track_element.h"
@@ -74,25 +76,27 @@ video_element::xml(std::ostream& osXML)
 }
 
 void
-video_element::restore()
+video_element::restore(iola::model::iasset* object)
 {
-	//FIXME duration element currently not used
-
+	if (m_pkDuration)
+		m_pkDuration->restore(object);
 	if (m_pkSampleCharacteristics)
-		m_pkSampleCharacteristics->restore();
-	if (m_pkTrack)
-		m_pkTrack->restore();
+		m_pkSampleCharacteristics->restore(object);
+
+	iola::model::isequence* sequence = dynamic_cast<iola::model::isequence*>(object);
+	if (m_pkTrack && sequence)
+		m_pkTrack->restore(sequence);
 }
 
 void
-video_element::store()
+video_element::store(ivisitor* visitor)
 {
-	//FIXME duration element currently not used
-
+	if (m_pkDuration)
+		m_pkDuration->store(visitor);
 	if (m_pkSampleCharacteristics)
-		m_pkSampleCharacteristics->store();
+		m_pkSampleCharacteristics->store(visitor);
 	if (m_pkTrack)
-		m_pkTrack->store();
+		m_pkTrack->store(visitor);
 }
 
 } // namespace dom

@@ -64,17 +64,17 @@ root::xml(std::ostream& osXML)
 }
 
 void
-root::restore()
+root::restore(iola::iunknown* object)
 {
 	if (m_pkIola)
-		m_pkIola->restore();
+		m_pkIola->restore(object);
 }
 
 void
-root::store()
+root::store(ivisitor* visitor)
 {
 	if (m_pkIola)
-		m_pkIola->store();
+		m_pkIola->store(visitor);
 }
 
 } // namespace dom

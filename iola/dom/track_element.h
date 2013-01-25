@@ -25,6 +25,8 @@
 #include <vector>
 
 // IOLA
+#include <iola/dom/ivisitor.h>
+#include <iola/model/isequence.h>
 #include <iola/xml/ielement.h>
 
 namespace  iola
@@ -46,8 +48,8 @@ public:
 	void attribute(std::string strKey, std::string strValue);
 	void text(std::string strText);
 	void xml(std::ostream& osXML);
-	void restore();
-	void store();
+	void restore(iola::model::isequence* object);
+	void store(ivisitor* visitor);
 
 private:
 	const std::string m_strName; 

@@ -34,6 +34,7 @@
 #include <rlog/RLogChannel.h>
 
 // IOLA
+#include <iola/application/iapplication.h>
 #include <iola/application/get_instance.h>
 
 namespace po = boost::program_options;

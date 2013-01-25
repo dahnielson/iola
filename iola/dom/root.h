@@ -22,6 +22,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 // IOLA
+#include <iola/dom/ivisitor.h>
 #include <iola/xml/ielement.h>
 
 namespace iola
@@ -43,8 +44,8 @@ public:
 	void attribute(std::string strKey, std::string strValue);
 	void text(std::string strText);
 	void xml(std::ostream& osXML);
-	void restore();
-	void store();
+	void restore(iola::iunknown* object);
+	void store(ivisitor* visitor);
 
 private:
 	iola_element* m_pkIola;

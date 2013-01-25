@@ -20,6 +20,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 // STD
+#include <cassert>
 #include <pthread.h>
 
 // LIBAO
@@ -29,19 +30,26 @@
 #include <mlt++/Mlt.h>
 
 // IOLA
-#include <iola/consumer/consumer_iola.h>
-#include <iola/model/iproject.h>
+#include <iola/application/iapplication.h>
 #include <iola/gui/igui.h>
-#include "get_instance.h"
+#include <iola/model/imodel.h>
+#include <iola/model/iprogram.h>
+#include <iola/model/isequence.h>
+
+#include <iola/consumer/consumer_iola.h>
+#include <iola/gui/gui.h>
+#include <iola/model/model.h>
+#include <iola/model/sequence.h>
 
 namespace
 {
 
 /////////////////////////////////////////////////////////////////////////////
-// global instance
+// global instances
 
-pthread_mutex_t instance_mutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t g_instance_mutex = PTHREAD_MUTEX_INITIALIZER;
 static iola::application::iapplication* g_pkApplicationInstance;
+
 
 /////////////////////////////////////////////////////////////////////////////
 // application_implementation
@@ -52,17 +60,12 @@ class application_implementation :
 public:
 	application_implementation() :
 		m_pkGUI(0),
-		m_pkProject(0)
+		m_pkModel(0)
 	{
 	}
 
 	~application_implementation()
 	{}
-
-	iola::model::iproject* get_project()
-	{
-		return m_pkProject;
-	}
 
 	void run()
 	{
@@ -73,18 +76,26 @@ public:
 		Mlt::Repository* pkRepository = Mlt::Factory::init(NULL);
 		pkRepository->register_service(consumer_type, "iola", iola::consumer::consumer_iola_init);
 
-		// Instance project
-		m_pkProject = iola::model::factory::project();
+		// Instance model
+		m_pkModel = iola::model::create_model();
+		assert(m_pkModel);
+
+		// New sequence
+		iola::model::isequence* pkSequence = iola::model::create_sequence();
+		assert(pkSequence);
+		m_pkModel->program()->load_sequence(pkSequence);
 
 		// Instance GUI
-		m_pkGUI = iola::gui::factory();
+		m_pkGUI = iola::gui::create_gui();
+		assert(m_pkGUI);
+		m_pkGUI->connect_to(m_pkModel);
 
 		// Enter main loop
 		m_pkGUI->show();
 
 		// Clean up
 		delete m_pkGUI;
-		delete m_pkProject;
+		delete m_pkModel;
 
 		// Shutdown audio
 		ao_shutdown();
@@ -99,7 +110,7 @@ public:
 
 private:
 	iola::gui::igui* m_pkGUI;
-	iola::model::iproject* m_pkProject;
+	iola::model::imodel* m_pkModel;
 };
 
 
@@ -115,10 +126,10 @@ namespace application
 
 iapplication* get_instance()
 {
-	pthread_mutex_lock(&instance_mutex);
+	pthread_mutex_lock(&g_instance_mutex);
 	if (!g_pkApplicationInstance)
 		g_pkApplicationInstance = new application_implementation();
-	pthread_mutex_unlock(&instance_mutex);
+	pthread_mutex_unlock(&g_instance_mutex);
 
 	return g_pkApplicationInstance;
 }

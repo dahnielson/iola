@@ -74,23 +74,25 @@ audio_element::xml(std::ostream& osXML)
 }
 
 void
-audio_element::restore()
+audio_element::restore(iola::model::iasset* object)
 {
-	//FIXME duration element currently not used
-	//FIXME rate element currently not used
-
+	if (m_pkDuration)
+		m_pkDuration->restore(object);
+	if (m_pkRate)
+		m_pkRate->restore(object->video_settings());
 	if (m_pkSampleCharacteristics)
-		m_pkSampleCharacteristics->restore();
+		m_pkSampleCharacteristics->restore(object);
 }
 
 void
-audio_element::store()
+audio_element::store(ivisitor* visitor)
 {
-	//FIXME duration element currently not used
-	//FIXME rate element currently not used
-
+	if (m_pkDuration)
+		m_pkDuration->store(visitor);
+	if (m_pkRate)
+		m_pkRate->store(visitor);
 	if (m_pkSampleCharacteristics)
-		m_pkSampleCharacteristics->store();
+		m_pkSampleCharacteristics->store(visitor);
 }
 
 } // namespace dom

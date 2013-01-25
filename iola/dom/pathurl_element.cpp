@@ -30,8 +30,52 @@ namespace dom
 // class iola::dom::pathurl_element
 
 pathurl_element::pathurl_element(const std::string strName) :
-	string_terminal(strName)
-{}
+        m_strName(strName)
+{
+}
+
+void
+pathurl_element::child(iola::xml::ielement* pkElement)
+{
+}
+
+void
+pathurl_element::attribute(std::string strKey, std::string strValue)
+{
+}
+
+void
+pathurl_element::text(std::string strText)
+{
+	if (m_strValue.empty())
+		m_strValue = strText;
+}
+
+void
+pathurl_element::xml(std::ostream& osXML)
+{
+	osXML << "<" << m_strName << ">";
+	osXML << m_strValue;
+	osXML << "</" << m_strName << ">"  << std::endl;
+}
+
+void
+pathurl_element::restore(iola::model::ifile* object)
+{
+	object->set_pathurl(m_strValue);
+}
+
+void
+pathurl_element::store(ivisitor* visitor)
+{
+	visitor->visit(this);
+}
+
+void
+pathurl_element::set(const std::string value)
+{
+	m_strValue = value;
+}
 
 } // namespace dom
 } // namespace iola

@@ -23,8 +23,6 @@
 #include <rlog/rlog.h>
 
 // IOLA
-#include <iola/application/get_instance.h>
-#include <iola/model/iproject.h>
 #include "SequenceSettings.h"
 
 namespace iola
@@ -34,6 +32,7 @@ namespace gui
 
 SequenceSettings::SequenceSettings() :
 	Fl_Double_Window(350, 165, "Sequence settings"),
+	m_pkSettings(0),
 	m_bEdited(false)
 {
 	Fl_Pack* pkMainGroup = new Fl_Pack(10, 10, 330, 145);
@@ -158,6 +157,178 @@ SequenceSettings::~SequenceSettings()
 {
 }
 
+void SequenceSettings::connect_to(iola::model::ivideo_settings* settings)
+{
+	m_pkSettings = settings;
+}
+
+void SequenceSettings::update_settings_on(iola::model::ivideo_settings* object)
+{
+	// Frame Size
+	object->set_width(m_pkWidth->value());
+	object->set_height(m_pkHeight->value());
+
+	// Pixel Aspect Ratio
+	switch (m_pkPAR->value())
+	{
+	case 0: // Square
+		object->set_par(iola::model::ivideo_settings::SQUARE);
+		break;
+	case 1: // NTSC (ITU-R 601)
+		object->set_par(iola::model::ivideo_settings::NTSC_601);
+		break;
+	case 2: // PAL (ITU-R 601)
+		object->set_par(iola::model::ivideo_settings::PAL_601);
+		break;
+	case 3: // HD (920x720)
+		object->set_par(iola::model::ivideo_settings::HD_960x720);
+		break;
+	case 4: // HD (1280x1080)
+		object->set_par(iola::model::ivideo_settings::HD_1280x1080);
+		break;
+	case 5: // HD (1440x1080)
+		object->set_par(iola::model::ivideo_settings::HD_1440x1080);
+		break;
+	default:
+		rError("%s: Pixel Aspect Ratio choice #%i '%s' has not been implemented", 
+		       __PRETTY_FUNCTION__, m_pkPAR->value(), m_pkPAR->text());
+	};
+
+	object->set_anamorphic(m_pkAnamorphic->value());
+
+	// Field Dominance
+	switch (m_pkFieldDominance->value())
+	{
+	case 0: // None
+		object->set_field_dominance(iola::model::ivideo_settings::NONE);
+		break;
+	case 1: // Lower (Even)
+		object->set_field_dominance(iola::model::ivideo_settings::EVEN);
+		break;
+	case 2: // Upper (Odd)
+		object->set_field_dominance(iola::model::ivideo_settings::ODD);
+		break;
+	default:
+		rError("%s: Field Dominance choice #%i '%s' has not been implemented", 
+		       __PRETTY_FUNCTION__, m_pkFieldDominance->value(), m_pkFieldDominance->text());
+	};
+
+	// Timebase
+	switch (m_pkFPS->value())
+	{
+	case 0: // 23.98
+		object->set_fps_timebase(24);
+		object->set_fps_ntsc(true);
+		break;
+	case 1: // 24
+		object->set_fps_timebase(24);
+		object->set_fps_ntsc(false);
+		break;
+	case 2:// 25
+		object->set_fps_timebase(25);
+		object->set_fps_ntsc(false);
+		break;
+	case 3: // 29.97
+		object->set_fps_timebase(30);
+		object->set_fps_ntsc(true);
+		break;
+	case 4: // 30
+		object->set_fps_timebase(30);
+		object->set_fps_ntsc(false);
+		break;
+	case 5: // 50
+		object->set_fps_timebase(50);
+		object->set_fps_ntsc(false);
+		break;
+	case 6: // 59.95
+		object->set_fps_timebase(60);
+		object->set_fps_ntsc(true);
+		break;
+	case 7: // 60
+		object->set_fps_timebase(60);
+		object->set_fps_ntsc(false);
+		break;
+	default:
+		rError("%s: Timebase choice #%i '%s' has not been implemented", 
+		       __PRETTY_FUNCTION__, m_pkFPS->value(), m_pkFPS->text());
+	};
+}
+
+void  SequenceSettings::update_settings_on(iola::model::ivideo_characteristics* object)
+{
+	assert(!"Unimplemented");
+}
+
+void SequenceSettings::set_width(const int width)
+{
+	m_pkWidth->value(width);
+}
+
+void SequenceSettings::set_height(const int height)
+{
+	m_pkHeight->value(height);
+}
+
+void SequenceSettings::set_par(const iola::model::ivideo_settings::par_t par)
+{
+	switch (par)
+	{
+	case iola::model::ivideo_settings::SQUARE:
+		m_pkPAR->value(0);
+		break;
+	case iola::model::ivideo_settings::NTSC_601:
+		m_pkPAR->value(1);
+		break;
+	case iola::model::ivideo_settings::PAL_601:
+		m_pkPAR->value(2);
+		break;
+	case iola::model::ivideo_settings::HD_960x720:
+		m_pkPAR->value(3);
+		break;
+	case iola::model::ivideo_settings::HD_1280x1080:
+		m_pkPAR->value(4);
+		break;
+	case iola::model::ivideo_settings::HD_1440x1080:
+		m_pkPAR->value(5);
+		break;
+	default:
+		rError("%s: Unknown Pixel Aspect Ratio", __PRETTY_FUNCTION__);
+	};
+}
+
+void SequenceSettings::set_anamorphic(const bool anamorphic)
+{
+	m_pkAnamorphic->value(anamorphic);
+}
+
+void SequenceSettings::set_field_dominance(const iola::model::ivideo_settings::field_t field)
+{
+	switch (field)
+	{
+	case iola::model::ivideo_settings::NONE:
+		m_pkFieldDominance->value(0);
+		break;
+	case iola::model::ivideo_settings::EVEN:
+		m_pkFieldDominance->value(1);
+		break;
+	case iola::model::ivideo_settings::ODD:
+		m_pkFieldDominance->value(2);
+		break;
+	default:
+		rError("%s: Unknown Field Dominance", __PRETTY_FUNCTION__);
+	};
+}
+
+void SequenceSettings::set_fps_timebase(const int timebase)
+{
+	m_iTimebase = timebase;
+}
+
+void SequenceSettings::set_fps_ntsc(const bool ntsc)
+{
+	m_bNTSC = ntsc;
+}
+
 int SequenceSettings::handle(int event)
 {
 	switch (event)
@@ -173,112 +344,14 @@ int SequenceSettings::handle(int event)
 	};
 }
 
-void SequenceSettings::set_sequence_settings()
-{
-	rDebug("%s: Update project with sequence settings", __PRETTY_FUNCTION__);
-
-	// Frame Size
-	iola::application::get_instance()->get_project()->set_width(m_pkWidth->value());
-	iola::application::get_instance()->get_project()->set_height(m_pkHeight->value());
-
-	// Pixel Aspect Ratio
-	switch (m_pkPAR->value())
-	{
-	case 0: // Square
-		iola::application::get_instance()->get_project()->set_par(iola::model::iproject::SQUARE);
-		break;
-	case 1: // NTSC (ITU-R 601)
-		iola::application::get_instance()->get_project()->set_par(iola::model::iproject::NTSC_601);
-		break;
-	case 2: // PAL (ITU-R 601)
-		iola::application::get_instance()->get_project()->set_par(iola::model::iproject::PAL_601);
-		break;
-	case 3: // HD (920x720)
-		iola::application::get_instance()->get_project()->set_par(iola::model::iproject::HD_960x720);
-		break;
-	case 4: // HD (1280x1080)
-		iola::application::get_instance()->get_project()->set_par(iola::model::iproject::HD_1280x1080);
-		break;
-	case 5: // HD (1440x1080)
-		iola::application::get_instance()->get_project()->set_par(iola::model::iproject::HD_1440x1080);
-		break;
-	default:
-		rError("%s: Pixel Aspect Ratio choice #%i '%s' has not been implemented", 
-		       __PRETTY_FUNCTION__, m_pkPAR->value(), m_pkPAR->text());
-		return;
-	};
-
-	iola::application::get_instance()->get_project()->set_anamorphic(m_pkAnamorphic->value());
-
-	// Field Dominance
-	switch (m_pkFieldDominance->value())
-	{
-	case 0: // None
-		iola::application::get_instance()->get_project()->set_field_dominance(iola::model::iproject::NONE);
-		break;
-	case 1: // Lower (Even)
-		iola::application::get_instance()->get_project()->set_field_dominance(iola::model::iproject::EVEN);
-		break;
-	case 2: // Upper (Odd)
-		iola::application::get_instance()->get_project()->set_field_dominance(iola::model::iproject::ODD);
-		break;
-	default:
-		rError("%s: Field Dominance choice #%i '%s' has not been implemented", 
-		       __PRETTY_FUNCTION__, m_pkFieldDominance->value(), m_pkFieldDominance->text());
-		return;
-	};
-
-	// Timebase
-	switch (m_pkFPS->value())
-	{
-	case 0: // 23.98
-		iola::application::get_instance()->get_project()->set_fps_timebase(24);
-		iola::application::get_instance()->get_project()->set_fps_ntsc(true);
-		break;
-	case 1: // 24
-		iola::application::get_instance()->get_project()->set_fps_timebase(24);
-		iola::application::get_instance()->get_project()->set_fps_ntsc(false);
-		break;
-	case 2:// 25
-		iola::application::get_instance()->get_project()->set_fps_timebase(25);
-		iola::application::get_instance()->get_project()->set_fps_ntsc(false);
-		break;
-	case 3: // 29.97
-		iola::application::get_instance()->get_project()->set_fps_timebase(30);
-		iola::application::get_instance()->get_project()->set_fps_ntsc(true);
-		break;
-	case 4: // 30
-		iola::application::get_instance()->get_project()->set_fps_timebase(30);
-		iola::application::get_instance()->get_project()->set_fps_ntsc(false);
-		break;
-	case 5: // 50
-		iola::application::get_instance()->get_project()->set_fps_timebase(50);
-		iola::application::get_instance()->get_project()->set_fps_ntsc(false);
-		break;
-	case 6: // 59.95
-		iola::application::get_instance()->get_project()->set_fps_timebase(60);
-		iola::application::get_instance()->get_project()->set_fps_ntsc(true);
-		break;
-	case 7: // 60
-		iola::application::get_instance()->get_project()->set_fps_timebase(60);
-		iola::application::get_instance()->get_project()->set_fps_ntsc(false);
-		break;
-	default:
-		rError("%s: Timebase choice #%i '%s' has not been implemented", 
-		       __PRETTY_FUNCTION__, m_pkFPS->value(), m_pkFPS->text());
-		return;
-	};
-
-}
-
 void SequenceSettings::get_sequence_settings()
 {
-	rDebug("%s: Get sequence settings from project", __PRETTY_FUNCTION__);
+	if (!m_pkSettings)
+		return;
+
+	m_pkSettings->update_settings_on(this);
 
 	// Frame Size
-	m_pkWidth->value(iola::application::get_instance()->get_project()->get_width());
-	m_pkHeight->value(iola::application::get_instance()->get_project()->get_height());
-
 	if (m_pkWidth->value() == 720 && m_pkHeight->value() == 480)
 	{
 		m_pkWidth->deactivate();
@@ -328,78 +401,35 @@ void SequenceSettings::get_sequence_settings()
 		m_pkDAR->value(7);
 	}
 
-	// Pixel Aspect Ratio
-	switch (iola::application::get_instance()->get_project()->get_par())
-	{
-	case iola::model::iproject::SQUARE:
-		m_pkPAR->value(0);
-		break;
-	case iola::model::iproject::NTSC_601:
-		m_pkPAR->value(1);
-		break;
-	case iola::model::iproject::PAL_601:
-		m_pkPAR->value(2);
-		break;
-	case iola::model::iproject::HD_960x720:
-		m_pkPAR->value(3);
-		break;
-	case iola::model::iproject::HD_1280x1080:
-		m_pkPAR->value(4);
-		break;
-	case iola::model::iproject::HD_1440x1080:
-		m_pkPAR->value(5);
-		break;
-	default:
-		rError("%s: Unknown Pixel Aspect Ratio", __PRETTY_FUNCTION__);
-	};
-
-	m_pkAnamorphic->value(iola::application::get_instance()->get_project()->get_anamorphic());
-
-	// Field Dominance
-	switch (iola::application::get_instance()->get_project()->get_field_dominance())
-	{
-	case iola::model::iproject::NONE:
-		m_pkFieldDominance->value(0);
-		break;
-	case iola::model::iproject::EVEN:
-		m_pkFieldDominance->value(1);
-		break;
-	case iola::model::iproject::ODD:
-		m_pkFieldDominance->value(2);
-		break;
-	default:
-		rError("%s: Unknown Field Dominance", __PRETTY_FUNCTION__);
-	};
-
 	// Timebase
-	switch (iola::application::get_instance()->get_project()->get_fps_timebase())
+	switch (m_iTimebase)
 	{
 	case 24:
-		if (iola::application::get_instance()->get_project()->get_fps_ntsc())
+		if (m_bNTSC)
 			m_pkFPS->value(0); // 23.98
 		else
 			m_pkFPS->value(1); // 24
 		break;
 	case 25:
-		if (iola::application::get_instance()->get_project()->get_fps_ntsc())
+		if (m_bNTSC)
 			rError("%s: Invalid Timebase and NTSC flag combination", __PRETTY_FUNCTION__);
 		else
 			m_pkFPS->value(2); // 25
 		break;
 	case 30:
-		if (iola::application::get_instance()->get_project()->get_fps_ntsc())
+		if (m_bNTSC)
 			m_pkFPS->value(3); // 29.97
 		else
 			m_pkFPS->value(4); // 30
 		break;
 	case 50:
-		if (iola::application::get_instance()->get_project()->get_fps_ntsc())
+		if (m_bNTSC)
 			rError("%s: Invalid Timebase and NTSC flag combination", __PRETTY_FUNCTION__);
 		else
 			m_pkFPS->value(5); // 50
 		break;
 	case 60:
-		if (iola::application::get_instance()->get_project()->get_fps_ntsc())
+		if (m_bNTSC)
 			m_pkFPS->value(6); // 59.95
 		else
 			m_pkFPS->value(7); // 60
@@ -407,7 +437,14 @@ void SequenceSettings::get_sequence_settings()
 	default:
 		rError("%s: Unknown Timebase", __PRETTY_FUNCTION__);
 	};
-	
+}
+
+void SequenceSettings::set_sequence_settings()
+{
+	if (!m_pkSettings)
+		return;
+
+	update_settings_on(m_pkSettings);
 }
 
 void SequenceSettings::dar_callback()

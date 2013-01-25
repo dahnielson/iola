@@ -22,7 +22,9 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 // IOLA
-#include "integer_terminal.h"
+#include <iola/dom/ivisitor.h>
+#include <iola/model/imarkers.h>
+#include <iola/xml/ielement.h>
 
 namespace  iola
 {
@@ -33,10 +35,21 @@ namespace dom
 // class iola::dom::out_element
 
 class out_element :
-	public integer_terminal
+	public iola::xml::ielement
 {
 public:
 	out_element(const std::string strName);
+	void child(iola::xml::ielement* pkElement);
+	void attribute(std::string strKey, std::string strValue);
+	void text(std::string strText);
+	void xml(std::ostream& osXML);
+	void restore(iola::model::imarkers* object);
+	void store(ivisitor* visitor);
+	void set(const int value);
+
+private:
+	const std::string m_strName; 
+	int m_iValue;
 };
 
 } // namespace dom

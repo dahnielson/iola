@@ -19,18 +19,19 @@
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-// RLOG
-#include <rlog/rlog.h>
-
 // STD
-#include <iostream>
+#include <cassert>
 #include <exception>
+#include <iostream>
 
 // BOOST
 #include <boost/filesystem.hpp>
 
+// RLOG
+#include <rlog/rlog.h>
+
 // IOLA
-#include <iola/application/get_instance.h>
+#include <iola/model/isource.h>
 #include "SourceMonitor.h"
 
 // XBM
@@ -51,15 +52,19 @@ namespace iola
 namespace gui
 {
 
-SourceMonitor::SourceMonitor(int x, int y, int w, int h, const char *label) :
+SourceMonitor::SourceMonitor(int x, int y, int w, int h, const char* label) :
 	Fl_Group(x, y, w, h, label),
+	m_pkSource(0),
 	m_pkConsumer(0),
 	m_pkFrameShowEvent(0),
 	m_pkSlider(0),
-	m_pkTimecode(0)
+	m_pkTimecode(0),
+	m_pkDisplay(0),
+	m_pkBrowser(0)
 {
 	// Transport Slider
 	m_pkSlider = new TimeRuler(x+4, y+h-50, w-8, 19);
+	assert(m_pkSlider);
 	m_pkSlider->bounds(0, 0);
 	m_pkSlider->precision(0);
 	m_pkSlider->callback((Fl_Callback *)slider_callback, this);
@@ -140,6 +145,7 @@ SourceMonitor::SourceMonitor(int x, int y, int w, int h, const char *label) :
 	Fl_Box* pkRightFiller = new Fl_Box(0, 0, ((w-275)/2)-98, 25);
 
 	m_pkTimecode = new TimeDisplay(0, 0, 90, 20);
+	assert(m_pkTimecode);
 
 	pkTransportGroup->end();
 
@@ -147,6 +153,7 @@ SourceMonitor::SourceMonitor(int x, int y, int w, int h, const char *label) :
 	Fl_Group *pkMainGroup = new Fl_Group(x, y+20, w, h-25, "Source");
 	pkMainGroup->labelsize(11);
 	m_pkDisplay = new Fl_Window(x+4, y+30, w-8, h-82);
+	assert(m_pkDisplay);
 	m_pkDisplay->color(FL_BLACK);
 	m_pkDisplay->end();
 	pkMainGroup->add(m_pkDisplay);
@@ -159,6 +166,7 @@ SourceMonitor::SourceMonitor(int x, int y, int w, int h, const char *label) :
 	Fl_Group* pkBinGroup = new Fl_Group(x, y+20, w, h-25, "Bin");
 	pkBinGroup->labelsize(11);
 	m_pkBrowser = new Fl_Hold_Browser(x+4, y+30, w-8, h-35);
+	assert(m_pkBrowser);
 	m_pkBrowser->color(FL_BACKGROUND_COLOR);
 	m_pkBrowser->textsize(12);
 	browser_load();
@@ -180,73 +188,209 @@ SourceMonitor::SourceMonitor(int x, int y, int w, int h, const char *label) :
 	end();
 
 	// Consumer
-	m_pkConsumer = Mlt::Factory::consumer(iola::application::get_instance()->get_project()->get_profile(), "iola");
-	if (!m_pkConsumer->get_consumer())
-	{
-		rError("%s: No consumer!", __PRETTY_FUNCTION__);
-		throw std::exception();
-	}
+	char consumer_id[] = "iola"; //NOTE Using our custom consumer
+	Mlt::Profile kProfile; //NOTE The MLT default profile
+	m_pkConsumer = Mlt::Factory::consumer(kProfile, consumer_id);
+	assert(m_pkConsumer->get_consumer());
+
 	m_pkConsumer->lock();
 	m_pkConsumer->set("app_locked", 1);
 	m_pkConsumer->set("app_lock", (void *)Fl::lock, 0);
 	m_pkConsumer->set("app_unlock", (void *)Fl::unlock, 0);
-	m_pkFrameShowEvent = m_pkConsumer->listen("consumer-frame-show", this, (mlt_listener)frame_show_callback);
+	m_pkFrameShowEvent = m_pkConsumer->listen("consumer-frame-show", this, 
+						  (mlt_listener)frame_show_callback);
 	m_pkConsumer->unlock();
+	assert(m_pkFrameShowEvent);
 
-	iola::application::get_instance()->get_project()->source_connect_consumer(m_pkConsumer);
-
-	// Connect signals
-	on_sar_change_connection = iola::application::get_instance()->get_project()->on_sar_change_signal.connect(
-		boost::bind(&SourceMonitor::on_sar_change, this)
-		);
-	on_dar_change_connection = iola::application::get_instance()->get_project()->on_dar_change_signal.connect(
-		boost::bind(&SourceMonitor::on_dar_change, this)
-		);
-	on_par_change_connection = iola::application::get_instance()->get_project()->on_par_change_signal.connect(
-		boost::bind(&SourceMonitor::on_par_change, this)
-		);
-	on_field_change_connection = iola::application::get_instance()->get_project()->on_field_change_signal.connect(
-		boost::bind(&SourceMonitor::on_field_change, this)
-		);
-	on_fps_change_connection = iola::application::get_instance()->get_project()->on_fps_change_signal.connect(
-		boost::bind(&SourceMonitor::on_fps_change, this)
-		);
-	on_sample_change_connection = iola::application::get_instance()->get_project()->on_sample_change_signal.connect(
-		boost::bind(&SourceMonitor::on_sample_change, this)
-		);
-	on_source_load_connection = iola::application::get_instance()->get_project()->on_source_load_signal.connect(
-		boost::bind(&SourceMonitor::on_source_load, this)
-		);
-	on_source_playback_connection = iola::application::get_instance()->get_project()->on_source_playback_signal.connect(
-		boost::bind(&SourceMonitor::on_source_playback, this)
-		);
-	on_source_marks_change_connection = iola::application::get_instance()->get_project()->on_source_marks_change_signal.connect(
-		boost::bind(&SourceMonitor::on_source_marks_change, this)
-		);
-	on_source_producer_change_connection = iola::application::get_instance()->get_project()->on_source_producer_change_signal.connect(
-		boost::bind(&SourceMonitor::on_source_producer_change, this)
-		);
-
-	rDebug("%s: Source monitor initiated", __PRETTY_FUNCTION__);
+	rDebug("%s: Source monitor constructed", __PRETTY_FUNCTION__);
 }
 
 SourceMonitor::~SourceMonitor()
 {
+	assert(m_pkFrameShowEvent);
 	delete m_pkFrameShowEvent;
-	on_sar_change_connection.disconnect();
+
+	// Video settings change signals
+	on_width_change_connection.disconnect();
+	on_height_change_connection.disconnect();
 	on_dar_change_connection.disconnect();
 	on_par_change_connection.disconnect();
-	on_field_change_connection.disconnect();
+	on_progressive_change_connection.disconnect();
 	on_fps_change_connection.disconnect();
-	on_sample_change_connection.disconnect();
-	on_source_load_connection.disconnect();
-	on_source_playback_connection.disconnect();
-	on_source_marks_change_connection.disconnect();
-	on_source_producer_change_connection.disconnect();
-	if (m_pkConsumer)
-		m_pkConsumer->stop();
+	on_timebase_change_connection.disconnect();
+	on_ntsc_change_connection.disconnect();
+
+	// Audio settings change signals
+	on_sample_depth_change_connection.disconnect();
+	on_sample_rate_change_connection.disconnect();
+
+	// Markers change signal
+	on_marks_change_connection.disconnect();
+
+	// Source change signals
+	on_playback_connection.disconnect();
+	on_producer_change_connection.disconnect();
+
+	assert(m_pkConsumer);
+	m_pkConsumer->stop();
 	delete m_pkConsumer;
-	rDebug("%s: Source monitor demolished", __PRETTY_FUNCTION__);
+
+	rDebug("%s: Source monitor destructed", __PRETTY_FUNCTION__);
+}
+
+void SourceMonitor::connect_to(iola::model::imodel* model)
+{
+	if (!model)
+		throw std::invalid_argument("Model passed as parameter is NULL");
+
+	m_pkSource = model->source();
+
+	assert(m_pkSource);
+	assert(m_pkConsumer);
+	m_pkSource->connect_to(m_pkConsumer);
+
+	// Video settings change signals
+	on_width_change_connection = m_pkSource->on_width_change_signal.connect(
+		boost::bind(&SourceMonitor::set_width, this, _1)
+		);
+	on_height_change_connection = m_pkSource->on_height_change_signal.connect(
+		boost::bind(&SourceMonitor::set_height, this, _1)
+		);
+	on_dar_change_connection = m_pkSource->on_dar_change_signal.connect(
+		boost::bind(&SourceMonitor::set_dar, this, _1)
+		);
+	on_par_change_connection = m_pkSource->on_par_change_signal.connect(
+		boost::bind(&SourceMonitor::set_par, this, _1)
+		);
+	on_fps_change_connection = m_pkSource->on_fps_change_signal.connect(
+		boost::bind(&SourceMonitor::set_fps, this, _1)
+		);
+	on_timebase_change_connection = m_pkSource->on_timebase_change_signal.connect(
+		boost::bind(&SourceMonitor::set_timebase, this, _1)
+		);
+	on_ntsc_change_connection = m_pkSource->on_ntsc_change_signal.connect(
+		boost::bind(&SourceMonitor::set_ntsc, this, _1)
+		);
+	on_progressive_change_connection = m_pkSource->on_progressive_change_signal.connect(
+		boost::bind(&SourceMonitor::set_progressive, this, _1)
+		);
+
+	// Audio settings change signals
+	on_sample_depth_change_connection = m_pkSource->on_sample_depth_change_signal.connect(
+		boost::bind(&SourceMonitor::set_sample_depth, this, _1)
+		);
+	on_sample_rate_change_connection = m_pkSource->on_sample_rate_change_signal.connect(
+		boost::bind(&SourceMonitor::set_sample_rate, this, _1)
+		);
+
+	// Markers change signal
+	on_marks_change_connection = m_pkSource->on_mark_change_signal.connect(
+		boost::bind(&SourceMonitor::on_marks_change, this, _1, _2)
+		);
+
+	// Source change signals
+	on_playback_connection = m_pkSource->on_playback_change_signal.connect(
+		boost::bind(&SourceMonitor::on_playback_change, this)
+		);
+	on_producer_change_connection = m_pkSource->on_producer_change_signal.connect(
+		boost::bind(&SourceMonitor::on_producer_change, this, _1, _2)
+		);
+}
+
+void SourceMonitor::set_width(const int width)
+{
+	assert(m_pkConsumer);
+	m_pkConsumer->lock();
+	m_pkConsumer->set("width", width);
+	m_pkConsumer->unlock();
+}
+
+void SourceMonitor::set_height(const int height)
+{
+	assert(m_pkConsumer);
+	m_pkConsumer->lock();
+	m_pkConsumer->set("height", height);
+	m_pkConsumer->unlock();
+}
+
+void SourceMonitor::set_dar(const boost::rational<int> dar)
+{
+	assert(m_pkConsumer);
+	m_pkConsumer->lock();
+	m_pkConsumer->set("display_aspect_num", dar.numerator());
+	m_pkConsumer->set("display_aspect_den", dar.denominator());
+	m_pkConsumer->unlock();
+}
+
+void SourceMonitor::set_par(const boost::rational<int> par)
+{
+	assert(m_pkConsumer);
+	m_pkConsumer->lock();
+	m_pkConsumer->set("sample_aspect_num", par.numerator());
+	m_pkConsumer->set("sample_aspect_den", par.denominator());
+	m_pkConsumer->unlock();
+}
+
+void SourceMonitor::set_fps(const boost::rational<int> fps)
+{
+	assert(m_pkConsumer);
+	m_pkConsumer->lock();
+	m_pkConsumer->set("frame_rate_num", fps.numerator());
+	m_pkConsumer->set("frame_rate_den", fps.denominator());
+	m_pkConsumer->unlock();
+}
+
+void SourceMonitor::set_timebase(const int timebase)
+{
+	assert(m_pkTimecode);
+	m_pkTimecode->set_timebase(timebase);
+}
+
+void SourceMonitor::set_ntsc(const bool ntsc)
+{
+	assert(m_pkTimecode);
+	m_pkTimecode->set_dropframe(ntsc);
+}
+
+void SourceMonitor::set_progressive(const bool progressive)
+{
+	assert(m_pkConsumer);
+	m_pkConsumer->lock();
+	m_pkConsumer->set("progressive", progressive);
+	m_pkConsumer->unlock();
+}
+
+void SourceMonitor::set_sample_depth(const int depth)
+{
+	assert(m_pkConsumer);
+	m_pkConsumer->lock();
+	m_pkConsumer->set("audio_format", depth);
+	m_pkConsumer->unlock();
+}
+
+void SourceMonitor::set_sample_rate(const int rate)
+{
+	assert(m_pkConsumer);
+	m_pkConsumer->lock();
+	m_pkConsumer->set("frequency", rate);
+	m_pkConsumer->unlock();
+}
+
+void SourceMonitor::on_marks_change(const int in, const int out)
+{
+	assert(m_pkSlider);
+	m_pkSlider->marks(in, out);
+}
+
+void SourceMonitor::on_playback_change()
+{
+	refresh();
+}
+
+void SourceMonitor::on_producer_change(const int start, const int end)
+{
+	assert(m_pkSlider);
+	m_pkSlider->bounds(start, end);
 }
 
 int SourceMonitor::handle(int event)
@@ -275,12 +419,12 @@ int SourceMonitor::handle(int event)
 	case FL_KEYUP:
 		if (Fl::event_key() == 'q')
 		{
-			mark_in_goto();
+			goto_mark_in();
 			return 1;
 		}
 		else if (Fl::event_key() == 'w')
 		{
-			mark_out_goto();
+			goto_mark_out();
 			return 1;
 		}
 		else if (Fl::event_key() == 'e')
@@ -310,18 +454,18 @@ int SourceMonitor::handle(int event)
 		}
 		else if (Fl::event_key() == 'd')
 		{
-			mark_in_clear();
+			clear_mark_in();
 			return 1;
 		}
 		else if (Fl::event_key() == 'f')
 		{
-			mark_out_clear();
+			clear_mark_out();
 			return 1;
 		}
 		else if (Fl::event_key() == 'g')
 		{
-			mark_in_clear();
-			mark_out_clear();
+			clear_mark_in();
+			clear_mark_out();
 			return 1;
 		}
 		else if (Fl::event_key() == 'j')
@@ -361,79 +505,13 @@ int SourceMonitor::handle(int event)
 	}
 }
 
-void SourceMonitor::on_sar_change()
-{
-	m_pkConsumer->lock();
-	m_pkConsumer->set("width", iola::application::get_instance()->get_project()->get_width());
-	m_pkConsumer->set("height", iola::application::get_instance()->get_project()->get_height());
-	m_pkConsumer->unlock();
-}
-
-void SourceMonitor::on_dar_change()
-{
-	m_pkConsumer->lock();
-	m_pkConsumer->set("display_aspect_num", iola::application::get_instance()->get_project()->dar().numerator());
-	m_pkConsumer->set("display_aspect_den", iola::application::get_instance()->get_project()->dar().denominator());
-	m_pkConsumer->unlock();
-}
-
-void SourceMonitor::on_par_change()
-{
-	m_pkConsumer->lock();
-	m_pkConsumer->set("sample_aspect_num", iola::application::get_instance()->get_project()->par().numerator());
-	m_pkConsumer->set("sample_aspect_den", iola::application::get_instance()->get_project()->par().denominator());
-	m_pkConsumer->unlock();
-}
-
-void SourceMonitor::on_field_change()
-{
-	m_pkConsumer->lock();
-	m_pkConsumer->set("progressive", iola::application::get_instance()->get_project()->get_progressive());
-	m_pkConsumer->unlock();
-}
-
-void SourceMonitor::on_fps_change()
-{
-	m_pkConsumer->lock();
-	m_pkConsumer->set("frame_rate_num", iola::application::get_instance()->get_project()->fps().numerator());
-	m_pkConsumer->set("frame_rate_den", iola::application::get_instance()->get_project()->fps().denominator());
-	m_pkConsumer->unlock();
-
-	m_pkTimecode->set_timebase(iola::application::get_instance()->get_project()->get_fps_timebase());
-	m_pkTimecode->set_dropframe(iola::application::get_instance()->get_project()->get_fps_ntsc());
-}
-
-void SourceMonitor::on_sample_change()
-{
-	m_pkConsumer->lock();
-	m_pkConsumer->set("audio_format", iola::application::get_instance()->get_project()->get_sample_depth());
-	m_pkConsumer->set("frequency", iola::application::get_instance()->get_project()->get_sample_rate());
-	m_pkConsumer->unlock();
-}
-
-void SourceMonitor::on_source_load()
-{
-	rDebug("%s: Got source load", __PRETTY_FUNCTION__);
-}
-
-void SourceMonitor::on_source_playback()
-{
-	rDebug("%s: Got source playback", __PRETTY_FUNCTION__);
-	refresh();
-}
-
-void SourceMonitor::on_source_marks_change()
-{
-	rDebug("%s: Got source marks change", __PRETTY_FUNCTION__);
-	m_pkSlider->marks(
-		iola::application::get_instance()->get_project()->source_get_mark_in(),
-		iola::application::get_instance()->get_project()->source_get_mark_out()
-		);
-}
-
 void SourceMonitor::frame_shown(Mlt::Frame &frame)
 {
-	if (m_pkConsumer && !m_pkConsumer->is_stopped() && m_pkSlider && m_pkTimecode)
+	assert(m_pkConsumer);
+	assert(m_pkSlider);
+	assert(m_pkTimecode);
+
+	if (!m_pkConsumer->is_stopped())
 	{
 		//NOTE Do not use Fl::lock() here, it will deadlock when the consumer is stopping!
 		int position = frame.get_int("_position");
@@ -442,22 +520,9 @@ void SourceMonitor::frame_shown(Mlt::Frame &frame)
 	}
 }
 
-void SourceMonitor::on_source_producer_change()
-{
-	rDebug("%s: Got producer change", __PRETTY_FUNCTION__);
-	m_pkSlider->bounds(
-		iola::application::get_instance()->get_project()->source_get_start(),
-		iola::application::get_instance()->get_project()->source_get_end()
-		);
-}
-
-void SourceMonitor::slider_callback()
-{
-	iola::application::get_instance()->get_project()->source_seek(m_pkSlider->value());
-}
-
 void SourceMonitor::browser_load()
 {
+	assert(m_pkBrowser);
 	m_pkBrowser->clear();
 	m_pkBrowser->add(".");
 	m_pkBrowser->add("..");
@@ -466,13 +531,14 @@ void SourceMonitor::browser_load()
 	for (boost::filesystem::directory_iterator itr(dir_path); itr != end_itr; ++itr)
 	{
 		if (boost::filesystem::is_directory(itr->path()) || 
-		    boost::filesystem::extension(itr->path()) == ".avi")
+		    boost::filesystem::extension(itr->path()) == ".xml")
 			m_pkBrowser->add(itr->path().filename().c_str());
 	}
 }
 
 void SourceMonitor::browser_callback()
 {
+	assert(m_pkBrowser);
 	int selected = m_pkBrowser->value();
 	if (selected && Fl::event_clicks())
 	{
@@ -485,105 +551,138 @@ void SourceMonitor::browser_callback()
 		}
 		else
 		{
-			iola::application::get_instance()->get_project()->source_load(
+			m_pkSource->load_file(
 				boost::filesystem::current_path() / selected_path
 				);
 		}
 	}
 }
 
+void SourceMonitor::slider_callback()
+{
+	if (!m_pkSource)
+		return;
+	m_pkSource->goto_frame(m_pkSlider->value());
+}
+
 void SourceMonitor::mark_in()
 {
-	iola::application::get_instance()->get_project()->source_set_mark_in();
+	if (!m_pkSource)
+		return;
+	m_pkSource->mark_in();
 }
 
 void SourceMonitor::mark_out()
 {
-	iola::application::get_instance()->get_project()->source_set_mark_out();
+	if (!m_pkSource)
+		return;
+	m_pkSource->mark_out();
 }
 
 void SourceMonitor::mark_clip()
 {
-	iola::application::get_instance()->get_project()->source_set_mark_clip();
+	if (!m_pkSource)
+		return;
+	m_pkSource->mark_clip();
 }
 
-void SourceMonitor::mark_in_clear()
+void SourceMonitor::clear_mark_in()
 {
-	iola::application::get_instance()->get_project()->source_clear_mark_in();
+	if (!m_pkSource)
+		return;
+	m_pkSource->clear_mark_in();
 }
 
-void SourceMonitor::mark_out_clear()
+void SourceMonitor::clear_mark_out()
 {
-	iola::application::get_instance()->get_project()->source_clear_mark_out();
+	if (!m_pkSource)
+		return;
+	m_pkSource->clear_mark_out();
 }
 
-void SourceMonitor::mark_in_goto()
+void SourceMonitor::goto_mark_in()
 {
-	iola::application::get_instance()->get_project()->source_goto_mark_in();
+	if (!m_pkSource)
+		return;
+	m_pkSource->goto_mark_in();
 }
 
-void SourceMonitor::mark_out_goto()
+void SourceMonitor::goto_mark_out()
 {
-	iola::application::get_instance()->get_project()->source_goto_mark_out();
+	if (!m_pkSource)
+		return;
+	m_pkSource->goto_mark_out();
 }
 
 void SourceMonitor::goto_start()
 {
-	iola::application::get_instance()->get_project()->source_goto_start();
+	if (!m_pkSource)
+		return;
+	m_pkSource->goto_start();
 }
 
 void SourceMonitor::goto_end()
 {
-	iola::application::get_instance()->get_project()->source_goto_end();
-}
-
-void SourceMonitor::step_backward()
-{
-	iola::application::get_instance()->get_project()->source_step_backward();
-}
-
-void SourceMonitor::step_forward()
-{
-	iola::application::get_instance()->get_project()->source_step_forward();
+	if (!m_pkSource)
+		return;
+	m_pkSource->goto_end();
 }
 
 void SourceMonitor::play_backward()
 {
-	iola::application::get_instance()->get_project()->source_play_reverse();
+	if (!m_pkSource)
+		return;
+	m_pkSource->play_backward();
 }
 
 void SourceMonitor::play_forward()
 {
-	iola::application::get_instance()->get_project()->source_play_forward();
+	if (!m_pkSource)
+		return;
+	m_pkSource->play_forward();
+}
+
+void SourceMonitor::step_backward()
+{
+	if (!m_pkSource)
+		return;
+	m_pkSource->step_backward();
+}
+
+void SourceMonitor::step_forward()
+{
+	if (!m_pkSource)
+		return;
+	m_pkSource->step_forward();
 }
 
 void SourceMonitor::stop_playback()
 {
-	iola::application::get_instance()->get_project()->source_pause();
+	if (!m_pkSource)
+		return;
+	m_pkSource->stop();
 }
 
 Window SourceMonitor::xid()
 {
+	assert(m_pkDisplay);
 	return m_pkDisplay->shown() ? fl_xid(m_pkDisplay) : 0;
 }
 
 void SourceMonitor::stop()
 {
-	if (m_pkConsumer)
-	{
-		rDebug("%s: Stop consumer", __PRETTY_FUNCTION__);
-		m_pkConsumer->stop();
-	}
+	assert(m_pkConsumer);
+	rDebug("%s: Stopping consumer", __PRETTY_FUNCTION__);
+	m_pkConsumer->stop();
 }
 
 bool SourceMonitor::restart()
 {
+	assert(m_pkConsumer);
 	bool ret = m_pkConsumer->is_stopped() && xid() != 0;
 	if (ret)
 	{
-		char temp[132];
-		sprintf(temp, "%d", (int)xid());
-		rDebug("%s: Start consumer with xid=%i", __PRETTY_FUNCTION__, (int)xid());
+		rDebug("%s: Starting consumer with xid=%i", __PRETTY_FUNCTION__, (int)xid());
 		m_pkConsumer->set("xid", (int)xid());
 		m_pkConsumer->start();
 	}
@@ -594,6 +693,7 @@ bool SourceMonitor::restart()
 
 void SourceMonitor::refresh()
 {
+	assert(m_pkConsumer);
 	m_pkConsumer->lock();
 	m_pkConsumer->set("refresh", 1);
 	m_pkConsumer->unlock();

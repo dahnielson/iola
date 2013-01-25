@@ -24,11 +24,20 @@
 
 // IOLA
 #include <iola/application/get_instance.h>
+
+#include <iola/application/iapplication.h>
+#include <iola/model/imodel.h>
+#include <iola/model/iprogram.h>
+#include <iola/model/isequence.h>
+#include <iola/model/isource.h>
+
 #include "About.h"
 #include "MainWindow.h"
 #include "ProgramMonitor.h"
 #include "SequenceSettings.h"
 #include "SourceMonitor.h"
+
+#include "theme.h"
 
 namespace iola
 {
@@ -36,7 +45,8 @@ namespace gui
 {
 
 MainWindow::MainWindow() :
-	Fl_Double_Window(Fl::w(), Fl::h(), "Iola NLE")
+	Fl_Double_Window(Fl::w(), Fl::h(), "Iola NLE"),
+	m_bRun(false)
 {
 	// Menu
 	Fl_Menu_Bar* pkMenuBar = new Fl_Menu_Bar(0, 0, Fl::w(), 25);
@@ -47,7 +57,7 @@ MainWindow::MainWindow() :
 	pkMenuBar->add("&File/&Open...", FL_CTRL+'o', (Fl_Callback *)open_project, this, 0);
 	pkMenuBar->add("&File/&Save", FL_CTRL+'s', (Fl_Callback *)save_project, this, 0);
 	pkMenuBar->add("&File/_Save &As...", 0, (Fl_Callback *)save_as_project, this, 0);
-	pkMenuBar->add("&File/Export/Sequence as EDL...", 0, (Fl_Callback *)export_edl, this, 0);
+	// pkMenuBar->add("&File/Export/Sequence as EDL...", 0, (Fl_Callback *)export_edl, this, 0);
 	pkMenuBar->add("&File/_Sequence settings", 0, (Fl_Callback *)sequence_settings, this, 0);
 	pkMenuBar->add("&File/&Quit", FL_CTRL+'q', (Fl_Callback *)quit_application, this, 0);
 //	pkMenuBar->add("&Edit/&Undo", FL_CTRL+'z', 0, this, 0);
@@ -90,21 +100,17 @@ MainWindow::MainWindow() :
 
 	// Window
 	xclass("iola");
-	callback((Fl_Callback *)close_window, this);
+	callback((Fl_Callback *)quit_application, this);
 	resizable(pkMainGroup);
 	size_range(800, 750);
 	end();
-
-	// Signals
-	on_alert_connection = iola::application::get_instance()->get_project()->on_alert.connect(
-		boost::bind(&MainWindow::on_alert, this, _1)
-		);
 }
 
 MainWindow::~MainWindow()
 {
-	on_alert_connection.disconnect();
-	rDebug("%s: Application window demolished", __PRETTY_FUNCTION__);
+	on_source_alert_connection.disconnect();
+	on_program_alert_connection.disconnect();
+	rDebug("%s: Application window destructed", __PRETTY_FUNCTION__);
 }
 
 void MainWindow::on_alert(std::string strMessage)
@@ -119,7 +125,7 @@ void MainWindow::open_project()
 	if (filename)
 	{
 		m_kProjectPath = boost::filesystem::path(filename);
-		iola::application::get_instance()->get_project()->program_load(m_kProjectPath);
+		m_pkModel->program()->load_file(m_kProjectPath);
 	}
 }
 
@@ -128,7 +134,7 @@ void MainWindow::save_project()
 	if (m_kProjectPath.empty())
 		save_as_project();
 	else
-		iola::application::get_instance()->get_project()->program_save(m_kProjectPath);
+		m_pkModel->program()->save_file(m_kProjectPath);
 }
 
 void MainWindow::save_as_project()
@@ -137,14 +143,14 @@ void MainWindow::save_as_project()
 	if (filename)
 	{
 		m_kProjectPath = boost::filesystem::path(filename);
-		iola::application::get_instance()->get_project()->program_save(m_kProjectPath);
+		m_pkModel->program()->save_file(m_kProjectPath);
 	}
 }
 
 void MainWindow::clear_project()
 {
-	iola::application::get_instance()->get_project()->source_new();
-	iola::application::get_instance()->get_project()->program_new();
+	m_pkModel->source()->clear();
+	m_pkModel->program()->clear();
 }
 
 void MainWindow::export_edl()
@@ -153,17 +159,21 @@ void MainWindow::export_edl()
 	if (filename)
 	{
 		boost::filesystem::path kEDLPath(filename);
-		iola::application::get_instance()->get_project()->program_export_edl(kEDLPath);
+		m_pkModel->program()->save_file(kEDLPath);
 	}
 }
 
 void MainWindow::sequence_settings()
 {
+	m_pkSequenceSettings->connect_to(m_pkModel->program()->sequence()->video_settings());
 	m_pkSequenceSettings->show();
 }
 
 void MainWindow::quit_application()
 {
+	if (Fl::event() == FL_SHORTCUT && Fl::event_key() == FL_Escape)
+		return;
+
 	iola::application::get_instance()->quit();
 }
 
@@ -172,12 +182,45 @@ void MainWindow::about_iola()
 	m_pkAbout->show();
 }
 
-void MainWindow::close_window()
+void  MainWindow::connect_to(iola::model::imodel* model)
 {
-	if (Fl::event() == FL_SHORTCUT && Fl::event_key() == FL_Escape)
+	if (!model)
+	{
+		rError("%s: Model passed as parameter is NULL", __PRETTY_FUNCTION__);
 		return;
+	}
 
-	iola::application::get_instance()->quit();
+	m_pkModel = model;
+	m_pkSourceMonitor->connect_to(m_pkModel);
+	m_pkProgramMonitor->connect_to(m_pkModel);
+
+	iola::model::isource* pkSource = m_pkModel->source();
+	iola::model::iprogram* pkProgram = m_pkModel->program();
+
+	on_source_alert_connection = pkSource->on_alert_signal.connect(
+		boost::bind(&MainWindow::on_alert, this, _1)
+		);
+	on_program_alert_connection = pkProgram->on_alert_signal.connect(
+		boost::bind(&MainWindow::on_alert, this, _1)
+		);
+}
+
+void  MainWindow::show()
+{
+	Fl::visible_focus(0);
+	Fl::visual(FL_DOUBLE|FL_RGB);
+	iola::gui::scheme::theme();
+
+	Fl_Double_Window::show();
+
+	m_bRun = true;
+	while(m_bRun)
+		Fl::wait(0); //NOTE The zero time makes the GUI really responsive
+}
+
+void  MainWindow::stop()
+{
+	m_bRun = false;
 }
 
 } // namespace gui

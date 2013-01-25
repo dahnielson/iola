@@ -22,6 +22,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 // IOLA
+#include <iola/dom/ivisitor.h>
 #include <iola/xml/ielement.h>
 
 namespace  iola
@@ -29,6 +30,7 @@ namespace  iola
 namespace dom
 {
 
+class clip_element;
 class sequence_element;
 
 ////////////////////////////////////////////////////////////////////////////
@@ -43,12 +45,13 @@ public:
 	void attribute(std::string strKey, std::string strValue);
 	void text(std::string strText);
 	void xml(std::ostream& osXML);
-	void restore();
-	void store();
+	void restore(iola::iunknown* object);
+	void store(ivisitor* visitor);
 
 private:
 	const std::string m_strName;
 	std::string m_strVersion;
+	clip_element* m_pkClip;
 	sequence_element* m_pkSequence;
 };
 

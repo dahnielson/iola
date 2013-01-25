@@ -26,6 +26,13 @@
 
 namespace iola
 {
+namespace model
+{
+
+class imodel;
+
+} // namespace model
+
 namespace gui
 {
 
@@ -37,17 +44,13 @@ class igui :
 	public virtual iola::iunknown
 {
 public:
+	/// Connect GUI to model
+	virtual void connect_to(iola::model::imodel* model) = 0;
 	/// Show the user interface and enter main loop
-	virtual bool show() = 0;
+	virtual void show() = 0;
 	/// Stop the main loop
 	virtual void stop() = 0;
 };
-
-/////////////////////////////////////////////////////////////////////////////
-// function iola::gui::factory
-
-/// Factory function for the GUI
-igui* factory();
 
 } // namespace gui
 } // namespace iola

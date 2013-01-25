@@ -23,7 +23,6 @@
 #include <boost/filesystem.hpp>
 
 // IOLA
-#include <iola/application/get_instance.h>
 #include "anamorphic_element.h"
 #include "clipitem_element.h"
 #include "duration_element.h"
@@ -101,13 +100,15 @@ clipitem_element::attribute(std::string strKey, std::string strValue)
 void
 clipitem_element::text(std::string strText)
 {
-	// No text.
 }
 
 void
 clipitem_element::xml(std::ostream& osXML)
 {
-	osXML << "<" << m_strName << ">" << std::endl;
+	if (m_strID.empty())
+		osXML << "<" << m_strName << ">" << std::endl;
+	else
+		osXML << "<" << m_strName << " id=\"" << m_strID << "\">" << std::endl;
 	if (m_pkName)
 		m_pkName->xml(osXML);
 	if (m_pkDuration)
@@ -136,31 +137,61 @@ clipitem_element::xml(std::ostream& osXML)
 }
 
 void
-clipitem_element::restore()
+clipitem_element::restore(iola::model::iclip* object)
 {
-	//FIXME name element currently not used
-	//FIXME rate element currently not used
-	//FIXME timecode element currently not used
-	//FIXME anamorphic element currently not used
-	//FIXME pixelaspectratio element currently not used
-	//FIXME fielddominance element currently not used
-
-	if (m_pkFile && m_pkDuration && m_pkIn && m_pkOut && m_pkStart && m_pkEnd)
-	{
-		boost::filesystem::path pathurl = m_pkFile->get_pathurl(); //FIXME this is a bit fugly
-		const int duration = m_pkDuration->get();
-		const int in = m_pkIn->get();
-		const int out = m_pkOut->get();
-		const int start = m_pkStart->get();
-		const int end = m_pkEnd->get();
-		iola::application::get_instance()->get_project()->program_overwrite(pathurl, start, in, out);
-	}
+	if (m_pkName)
+		m_pkName->restore(object);
+	if (m_pkDuration)
+		m_pkDuration->restore(object);
+	if (m_pkFile)
+		m_pkFile->restore(object);
+	if (m_pkIn)
+		m_pkIn->restore(object->markers());
+	if (m_pkOut)
+		m_pkOut->restore(object->markers());
+	if (m_pkStart)
+		m_pkStart->restore(object->markers());
+	if (m_pkEnd)
+		m_pkEnd->restore(object->markers());
+	if (m_pkRate)
+		m_pkRate->restore(object->video_settings());
+	if (m_pkTimecode)
+		m_pkTimecode->restore(object);
+	if (m_pkAnamorphic)
+		m_pkAnamorphic->restore(object->video_settings());
+	if (m_pkPixelAspectRatio)
+		m_pkPixelAspectRatio->restore(object->video_settings());
+	if (m_pkFieldDominance)
+		m_pkFieldDominance->restore(object->video_settings());
 }
 
 void
-clipitem_element::store()
+clipitem_element::store(ivisitor* visitor)
 {
-	//NOTE track_element::store() is used to populate the clipitem elements
+	if (m_pkName)
+		m_pkName->store(visitor);
+	if (m_pkDuration)
+		m_pkDuration->store(visitor);
+	if (m_pkFile)
+		m_pkFile->store(visitor);
+	if (m_pkIn)
+		m_pkIn->store(visitor);
+	if (m_pkOut)
+		m_pkOut->store(visitor);
+	if (m_pkStart)
+		m_pkStart->store(visitor);
+	if (m_pkEnd)
+		m_pkEnd->store(visitor);
+	if (m_pkRate)
+		m_pkRate->store(visitor);
+	if (m_pkTimecode)
+		m_pkTimecode->store(visitor);
+	if (m_pkAnamorphic)
+		m_pkAnamorphic->store(visitor);
+	if (m_pkPixelAspectRatio)
+		m_pkPixelAspectRatio->store(visitor);
+	if (m_pkFieldDominance)
+		m_pkFieldDominance->store(visitor);
 }
 
 } // namespace dom

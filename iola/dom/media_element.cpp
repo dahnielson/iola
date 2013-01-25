@@ -68,21 +68,21 @@ media_element::xml(std::ostream& osXML)
 }
 
 void
-media_element::restore()
+media_element::restore(iola::model::iasset* object)
 {
 	if (m_pkVideo)
-		m_pkVideo->restore();
+		m_pkVideo->restore(object);
 	if (m_pkAudio)
-		m_pkAudio->restore();
+		m_pkAudio->restore(object);
 }
 
 void
-media_element::store()
+media_element::store(ivisitor* visitor)
 {
 	if (m_pkVideo)
-		m_pkVideo->store();
+		m_pkVideo->store(visitor);
 	if (m_pkAudio)
-		m_pkAudio->store();
+		m_pkAudio->store(visitor);
 }
 
 } // namespace dom

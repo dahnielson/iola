@@ -1,4 +1,6 @@
 /* -*- Mode: C++ ; c-basic-offset: 8 -*- */
+#ifndef IOLA_MODEL_ICLIP_WRITER_H
+#define IOLA_MODEL_ICLIP_WRITER_H
 
 // Iola NLE
 // Copyright (c) 2010, Anders Dahnielson
@@ -19,68 +21,35 @@
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-// BOOS
-#include <boost/lexical_cast.hpp>
-
 // IOLA
-#include "integer_terminal.h"
+#include <iola/model/iaudio_settings.h>
+#include <iola/model/ivideo_settings.h>
 
 namespace iola
 {
-namespace dom
+namespace model
 {
 
 ////////////////////////////////////////////////////////////////////////////
-// class iola::dom::integer_terminal
+// class iola::model::iclip_writer
 
-integer_terminal::integer_terminal(const std::string strName) :
-        m_strName(strName)
-{}
-
-void
-integer_terminal::child(iola::xml::ielement* pkElement)
+/// Abstract interface
+class iclip_writer :
+	public ivideo_settings,
+	public iaudio_settings
 {
-	// We're terminal. And we've had a vasectomy!
-}
+public:
+	/// Set name to write
+	virtual void set_name(const std::string name) = 0;
+	/// Set duration to write
+	virtual void set_duration(const int duration) = 0;
+	/// Set timecode to write
+	virtual void set_timecode(const std::string timecode) = 0;
+	/// Set file to write
+	virtual void set_file(const boost::filesystem::path file) = 0;
+};
 
-void
-integer_terminal::attribute(std::string strKey, std::string strValue)
-{
-	// No attributes.
-}
-
-void
-integer_terminal::text(std::string strText)
-{
-	try
-	{
-		m_iValue = boost::lexical_cast<int>(strText);
-	}
-	catch(boost::bad_lexical_cast &)
-        {
-		m_iValue = 0;
-	}
-}
-
-void
-integer_terminal::xml(std::ostream& osXML)
-{
-	osXML << "<" << m_strName << ">";
-	osXML << m_iValue;
-	osXML << "</" << m_strName << ">" << std::endl;
-}
-
-int
-integer_terminal::get()
-{
-	return m_iValue;
-}
-
-void
-integer_terminal::set(int iValue)
-{
-	m_iValue = iValue;
-}
-
-} // namespace dom
+} // namespace model
 } // namespace iola
+
+#endif // IOLA_MODEL_ICLIP_WRITER_H

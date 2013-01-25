@@ -31,6 +31,10 @@
 // FLTK
 #include "fltk.h"
 
+// IOLA
+#include <iola/gui/igui.h>
+#include <iola/model/imodel.h>
+
 namespace iola
 {
 namespace gui
@@ -46,7 +50,8 @@ class SourceMonitor;
 
 /// Application main window
 class MainWindow :
-	public Fl_Double_Window
+	public Fl_Double_Window,
+	public iola::gui::igui
 {
 public:
 	MainWindow();
@@ -68,10 +73,18 @@ public:
 	void quit_application();
 	/// Show about dialog
 	void about_iola();
-	/// Close window
-	void close_window();
+
+	void connect_to(iola::model::imodel* model);
+	void show();
+	void stop();
 
 private:
+	void on_alert(std::string strMessage);
+
+	bool m_bRun;
+
+	iola::model::imodel* m_pkModel;
+
 	SourceMonitor* m_pkSourceMonitor;
 	ProgramMonitor* m_pkProgramMonitor;
 	Fl_Output* m_pkStatusbar;
@@ -81,9 +94,8 @@ private:
 
 	boost::filesystem::path m_kProjectPath;
 
-	void on_alert(std::string strMessage);
-
-	boost::signals2::connection on_alert_connection;
+	boost::signals2::connection on_source_alert_connection;
+	boost::signals2::connection on_program_alert_connection;
 
 	static void new_project(Fl_Widget*, void* v) { reinterpret_cast<MainWindow*>(v)->clear_project(); }
 	static void open_project(Fl_Widget*, void* v) { reinterpret_cast<MainWindow*>(v)->open_project(); }
@@ -93,7 +105,6 @@ private:
 	static void sequence_settings(Fl_Widget*, void* v) { reinterpret_cast<MainWindow*>(v)->sequence_settings(); }
 	static void quit_application(Fl_Widget*, void* v) { reinterpret_cast<MainWindow*>(v)->quit_application(); }
 	static void about_iola(Fl_Widget*, void* v) { reinterpret_cast<MainWindow*>(v)->about_iola(); }
-	static void close_window(Fl_Widget*, void* v) { reinterpret_cast<MainWindow*>(v)->close_window(); }
 };
 
 } // namespace gui

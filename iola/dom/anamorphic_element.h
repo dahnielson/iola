@@ -22,7 +22,9 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 // IOLA
-#include "bool_terminal.h"
+#include <iola/dom/ivisitor.h>
+#include <iola/model/ivideo_settings.h>
+#include <iola/xml/ielement.h>
 
 namespace  iola
 {
@@ -33,10 +35,21 @@ namespace dom
 // class iola::dom::anamorphic_element
 
 class anamorphic_element :
-	public bool_terminal
+	public iola::xml::ielement
 {
 public:
 	anamorphic_element(const std::string strName);
+	void child(iola::xml::ielement* pkElement);
+	void attribute(std::string strKey, std::string strValue);
+	void text(std::string strText);
+	void xml(std::ostream& osXML);
+	void restore(iola::model::ivideo_settings* object);
+	void store(ivisitor* visitor);
+	void set(const bool value);
+
+private:
+	const std::string m_strName; 
+	bool m_bValue;
 };
 
 } // namespace dom

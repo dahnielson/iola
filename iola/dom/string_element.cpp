@@ -30,8 +30,52 @@ namespace dom
 // class iola::dom::string_element
 
 string_element::string_element(const std::string strName) :
-	string_terminal(strName)
-{}
+        m_strName(strName)
+{
+}
+
+void
+string_element::child(iola::xml::ielement* pkElement)
+{
+}
+
+void
+string_element::attribute(std::string strKey, std::string strValue)
+{
+}
+
+void
+string_element::text(std::string strText)
+{
+	if (m_strValue.empty())
+		m_strValue = strText;
+}
+
+void
+string_element::xml(std::ostream& osXML)
+{
+	osXML << "<" << m_strName << ">";
+	osXML << m_strValue;
+	osXML << "</" << m_strName << ">"  << std::endl;
+}
+
+void
+string_element::restore(iola::model::iasset* object)
+{
+	object->set_timecode(m_strValue);
+}
+
+void
+string_element::store(ivisitor* visitor)
+{
+	visitor->visit(this);
+}
+
+void
+string_element::set(const std::string value)
+{
+	m_strValue = value;
+}
 
 } // namespace dom
 } // namespace iola

@@ -25,6 +25,7 @@
 
 #include "anamorphic_element.h"
 #include "audio_element.h"
+#include "clip_element.h"
 #include "clipitem_element.h"
 #include "depth_element.h"
 #include "duration_element.h"
@@ -49,6 +50,7 @@
 #include "timebase_element.h"
 #include "timecode_element.h"
 #include "track_element.h"
+#include "uuid_element.h"
 #include "video_element.h"
 #include "width_element.h"
 
@@ -69,6 +71,8 @@ element_factory::factory(const std::string strElement)
 		return new audio_element(strElement);
 	else if (strElement == "depth")
 		return new depth_element(strElement);
+	else if (strElement == "clip")
+		return new clip_element(strElement);
 	else if (strElement == "clipitem")
 		return new clipitem_element(strElement);
 	else if (strElement == "duration")
@@ -115,6 +119,8 @@ element_factory::factory(const std::string strElement)
 		return new timecode_element(strElement);
 	else if (strElement == "track")
 		return new track_element(strElement);
+	else if (strElement == "uuid")
+		return new uuid_element(strElement);
 	else if (strElement == "video")
 		return new video_element(strElement);
 	else if (strElement == "width")

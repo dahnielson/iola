@@ -25,6 +25,8 @@
 #include <boost/filesystem.hpp>
 
 // IOLA
+#include <iola/dom/ivisitor.h>
+#include <iola/model/iclip.h>
 #include <iola/xml/ielement.h>
 
 namespace  iola
@@ -49,10 +51,8 @@ public:
 	void attribute(std::string strKey, std::string strValue);
 	void text(std::string strText);
 	void xml(std::ostream& osXML);
-	void restore();
-	void store();
-	boost::filesystem::path get_pathurl(); //FIXME this is a bit fugly (anti-pattern alert!)
-	void set_pathurl(boost::filesystem::path pathurl); //FIXME I don't like it at all...
+	void restore(iola::model::iclip* object);
+	void store(ivisitor* visitor);
 
 private:
 	const std::string m_strName; 

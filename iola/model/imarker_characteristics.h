@@ -1,4 +1,6 @@
 /* -*- Mode: C++ ; c-basic-offset: 8 -*- */
+#ifndef IOLA_MODEL_IMARKER_CHARACTERISTICS_H
+#define IOLA_MODEL_IMARKER_CHARACTERISTICS_H
 
 // Iola NLE
 // Copyright (c) 2010, Anders Dahnielson
@@ -19,63 +21,27 @@
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-#include "bool_terminal.h"
+// IOLA
+#include <iola/iunknown.h>
 
 namespace iola
 {
-namespace dom
+namespace model
 {
 
 ////////////////////////////////////////////////////////////////////////////
-// class iola::dom::bool_terminal
+// class iola::model::imarker_characteristics
 
-bool_terminal::bool_terminal(const std::string strName) :
-        m_strName(strName)
-{}
-
-void
-bool_terminal::child(iola::xml::ielement* pkElement)
+/// Abstract interface
+class imarker_characteristics :
+	virtual public iola::iunknown
 {
-	// We're terminal. And we've had a vasectomy!
-}
+public:
+	/// Set points
+	virtual void set_markers(const int in, const int out, const int start, const int end) = 0;
+};
 
-void
-bool_terminal::attribute(std::string strKey, std::string strValue)
-{
-	// No attributes.
-}
-
-void
-bool_terminal::text(std::string strText)
-{
-	if (strText == "TRUE" || strText == "true" || strText == "True")
-		m_bValue = true;
-	else if (strText == "FALSE" || strText == "false" || strText == "False")
-		m_bValue = false;
-}
-
-void
-bool_terminal::xml(std::ostream& osXML)
-{
-	osXML << "<" << m_strName << ">";
-	if (m_bValue)
-		osXML << "TRUE";
-	else
-		osXML << "FALSE";
-	osXML << "</" << m_strName << ">" << std::endl;
-}
-
-bool
-bool_terminal::get()
-{
-	return m_bValue;
-}
-
-void
-bool_terminal::set(bool bValue)
-{
-	m_bValue = bValue;
-}
-
-} // namespace dom
+} // namespace model
 } // namespace iola
+
+#endif // IOLA_MODEL_IMARKER_CHARACTERISTICS_H

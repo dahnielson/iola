@@ -1,4 +1,6 @@
 /* -*- Mode: C++ ; c-basic-offset: 8 -*- */
+#ifndef IOLA_MODEL_SEQUENCE_H
+#define IOLA_MODEL_SEQUENCE_H
 
 // Iola NLE
 // Copyright (c) 2010, Anders Dahnielson
@@ -19,58 +21,20 @@
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-#include "string_terminal.h"
-
 namespace iola
 {
-namespace dom
+namespace model
 {
+
+class isequence;
 
 ////////////////////////////////////////////////////////////////////////////
-// class iola::dom::string_terminal
+// function iola::model::create_sequence
 
-string_terminal::string_terminal(const std::string strName) :
-        m_strName(strName)
-{}
+/// Static factory for the concrete imlementation
+isequence* create_sequence();
 
-void
-string_terminal::child(iola::xml::ielement* pkElement)
-{
-	// We're terminal. And we've had a vasectomy!
-}
-
-void
-string_terminal::attribute(std::string strKey, std::string strValue)
-{
-	// No attributes.
-}
-
-void
-string_terminal::text(std::string strText)
-{
-	if (m_strValue.empty())
-		m_strValue = strText;
-}
-
-void
-string_terminal::xml(std::ostream& osXML)
-{
-	osXML << "<" << m_strName << ">";
-	osXML << m_strValue;
-	osXML << "</" << m_strName << ">"  << std::endl;
-}
-
-std::string
-string_terminal::get()
-{
-	return m_strValue;
-}
-
-void
-string_terminal::set(std::string strValue)
-{
-	m_strValue = strValue;
-}
-
-} // namespace dom
+} // namespace model
 } // namespace iola
+
+#endif // IOLA_MODEL_SEQUENCE_H

@@ -19,6 +19,9 @@
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+#include <iola/model/iclip.h>
+#include <iola/model/isequence.h>
+#include "clip_element.h"
 #include "iola_element.h"
 #include "sequence_element.h"
 
@@ -32,13 +35,16 @@ namespace dom
 
 iola_element::iola_element(const std::string strName) :
         m_strName(strName),
+	m_pkClip(0),
 	m_pkSequence(0)
 {}
 
 void
 iola_element::child(iola::xml::ielement* pkElement)
 {
-	if (dynamic_cast<sequence_element*>(pkElement))
+	if (dynamic_cast<clip_element*>(pkElement))
+		m_pkClip = dynamic_cast<clip_element*>(pkElement);
+	else if (dynamic_cast<sequence_element*>(pkElement))
 		m_pkSequence = dynamic_cast<sequence_element*>(pkElement);
 }
 
@@ -58,23 +64,38 @@ void
 iola_element::xml(std::ostream& osXML)
 {
 	osXML << "<" << m_strName << " version=\"" << m_strVersion << "\">" << std::endl;
+	if (m_pkClip)
+		m_pkClip->xml(osXML);
 	if (m_pkSequence)
 		m_pkSequence->xml(osXML);
 	osXML << "</" << m_strName << ">" << std::endl;
 }
 
 void
-iola_element::restore()
+iola_element::restore(iola::iunknown* object)
 {
+	if (m_pkClip)
+	{
+		iola::model::iclip* clip = dynamic_cast<iola::model::iclip*>(object);
+		if (clip)
+			m_pkClip->restore(clip);
+		return;
+	}
+
 	if (m_pkSequence)
-		m_pkSequence->restore();
+	{
+		iola::model::isequence* sequence = dynamic_cast<iola::model::isequence*>(object);
+		if (sequence)
+			m_pkSequence->restore(sequence);
+		return;
+	}
 }
 
 void
-iola_element::store()
+iola_element::store(ivisitor* visitor)
 {
 	if (m_pkSequence)
-		m_pkSequence->store();
+		m_pkSequence->store(visitor);
 }
 
 } // namespace dom

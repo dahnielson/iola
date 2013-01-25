@@ -110,13 +110,13 @@ dummy::xml(std::ostream& osXML)
 }
 
 void
-dummy::restore()
+dummy::restore(iola::iunknown* object)
 {
 	rWarning("%s: Stand in dummy for element %s can't call restore()", __PRETTY_FUNCTION__, m_strName.c_str());
 }
 
 void
-dummy::store()
+dummy::store(ivisitor* visitor)
 {
 	rWarning("%s: Stand in dummy for element %s can't call store()", __PRETTY_FUNCTION__, m_strName.c_str());
 }

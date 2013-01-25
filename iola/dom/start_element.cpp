@@ -19,6 +19,10 @@
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+// BOOST
+#include <boost/lexical_cast.hpp>
+
+// IOLA
 #include "start_element.h"
 
 namespace iola
@@ -30,8 +34,53 @@ namespace dom
 // class iola::dom::start_element
 
 start_element::start_element(const std::string strName) :
-	integer_terminal(strName)
-{}
+        m_strName(strName),
+	m_iValue(0)
+{
+}
+
+void
+start_element::child(iola::xml::ielement* pkElement)
+{
+}
+
+void
+start_element::attribute(std::string strKey, std::string strValue)
+{
+}
+
+void
+start_element::text(std::string strText)
+{
+	try
+	{
+		m_iValue = boost::lexical_cast<int>(strText);
+	}
+	catch(boost::bad_lexical_cast &)
+        {
+		m_iValue = 0;
+	}
+}
+
+void
+start_element::xml(std::ostream& osXML)
+{
+	osXML << "<" << m_strName << ">";
+	osXML << m_iValue;
+	osXML << "</" << m_strName << ">" << std::endl;
+}
+
+void
+start_element::restore(iola::model::imarkers* object)
+{
+	object->set_start_point(m_iValue);
+}
+
+void
+start_element::store(ivisitor* visitor)
+{
+	visitor->visit(this);
+}
 
 } // namespace dom
 } // namespace iola

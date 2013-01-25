@@ -21,17 +21,17 @@
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-#include "iapplication.h"
-
 namespace iola
 {
 namespace application
 {
 
+class iapplication;
+
 /////////////////////////////////////////////////////////////////////////////
 // function iola::application::get_instance
 
-/// Factory for the iapplication singleton
+/// Static factory for the iapplication singleton
 iapplication* get_instance();
 
 } // namespace application

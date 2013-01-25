@@ -57,7 +57,7 @@ void TimeDisplay::set_dropframe(const bool dropframe)
 void TimeDisplay::value(const int v)
 {
 	m_kTimecode.set_framecount(v);
-	redraw();
+//	redraw(); //XXX this will cause a spectacular crash
 }
 
 void TimeDisplay::draw()

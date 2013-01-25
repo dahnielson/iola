@@ -1,6 +1,6 @@
 /* -*- Mode: C++ ; c-basic-offset: 8 -*- */
-#ifndef IOLA_DOM_STRING_TERMINAL_H
-#define IOLA_DOM_STRING_TERMINAL_H
+#ifndef IOLA_MODEL_ISOURCE_H
+#define IOLA_MODEL_ISOURCE_H
 
 // Iola NLE
 // Copyright (c) 2010, Anders Dahnielson
@@ -21,35 +21,45 @@
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-// IOLA
-#include <iola/xml/ielement.h>
+// BOOST
+#include <boost/signals2.hpp>
 
-namespace  iola
+// IOLA
+#include "iconsumable.h"
+#include "iloadable.h"
+#include "imarkable.h"
+#include "iplayable.h"
+
+namespace iola
 {
-namespace dom
+namespace model
 {
+
+class iclip;
 
 ////////////////////////////////////////////////////////////////////////////
-// class iola::dom::string_terminal
+// class iola::model::isource
 
-class string_terminal :
-	public iola::xml::ielement
+/// Abstract interface of a domain model source object
+class isource :
+	public iloadable,
+	public iconsumable,
+	public iplayable,
+	public imarkable
 {
 public:
-	string_terminal(const std::string strName);
-	void child(iola::xml::ielement* pkElement);
-	void attribute(std::string strKey, std::string strValue);
-	void text(std::string strText);
-	void xml(std::ostream& osXML);
-	std::string get();
-	void set(std::string strValue);
+	/// Signal emitted on alert
+	boost::signals2::signal<void (std::string)> on_alert_signal;
 
-private:
-	const std::string m_strName; 
-	std::string m_strValue;
+	/// Clear source
+	virtual void clear() = 0;
+	/// Load a clip
+	virtual void load_clip(iclip* clip) = 0;
+	/// Returns clip
+	virtual iclip* clip() = 0;
 };
 
-} // namespace dom
+} // namespace model
 } // namespace iola
 
-#endif // IOLA_DOM_STRING_TERMINAL_H
+#endif // IOLA_MODEL_ISOURCE_H

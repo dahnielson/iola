@@ -500,7 +500,9 @@ static void* consumer_thread(void *arg)
 			glXSwapBuffers(self->display, self->xid);
 
 			// Fire event
-			mlt_events_fire(self->properties, "consumer-frame-show", frame, NULL); //NOTE This will cause the thread to call functions (the listeners) in other threads (i.e. the main thread) and block.
+			//NOTE This will cause the thread to call functions (the listeners) 
+			//     in other threads (i.e. the main thread) and block.
+			mlt_events_fire(self->properties, "consumer-frame-show", frame, NULL);
 		}
 	}
 

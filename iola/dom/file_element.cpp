@@ -69,7 +69,10 @@ file_element::text(std::string strText)
 void
 file_element::xml(std::ostream& osXML)
 {
-	osXML << "<" << m_strName << ">" << std::endl;
+	if (m_strID.empty())
+		osXML << "<" << m_strName << ">" << std::endl;
+	else
+		osXML << "<" << m_strName << " id=\"" << m_strID << "\">" << std::endl;
 	if (m_pkDuration)
 		m_pkDuration->xml(osXML);
 	if (m_pkRate)
@@ -82,42 +85,29 @@ file_element::xml(std::ostream& osXML)
 }
 
 void
-file_element::restore()
+file_element::restore(iola::model::iclip* object)
 {
-	//FIXME duration element currently not used
-	//FIXME name element currently not used
-	//FIXME rate element currently not used
+	if (m_pkDuration)
+		m_pkDuration->restore(object);
+	if (m_pkRate)
+		m_pkRate->restore(object->video_settings());
+	if (m_pkName)
+		m_pkName->restore(object);
+	if (m_pkPathURL)
+		m_pkPathURL->restore(object->file());
 }
 
 void
-file_element::store()
+file_element::store(ivisitor* visitor)
 {
-	//FIXME duration element currently not used
-	//FIXME name element currently not used
-	//FIXME rate element currently not used
-}
-
-boost::filesystem::path
-file_element::get_pathurl()
-{
+	if (m_pkDuration)
+		m_pkDuration->store(visitor);
+	if (m_pkRate)
+		m_pkRate->store(visitor);
+	if (m_pkName)
+		m_pkName->store(visitor);
 	if (m_pkPathURL)
-		return boost::filesystem::path(m_pkPathURL->get());
-	else
-		return boost::filesystem::path();
-}
-
-void
-file_element::set_pathurl(boost::filesystem::path pathurl)
-{
-	if (m_pkPathURL)
-	{
-		m_pkPathURL->set(pathurl.string());
-	}
-	else
-	{
-		m_pkPathURL = new pathurl_element("pathurl");
-		m_pkPathURL->set(pathurl.string());
-	}
+		m_pkPathURL->store(visitor);
 }
 
 } // namespace dom

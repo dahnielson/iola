@@ -20,8 +20,8 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 // IOLA
-#include <iola/application/get_instance.h>
-#include <iola/model/iproject.h>
+#include <iola/model/ivideo_settings.h>
+
 #include "anamorphic_element.h"
 #include "depth_element.h"
 #include "fielddominance_element.h"
@@ -78,13 +78,11 @@ samplecharacteristics_element::child(iola::xml::ielement* pkElement)
 void
 samplecharacteristics_element::attribute(std::string strKey, std::string strValue)
 {
-	// No attributes.
 }
 
 void
 samplecharacteristics_element::text(std::string strText)
 {
-	// No text.
 }
 
 void
@@ -113,180 +111,49 @@ samplecharacteristics_element::xml(std::ostream& osXML)
 }
 
 void
-samplecharacteristics_element::restore()
+samplecharacteristics_element::restore(iola::model::iasset* object)
 {
 	// Video
 	if (m_pkWidth)
-	{
-		const int width = m_pkWidth->get();
-		iola::application::get_instance()->get_project()->set_width(width);
-	}
-
+		m_pkWidth->restore(object->video_settings());
 	if (m_pkHeight)
-	{
-		const int height = m_pkHeight->get();
-		iola::application::get_instance()->get_project()->set_height(height);
-	}
-
+		m_pkWidth->restore(object->video_settings());
 	if (m_pkAnamorphic)
-	{
-		const bool anamorphic = m_pkAnamorphic->get();
-		iola::application::get_instance()->get_project()->set_anamorphic(anamorphic);
-	}
-
+		m_pkAnamorphic->restore(object->video_settings());
 	if (m_pkPixelAspectRatio)
-	{
-		iola::model::iproject::par_t par;
-		const std::string strPAR = m_pkPixelAspectRatio->get();
-		if (strPAR == "SQUARE" || strPAR == "square")
-			par = iola::model::iproject::SQUARE;
-		else if (strPAR == "NTSC-601")
-			par = iola::model::iproject::NTSC_601;
-		else if (strPAR == "PAL-601")
-			par = iola::model::iproject::PAL_601;
-		else if (strPAR == "HD-(960x720)" || strPAR == "DVCPROHD-720p")
-			par = iola::model::iproject::HD_960x720;
-		else if (strPAR == "HD-(1280x1080)" || strPAR == "DVCPROHD-1080i60")
-			par = iola::model::iproject::HD_1280x1080;
-		else if (strPAR == "HD-(1440x1080)" || strPAR == "DVCPROHD-1080i50")
-			par = iola::model::iproject::HD_1440x1080;
-		iola::application::get_instance()->get_project()->set_par(par);
-	}
-
+		m_pkPixelAspectRatio->restore(object->video_settings());
 	if (m_pkFieldDominance)
-	{
-		iola::model::iproject::field_t field;
-		const std::string strField = m_pkFieldDominance->get();
-		if (strField == "NONE" || strField == "none")
-			field = iola::model::iproject::NONE;
-		else if (strField == "LOWER" || strField == "lower" || strField == "EVEN" || strField == "even")
-			field = iola::model::iproject::EVEN;
-		else if (strField == "UPPER" || strField == "upper" || strField == "ODD" || strField == "odd")
-			field = iola::model::iproject::ODD;
-		iola::application::get_instance()->get_project()->set_field_dominance(field);
-	}
-
+		m_pkFieldDominance->restore(object->video_settings());
 	if (m_pkRate)
-		m_pkRate->restore();
-
+		m_pkRate->restore(object->video_settings());
 	// Audio
 	if (m_pkDepth)
-	{
-		const int depth = m_pkDepth->get();
-		switch (depth)
-		{
-		case 16:
-			iola::application::get_instance()->get_project()->set_sample_depth(depth);
-			break;
-		};
-	}
-
+		m_pkDepth->restore(object->audio_settings());
 	if (m_pkSampleRate)
-	{
-		const int rate = m_pkSampleRate->get();
-		switch (rate)
-		{
-		case 32000:
-		case 44100:
-		case 48000:
-			iola::application::get_instance()->get_project()->set_sample_rate(rate);
-			break;
-		};
-	}
+		m_pkSampleRate->restore(object->audio_settings());
 }
 
 void
-samplecharacteristics_element::store()
+samplecharacteristics_element::store(ivisitor* visitor)
 {
 	// Video
 	if (m_pkWidth)
-	{
-		const int width = iola::application::get_instance()->get_project()->get_width();
-		m_pkWidth->set(width);
-	}
-
+		m_pkWidth->store(visitor);
 	if (m_pkHeight)
-	{
-		const int height = iola::application::get_instance()->get_project()->get_height();
-		m_pkHeight->set(height);
-	}
-
+		m_pkHeight->store(visitor);
 	if (m_pkAnamorphic)
-	{
-		const bool anamorphic = iola::application::get_instance()->get_project()->get_anamorphic();
-		m_pkAnamorphic->set(anamorphic);
-	}
-
+		m_pkAnamorphic->store(visitor);
 	if (m_pkPixelAspectRatio)
-	{
-		iola::model::iproject::par_t par = iola::application::get_instance()->get_project()->get_par();
-		switch (par)
-		{
-		case iola::model::iproject::SQUARE:
-			m_pkPixelAspectRatio->set("SQUARE");
-			break;
-		case iola::model::iproject::NTSC_601:
-			m_pkPixelAspectRatio->set("NTSC-601");
-			break;
-		case iola::model::iproject::PAL_601:
-			m_pkPixelAspectRatio->set("PAL-601");
-			break;
-		case iola::model::iproject::HD_960x720:
-			m_pkPixelAspectRatio->set("HD-(960x720)");
-			break;
-		case iola::model::iproject::HD_1280x1080:
-			m_pkPixelAspectRatio->set("HD-(1280x1080)");
-			break;
-		case iola::model::iproject::HD_1440x1080:
-			m_pkPixelAspectRatio->set("HD-(1440x1080)");
-			break;
-		};
-	}
-
+		m_pkPixelAspectRatio->store(visitor);
 	if (m_pkFieldDominance)
-	{
-		iola::model::iproject::field_t field  = iola::application::get_instance()->get_project()->get_field_dominance();
-		switch (field)
-		{
-		case iola::model::iproject::NONE:
-			m_pkFieldDominance->set("NONE");
-			break;
-		case iola::model::iproject::EVEN:
-			m_pkFieldDominance->set("EVEN");
-			break;
-		case iola::model::iproject::ODD:
-			m_pkFieldDominance->set("ODD");
-			break;
-		};
-	}
-
+		m_pkFieldDominance->store(visitor);
 	if (m_pkRate)
-		m_pkRate->store();
-
+		m_pkRate->store(visitor);
 	// Audio
 	if (m_pkDepth)
-	{
-		const int depth = iola::application::get_instance()->get_project()->get_sample_depth();
-		switch (depth)
-		{
-		case 16:
-			m_pkDepth->set(depth);
-			break;
-		};
-	}
-
+		m_pkDepth->store(visitor);
 	if (m_pkSampleRate)
-	{
-		const int rate = iola::application::get_instance()->get_project()->get_sample_rate();
-		switch (rate)
-		{
-		case 32000:
-		case 44100:
-		case 48000:
-			m_pkSampleRate->set(rate);
-			break;
-		};
-	}
+		m_pkSampleRate->store(visitor);
 }
 
 } // namespace dom

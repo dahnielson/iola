@@ -1,6 +1,6 @@
 /* -*- Mode: C++ ; c-basic-offset: 8 -*- */
-#ifndef IOLA_DOM_BOOL_TERMINAL_H
-#define IOLA_DOM_BOOL_TERMINAL_H
+#ifndef IOLA_GUI_GUI_H
+#define IOLA_GUI_GUI_H
 
 // Iola NLE
 // Copyright (c) 2010, Anders Dahnielson
@@ -21,35 +21,20 @@
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-// IOLA
-#include <iola/xml/ielement.h>
+namespace iola
+{
+namespace gui
+{
 
-namespace  iola
-{
-namespace dom
-{
+class igui;
 
 ////////////////////////////////////////////////////////////////////////////
-// class iola::dom::bool_terminal
+// function iola::gui::create_gui
 
-class bool_terminal :
-	public iola::xml::ielement
-{
-public:
-	bool_terminal(const std::string strName);
-	void child(iola::xml::ielement* pkElement);
-	void attribute(std::string strKey, std::string strValue);
-	void text(std::string strText);
-	void xml(std::ostream& osXML);
-	bool get();
-	void set(bool bValue);
+/// Static factory for the concrete imlementation
+igui* create_gui();
 
-private:
-	const std::string m_strName; 
-	bool m_bValue;
-};
-
-} // namespace dom
+} // namespace gui
 } // namespace iola
 
-#endif // IOLA_DOM_BOOL_TERMINAL_H
+#endif // IOLA_GUI_GUI_H

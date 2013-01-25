@@ -23,7 +23,6 @@
 #include <boost/lexical_cast.hpp>
 
 // IOLA
-#include <iola/application/get_instance.h>
 #include "rate_element.h"
 #include "string_element.h"
 #include "timecode_element.h"
@@ -66,7 +65,10 @@ timecode_element::text(std::string strText)
 void
 timecode_element::xml(std::ostream& osXML)
 {
-	osXML << "<" << m_strName << ">" << std::endl;
+	if (m_strID.empty())
+		osXML << "<" << m_strName << ">" << std::endl;
+	else
+		osXML << "<" << m_strName << " id=\"" << m_strID << "\">" << std::endl;
 	if (m_pkString)
 		m_pkString->xml(osXML);
 	if (m_pkRate)
@@ -75,29 +77,21 @@ timecode_element::xml(std::ostream& osXML)
 }
 
 void
-timecode_element::restore()
+timecode_element::restore(iola::model::iasset* object)
 {
 	if (m_pkString)
-	{
-		std::string string = m_pkString->get();
-		iola::application::get_instance()->get_project()->program_set_start_timecode(string);
-	}
-
+		m_pkString->restore(object);
 	if (m_pkRate)
-		m_pkRate->restore();
+		m_pkRate->restore(object->video_settings());
 }
 
 void
-timecode_element::store()
+timecode_element::store(ivisitor* visitor)
 {
 	if (m_pkString)
-	{
-		std::string string = iola::application::get_instance()->get_project()->program_get_start_timecode();
-		m_pkString->set(string);
-	}
-
+		m_pkString->store(visitor);
 	if (m_pkRate)
-		m_pkRate->store();
+		m_pkRate->store(visitor);
 }
 
 } // namespace dom

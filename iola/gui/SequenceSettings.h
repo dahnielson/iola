@@ -21,8 +21,14 @@
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+// BOOST
+#include <boost/rational.hpp>
+
 // FLTK
 #include "fltk.h"
+
+// IOLA
+#include <iola/model/ivideo_settings.h>
 
 namespace iola
 {
@@ -34,11 +40,24 @@ namespace gui
 
 /// Sequence settings dialog
 class SequenceSettings :
-	public Fl_Double_Window
+	public Fl_Double_Window,
+	public iola::model::ivideo_settings
 {
 public:
 	SequenceSettings();
 	~SequenceSettings();
+
+	void connect_to(iola::model::ivideo_settings* settings);
+
+	void update_settings_on(iola::model::ivideo_settings* object);
+	void update_settings_on(iola::model::ivideo_characteristics* object);
+	void set_width(const int width);
+	void set_height(const int height);
+	void set_par(const iola::model::ivideo_settings::par_t par);
+	void set_anamorphic(const bool anamorphic);
+	void set_field_dominance(const iola::model::ivideo_settings::field_t field);
+	void set_fps_timebase(const int timebase);
+	void set_fps_ntsc(const bool ntsc);
 
 	/// FLTK event handler
 	int handle(int event);
@@ -57,7 +76,12 @@ private:
 	void cancel_callback();
 	void close_window();
 
+	iola::model::ivideo_settings* m_pkSettings;
+
 	bool m_bEdited;
+
+	int m_iTimebase;
+	bool m_bNTSC;
 
 	Fl_Value_Input* m_pkWidth;
 	Fl_Value_Input* m_pkHeight;

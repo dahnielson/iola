@@ -30,8 +30,71 @@ namespace dom
 // class iola::dom::fielddominance_element
 
 fielddominance_element::fielddominance_element(const std::string strName) :
-	string_terminal(strName)
-{}
+        m_strName(strName)
+{
+}
+
+void
+fielddominance_element::child(iola::xml::ielement* pkElement)
+{
+}
+
+void
+fielddominance_element::attribute(std::string strKey, std::string strValue)
+{
+}
+
+void
+fielddominance_element::text(std::string strText)
+{
+	if (m_strValue.empty())
+		m_strValue = strText;
+}
+
+void
+fielddominance_element::xml(std::ostream& osXML)
+{
+	osXML << "<" << m_strName << ">";
+	osXML << m_strValue;
+	osXML << "</" << m_strName << ">"  << std::endl;
+}
+
+void
+fielddominance_element::restore(iola::model::ivideo_settings* object)
+{
+	iola::model::ivideo_settings::field_t field;
+	if (m_strValue == "NONE" || m_strValue == "none")
+		field = iola::model::ivideo_settings::NONE;
+	else if (m_strValue == "LOWER" || m_strValue == "lower" || m_strValue == "EVEN" || m_strValue == "even")
+		field = iola::model::ivideo_settings::EVEN;
+	else if (m_strValue == "UPPER" || m_strValue == "upper" || m_strValue == "ODD" || m_strValue == "odd")
+		field = iola::model::ivideo_settings::ODD;
+	else
+		return;
+	object->set_field_dominance(field);
+}
+
+void
+fielddominance_element::store(ivisitor* visitor)
+{
+	visitor->visit(this);
+}
+
+void
+fielddominance_element::set(const iola::model::ivideo_settings::field_t value)
+{
+	switch (value)
+	{
+	case iola::model::ivideo_settings::NONE:
+		m_strValue = "NONE";
+	case iola::model::ivideo_settings::EVEN:
+		m_strValue = "EVEN";
+	case iola::model::ivideo_settings::ODD:
+		m_strValue = "ODD";
+	default:
+		assert(!"Default case should never be reached");
+	};
+}
 
 } // namespace dom
 } // namespace iola

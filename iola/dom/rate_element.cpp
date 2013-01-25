@@ -20,7 +20,6 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 // IOLA
-#include <iola/application/get_instance.h>
 #include "ntsc_element.h"
 #include "rate_element.h"
 #include "timebase_element.h"
@@ -51,13 +50,11 @@ rate_element::child(iola::xml::ielement* pkElement)
 void
 rate_element::attribute(std::string strKey, std::string strValue)
 {
-	// No attributes.
 }
 
 void
 rate_element::text(std::string strText)
 {
-	// No text.
 }
 
 void
@@ -72,35 +69,21 @@ rate_element::xml(std::ostream& osXML)
 }
 
 void
-rate_element::restore()
+rate_element::restore(iola::model::ivideo_settings* object)
 {
 	if (m_pkTimebase)
-	{
-		const int timebase = m_pkTimebase->get();
-		iola::application::get_instance()->get_project()->set_fps_timebase(timebase);
-	}
-
+		m_pkTimebase->restore(object);
 	if (m_pkNTSC)
-	{
-		const bool ntsc = m_pkNTSC->get();
-		iola::application::get_instance()->get_project()->set_fps_ntsc(ntsc);
-	}
+		m_pkNTSC->restore(object);
 }
 
 void
-rate_element::store()
+rate_element::store(ivisitor* visitor)
 {
 	if (m_pkTimebase)
-	{
-		const int timebase = iola::application::get_instance()->get_project()->get_fps_timebase();
-		m_pkTimebase->set(timebase);
-	}
-
+		m_pkTimebase->store(visitor);
 	if (m_pkNTSC)
-	{
-		const bool ntsc = iola::application::get_instance()->get_project()->get_fps_ntsc();
-		m_pkNTSC->set(ntsc);
-	}
+		m_pkNTSC->store(visitor);
 }
 
 } // namespace dom
