@@ -1,6 +1,6 @@
 /* -*- Mode: C++ ; c-basic-offset: 8 -*- */
-#ifndef IOLA_MODEL_ICLIP_WRITER_H
-#define IOLA_MODEL_ICLIP_WRITER_H
+#ifndef IOLA_MODEL_IOLA_CLIP_WRITER_H
+#define IOLA_MODEL_IOLA_CLIP_WRITER_H
 
 // Iola NLE
 // Copyright (c) 2010, Anders Dahnielson
@@ -21,10 +21,11 @@
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+// BOOST
+#include <boost/filesystem.hpp>
+
 // IOLA
-#include <iola/icommand.h>
-#include <iola/model/iaudio_settings.h>
-#include <iola/model/ivideo_settings.h>
+#include <iola/model/iclip_writer.h>
 
 namespace iola
 {
@@ -32,26 +33,12 @@ namespace model
 {
 
 ////////////////////////////////////////////////////////////////////////////
-// class iola::model::iclip_writer
+// function iola::model::create_iola_clip_writer
 
-/// Abstract interface
-class iclip_writer :
-	public iola::icommand,
-	public ivideo_settings,
-	public iaudio_settings
-{
-public:
-	/// Set name to write
-	virtual void set_name(const std::string name) = 0;
-	/// Set duration to write
-	virtual void set_duration(const int duration) = 0;
-	/// Set timecode to write
-	virtual void set_timecode(const std::string timecode) = 0;
-	/// Set file to write
-	virtual void set_file(const boost::filesystem::path file) = 0;
-};
+/// Static factory for the concrete imlementation
+iclip_writer* create_iola_clip_writer(const boost::filesystem::path file);
 
 } // namespace model
 } // namespace iola
 
-#endif // IOLA_MODEL_ICLIP_WRITER_H
+#endif // IOLA_MODEL_IOLA_CLIP_WRITER_H
