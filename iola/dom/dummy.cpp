@@ -1,7 +1,7 @@
 /* -*- Mode: C++ ; indent-tabs-mode: t ; c-basic-offset: 8 -*- */
 
 // Iola NLE
-// Copyright (c) 2010, Anders Dahnielson
+// Copyright (c) 2010-2013, Anders Dahnielson
 //
 // Contact: anders@dahnielson.com
 //

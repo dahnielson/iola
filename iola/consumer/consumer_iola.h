@@ -3,7 +3,7 @@
 #define IOLA_CONSUMER_CONSUMER_IOLA_H
 
 // Iola NLE
-// Copyright (c) 2010, Anders Dahnielson
+// Copyright (c) 2010-2013, Anders Dahnielson
 //
 // Contact: anders@dahnielson.com
 //

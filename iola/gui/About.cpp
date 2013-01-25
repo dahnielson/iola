@@ -1,7 +1,7 @@
 /* -*- Mode: C++ ; indent-tabs-mode: t ; c-basic-offset: 8 -*- */
 
 // Iola NLE
-// Copyright (c) 2010, Anders Dahnielson
+// Copyright (c) 2010-2013, Anders Dahnielson
 //
 // Contact: anders@dahnielson.com
 //
@@ -48,7 +48,7 @@ About::About() :
 	Fl_Group *pkAboutGroup = new Fl_Group(0, 20, 330, 100, "About");
 	pkAboutGroup->labelsize(11);
 	Fl_Box* pkAboutLabel = new Fl_Box(FL_FLAT_BOX, 10, 30, 310, 70,
-					    "A free non-linear digital video and motion picture editor.\n\nCopyright (c) 2010, Anders Dahnielson.");
+					    "A free non-linear digital video and motion picture editor.\n\nCopyright (c) 2010-2013, Anders Dahnielson.");
 	pkAboutLabel->align(FL_ALIGN_TOP|FL_ALIGN_LEFT|FL_ALIGN_INSIDE|FL_ALIGN_WRAP);
 	pkAboutLabel->labelsize(11);
 	pkAboutGroup->end();
