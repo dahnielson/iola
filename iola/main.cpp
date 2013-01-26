@@ -40,14 +40,16 @@
 // MLT
 #include <mlt++/Mlt.h>
 
+// QT
+#include <QApplication>
+
 // IOLA
-#include <iola/gui/igui.h>
 #include <iola/model/imodel.h>
 #include <iola/model/iprogram.h>
 #include <iola/model/isequence.h>
 
 #include <iola/consumer/consumer_iola.h>
-#include <iola/gui/gui.h>
+#include <iola/gui/MainWindow.h>
 #include <iola/model/model.h>
 #include <iola/model/sequence.h>
 
@@ -113,16 +115,14 @@ int main(int argc, char **argv)
 		assert(pkSequence);
 		pkModel->program()->load_sequence(pkSequence);
 
-		// Instance GUI
-		iola::gui::igui* pkGUI = iola::gui::create_gui();
-		assert(pkGUI);
-		pkGUI->connect_to(pkModel);
-
-		// Enter main loop
-		pkGUI->show();
+		// Instance GUI and enter main loop
+		QApplication application(argc, argv);
+		iola::gui::MainWindow kMainWindow;
+		kMainWindow.connect_to(pkModel);
+		kMainWindow.show();
+		application.exec();
 
 		// Clean up
-		delete pkGUI;
 		delete pkModel;
 
 		// Shutdown audio

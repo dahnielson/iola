@@ -44,6 +44,17 @@ MainWindow::~MainWindow()
 	delete m_pkUI;
 }
 
+void MainWindow::connect_to(iola::model::imodel* model)
+{
+	if (!model)
+	{
+		rError("%s: Model passed as parameter is NULL", __PRETTY_FUNCTION__);
+		return;
+	}
+
+	m_pkModel = model;
+}
+
 //void closeEvent(QCloseEvent* event)
 //{
 //}

@@ -24,6 +24,9 @@
 // QT
 #include <QMainWindow>
 
+// IOLA
+#include <iola/model/imodel.h>
+
 namespace Ui {
 class MainWindow;
 }
@@ -46,11 +49,14 @@ public:
 	explicit MainWindow(QWidget* parent = 0);
 	~MainWindow();
 
+	void connect_to(iola::model::imodel* model);
+
 //protected:
 //	void closeEvent(QCloseEvent* event);
 
 private:
 	Ui::MainWindow* m_pkUI;
+	iola::model::imodel* m_pkModel;
 
 private slots:
 	void on_actionNew_triggered();
