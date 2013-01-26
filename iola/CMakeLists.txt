@@ -13,13 +13,27 @@ SET(CMAKE_CXX_FLAGS "-D_REENTRANT -DRLOG_COMPONENT=iola")
 INCLUDE_DIRECTORIES(
   ${IOLA_SOURCE_DIR}
   ${MLT_INCLUDE_DIRS}
-  ${FLTK_INCLUDE_DIR}
   ${Boost_INCLUDE_DIRS}
   ${EXPAT_INCLUDE_DIRS}
   )
 
 ADD_EXECUTABLE(iola ${SOURCES})
-TARGET_LINK_LIBRARIES(iola iolaapplication iolaconsumer iolagui iolamodel ioladom iolaxml mlt++ ${MLT_LIBRARIES} ${FLTK_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} ${RLOG_LIBRARIES} ${EXPAT_LIBRARIES} ${LIBAO_LIBRARIES})
+TARGET_LINK_LIBRARIES(
+  iola
+  iolaapplication
+  iolaconsumer
+  iolagui
+  iolamodel
+  ioladom
+  iolaxml
+  mlt++
+  ${MLT_LIBRARIES}
+  ${CMAKE_THREAD_LIBS_INIT}
+  ${Boost_LIBRARIES}
+  ${RLOG_LIBRARIES}
+  ${EXPAT_LIBRARIES}
+  ${LIBAO_LIBRARIES}
+  )
 
 # Set up subdirectories...
 ADD_SUBDIRECTORY(application)

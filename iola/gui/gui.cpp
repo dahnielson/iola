@@ -20,21 +20,53 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 // IOLA
-#include "MainWindow.h"
+#include "igui.h"
+
+namespace
+{
+
+////////////////////////////////////////////////////////////////////////////
+// class <unnamed>::gui_implementation
+
+class gui_implementation :
+	public iola::gui::igui
+{
+public:
+	gui_implementation()
+	{
+	}
+
+	~gui_implementation()
+	{
+	}
+
+	void connect_to(iola::model::imodel* model)
+	{
+	}
+
+	void show()
+	{
+	}
+
+	void stop()
+	{
+	}
+};
+
+
+} // namespace
 
 namespace iola
 {
 namespace gui
 {
 
-class igui;
-
-/////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
 // function iola::gui::create_gui
 
 igui* create_gui()
 {
-	return new MainWindow();
+	return new gui_implementation();
 }
 
 } // namespace gui
