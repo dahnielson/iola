@@ -23,6 +23,7 @@
 
 // QT
 #include <QMainWindow>
+#include <QCloseEvent>
 
 // IOLA
 #include <iola/model/imodel.h>
@@ -51,8 +52,8 @@ public:
 
 	void connect_to(iola::model::imodel* model);
 
-//protected:
-//	void closeEvent(QCloseEvent* event);
+protected:
+	void closeEvent(QCloseEvent* event);
 
 private:
 	Ui::MainWindow* m_pkUI;

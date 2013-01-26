@@ -55,9 +55,10 @@ void MainWindow::connect_to(iola::model::imodel* model)
 	m_pkModel = model;
 }
 
-//void closeEvent(QCloseEvent* event)
-//{
-//}
+void MainWindow::closeEvent(QCloseEvent* event)
+{
+	event->accept();
+}
 
 void MainWindow::on_actionNew_triggered()
 {
@@ -81,6 +82,7 @@ void MainWindow::on_actionSequenceSettings_triggered()
 
 void MainWindow::on_actionQuit_triggered()
 {
+	close();
 }
 
 } // namespace gui
