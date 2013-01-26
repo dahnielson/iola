@@ -20,6 +20,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 // STD
+#include <cassert>
 #include <exception>
 #include <iostream>
 
@@ -33,9 +34,22 @@
 #include <rlog/SyslogNode.h>
 #include <rlog/RLogChannel.h>
 
+// LIBAO
+#include <ao/ao.h>
+
+// MLT
+#include <mlt++/Mlt.h>
+
 // IOLA
-#include <iola/application/iapplication.h>
-#include <iola/application/get_instance.h>
+#include <iola/gui/igui.h>
+#include <iola/model/imodel.h>
+#include <iola/model/iprogram.h>
+#include <iola/model/isequence.h>
+
+#include <iola/consumer/consumer_iola.h>
+#include <iola/gui/gui.h>
+#include <iola/model/model.h>
+#include <iola/model/sequence.h>
 
 namespace po = boost::program_options;
 
@@ -83,8 +97,36 @@ int main(int argc, char **argv)
 
 	try
 	{
-		iola::application::iapplication* const application = iola::application::get_instance();
-		application->run();
+		// Initialize audio
+		ao_initialize();
+
+		// Initialize MLT
+		Mlt::Repository* pkRepository = Mlt::Factory::init(NULL);
+		pkRepository->register_service(consumer_type, "iola", iola::consumer::consumer_iola_init);
+
+		// Instance model
+		iola::model::imodel* pkModel = iola::model::create_model();
+		assert(pkModel);
+
+		// New sequence
+		iola::model::isequence* pkSequence = iola::model::create_sequence();
+		assert(pkSequence);
+		pkModel->program()->load_sequence(pkSequence);
+
+		// Instance GUI
+		iola::gui::igui* pkGUI = iola::gui::create_gui();
+		assert(pkGUI);
+		pkGUI->connect_to(pkModel);
+
+		// Enter main loop
+		pkGUI->show();
+
+		// Clean up
+		delete pkGUI;
+		delete pkModel;
+
+		// Shutdown audio
+		ao_shutdown();
 	}
 	catch (std::exception& e)
 	{

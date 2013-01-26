@@ -23,7 +23,6 @@ ADD_EXECUTABLE(iola ${SOURCES})
 
 TARGET_LINK_LIBRARIES(
   iola
-  iolaapplication
   iolaconsumer
   iolagui
   iolamodel
@@ -42,7 +41,6 @@ TARGET_LINK_LIBRARIES(
   )
 
 # Set up subdirectories...
-ADD_SUBDIRECTORY(application)
 ADD_SUBDIRECTORY(consumer)
 ADD_SUBDIRECTORY(dom)
 ADD_SUBDIRECTORY(gui)
