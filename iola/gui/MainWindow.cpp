@@ -19,62 +19,57 @@
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-// QT
-#include <QApplication>
+// RLOG
+#include <rlog/rlog.h>
 
 // IOLA
-#include "igui.h"
 #include "MainWindow.h"
-
-namespace
-{
-
-////////////////////////////////////////////////////////////////////////////
-// class <unnamed>::gui_implementation
-
-class gui_implementation :
-	public iola::gui::igui
-{
-public:
-	gui_implementation()
-	{
-	}
-
-	~gui_implementation()
-	{
-	}
-
-	void connect_to(iola::model::imodel* model)
-	{
-	}
-
-	void show()
-	{
-		QApplication application(0, 0);
-		iola::gui::MainWindow kMainWindow;
-		kMainWindow.show();
-		application.exec();
-	}
-
-	void stop()
-	{
-	}
-};
-
-
-} // namespace
+#include "ui_MainWindow.h"
 
 namespace iola
 {
 namespace gui
 {
 
-////////////////////////////////////////////////////////////////////////////
-// function iola::gui::create_gui
-
-igui* create_gui()
+MainWindow::MainWindow(QWidget* parent) :
+	QMainWindow(parent),
+	m_pkUI(new Ui::MainWindow)
 {
-	return new gui_implementation();
+	m_pkUI->setupUi(this);
+}
+
+MainWindow::~MainWindow()
+{
+	rDebug("%s: Application window destructed", __PRETTY_FUNCTION__);
+	delete m_pkUI;
+}
+
+//void closeEvent(QCloseEvent* event)
+//{
+//}
+
+void MainWindow::on_actionNew_triggered()
+{
+}
+
+void MainWindow::on_actionOpen_triggered()
+{
+}
+
+void MainWindow::on_actionSave_triggered()
+{
+}
+
+void MainWindow::on_actionSaveAs_triggered()
+{
+}
+
+void MainWindow::on_actionSequenceSettings_triggered()
+{
+}
+
+void MainWindow::on_actionQuit_triggered()
+{
 }
 
 } // namespace gui

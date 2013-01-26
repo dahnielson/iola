@@ -1,4 +1,6 @@
 /* -*- Mode: C++ ; indent-tabs-mode: t ; c-basic-offset: 8 -*- */
+#ifndef IOLA_GUI_MAINWINDOW_H
+#define IOLA_GUI_MAINWINDOW_H
 
 // Iola NLE
 // Copyright (c) 2010-2013, Anders Dahnielson
@@ -20,49 +22,11 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 // QT
-#include <QApplication>
+#include <QMainWindow>
 
-// IOLA
-#include "igui.h"
-#include "MainWindow.h"
-
-namespace
-{
-
-////////////////////////////////////////////////////////////////////////////
-// class <unnamed>::gui_implementation
-
-class gui_implementation :
-	public iola::gui::igui
-{
-public:
-	gui_implementation()
-	{
-	}
-
-	~gui_implementation()
-	{
-	}
-
-	void connect_to(iola::model::imodel* model)
-	{
-	}
-
-	void show()
-	{
-		QApplication application(0, 0);
-		iola::gui::MainWindow kMainWindow;
-		kMainWindow.show();
-		application.exec();
-	}
-
-	void stop()
-	{
-	}
-};
-
-
-} // namespace
+namespace Ui {
+class MainWindow;
+}
 
 namespace iola
 {
@@ -70,12 +34,34 @@ namespace gui
 {
 
 ////////////////////////////////////////////////////////////////////////////
-// function iola::gui::create_gui
+// class iola::gui::MainWindow
 
-igui* create_gui()
+/// Application main window
+class MainWindow :
+	public QMainWindow
 {
-	return new gui_implementation();
-}
+	Q_OBJECT
+
+public:
+	explicit MainWindow(QWidget* parent = 0);
+	~MainWindow();
+
+//protected:
+//	void closeEvent(QCloseEvent* event);
+
+private:
+	Ui::MainWindow* m_pkUI;
+
+private slots:
+	void on_actionNew_triggered();
+	void on_actionOpen_triggered();
+	void on_actionSave_triggered();
+	void on_actionSaveAs_triggered();
+	void on_actionSequenceSettings_triggered();
+	void on_actionQuit_triggered();
+};
 
 } // namespace gui
 } // namespace iola
+
+#endif // IOLA_GUI_MAINWINDOW_H
