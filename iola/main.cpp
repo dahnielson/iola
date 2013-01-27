@@ -119,7 +119,7 @@ int main(int argc, char **argv)
 		QApplication application(argc, argv);
 		iola::gui::MainWindow kMainWindow;
 		kMainWindow.connect_to(pkModel);
-		kMainWindow.show();
+		kMainWindow.showMaximized();
 		application.exec();
 
 		// Clean up
