@@ -21,16 +21,19 @@
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+// STD
+#include <string>
+
+// BOOST
+#include <boost/filesystem.hpp>
+#include <boost/signals2.hpp>
+
 // QT
 #include <QMainWindow>
 #include <QCloseEvent>
 
 // IOLA
 #include <iola/model/imodel.h>
-
-namespace Ui {
-class MainWindow;
-}
 
 namespace iola
 {
@@ -56,16 +59,31 @@ protected:
 	void closeEvent(QCloseEvent* event);
 
 private:
-	Ui::MainWindow* m_pkUI;
+	bool okToContinue();
+	void on_alert(std::string strMessage);
+
+	QAction* m_pkNewAction;
+	QAction* m_pkOpenAction;
+	QAction* m_pkSaveAction;
+	QAction* m_pkSaveAsAction;
+	QAction* m_pkSequenceSettingsAction;
+	QAction* m_pkQuitAction;
+
+	QMenu* m_pkFileMenu;
+
 	iola::model::imodel* m_pkModel;
+	boost::filesystem::path m_kProjectPath;
+
+	boost::signals2::connection on_source_alert_connection;
+	boost::signals2::connection on_program_alert_connection;
 
 private slots:
-	void on_actionNew_triggered();
-	void on_actionOpen_triggered();
-	void on_actionSave_triggered();
-	void on_actionSaveAs_triggered();
-	void on_actionSequenceSettings_triggered();
-	void on_actionQuit_triggered();
+	void on_NewAction_triggered();
+	void on_OpenAction_triggered();
+	void on_SaveAction_triggered();
+	void on_SaveAsAction_triggered();
+	void on_SequenceSettingsAction_triggered();
+	void on_QuitAction_triggered();
 };
 
 } // namespace gui
