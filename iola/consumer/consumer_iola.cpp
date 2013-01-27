@@ -32,17 +32,15 @@
 
 // OPENGL
 #include <GL/gl.h>
-#include <GL/glx.h>
 
 // LIBAO
 #include <ao/ao.h>
 
+// QT
+#include <QGLWidget>
+
 // IOLA
 #include "consumer_iola.h"
-
-// The idea behind this consumer is that you pass it an xid to be used
-// with an OpenGL context to draw frames using OpenGL calls in the
-// consumer video thread.
 
 namespace iola
 {
@@ -62,11 +60,7 @@ struct consumer_iola_s
 	int window_height;
 	int width;
 	int height;
-	Display* display;
-	int screen;
-	XVisualInfo* visual;
-	Window xid;
-	GLXContext context;
+	QGLWidget* display;
 	GLuint texture;
 	int audio_driver;
 	ao_device* audio_device;
@@ -220,10 +214,9 @@ static void consumer_close(mlt_consumer parent)
 static int consumer_play_video(consumer_iola self, mlt_frame frame)
 {
 	// Get window dimensions
-	XWindowAttributes attr;
-	XGetWindowAttributes(self->display, self->xid, &attr);
-	self->window_width = attr.width;
-	self->window_height = attr.height;
+	self->window_width = mlt_properties_get_int(self->properties, "window_width");;
+	self->window_height = mlt_properties_get_int(self->properties, "window_height");;
+	self->display->makeCurrent();
 	glViewport(0, 0, self->window_width, self->window_height);
 
 	glMatrixMode(GL_PROJECTION);
@@ -315,6 +308,8 @@ static int consumer_play_video(consumer_iola self, mlt_frame frame)
 		glDisable(GL_BLEND);
 		glDisable(GL_TEXTURE_RECTANGLE_ARB);
 	}
+
+	self->display->doneCurrent();
 
 	return 0;
 }
@@ -422,31 +417,22 @@ static void* consumer_thread(void *arg)
 	if (!self->audio_buffer)
 		rError("%s: No audio buffer allocated!", __PRETTY_FUNCTION__);
 
-	// Create OpenGL context
-	int attrib[] = {
-		GLX_RGBA,
-		GLX_RED_SIZE,   8,
-		GLX_GREEN_SIZE, 8,
-		GLX_BLUE_SIZE,  8,
-		GLX_DOUBLEBUFFER,
-		0
-	};
-
-	self->display = XOpenDisplay(NULL);
-	self->screen = DefaultScreen(self->display);
-	self->visual = glXChooseVisual(self->display, self->screen, attrib);
-	self->context = glXCreateContext(self->display, self->visual, 0, 1);
-	self->xid = mlt_properties_get_int(self->properties, "xid");
-	glXMakeCurrent(self->display, self->xid, self->context);
-
 	// Set up OpenGL
+	self->display = (QGLWidget*) mlt_properties_get_data(self->properties, "display", NULL);
+	if (!self->display)
+		rError("%s: No OpenGL context allocated!", __PRETTY_FUNCTION__);
+
+	self->display->makeCurrent();
+
 	glDisable(GL_LIGHTING);
 	glDisable(GL_DEPTH_TEST);
 	glClearColor(0.0, 0.0, 0.0, 0.0);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	// Generate a texture name
 	glGenTextures(1, &self->texture);
+
+	self->display->swapBuffers();
+	self->display->doneCurrent();
 
 	// Get FPS
 	double fps = mlt_properties_get_double(self->properties, "fps");
@@ -463,14 +449,18 @@ static void* consumer_thread(void *arg)
 	start = (int64_t)now.tv_sec * 1000000 + now.tv_usec;
 
 	// Loop until told not to
+	rDebug("%s: Entering iola consumer thread loop", __PRETTY_FUNCTION__);
 	while(!terminated && self->running)
 	{
 		gettimeofday(&now, NULL);
 		delta = ((int64_t)now.tv_sec * 1000000 + now.tv_usec) - start;
 		start = (int64_t)now.tv_sec * 1000000 + now.tv_usec;
-		accumulator +=  std::min(delta, max_lag);
+		accumulator += std::min(delta, max_lag);
 
-		while(accumulator >= duration)
+		fps = mlt_properties_get_double(self->properties, "fps");
+		duration = 1000000 / fps;
+
+		while(duration > 0 and accumulator >= duration)
 		{
 			accumulator -= duration;
 
@@ -497,22 +487,31 @@ static void* consumer_thread(void *arg)
 			consumer_play_video(self, frame);
 
 			// Swap buffers
-			glXSwapBuffers(self->display, self->xid);
+			self->display->makeCurrent();
+			self->display->swapBuffers();
+			self->display->doneCurrent();
 
 			// Fire event
 			//NOTE This will cause the thread to call functions (the listeners) 
 			//     in other threads (i.e. the main thread) and block.
-			mlt_events_fire(self->properties, "consumer-frame-show", frame, NULL);
+//			mlt_events_fire(self->properties, "consumer-frame-show", frame, NULL);
 		}
+
+		// Sleep
+		if (duration > 0)
+			usleep(duration / 2);
+		else
+			usleep(max_lag);
 	}
+	rDebug("%s: Exiting iola consumer thread loop", __PRETTY_FUNCTION__);
 
 	self->running = false;
 
-	ao_close(self->audio_device);
+//	ao_close(self->audio_device); //FIXME Why does it segfault?
 
+	self->display->makeCurrent();
 	glDeleteTextures(1, &self->texture);
-	glXDestroyContext(self->display, self->context);
-	XCloseDisplay(self->display);
+	self->display->doneCurrent();
 
 	mlt_consumer_stopped(&self->parent);
 

@@ -1,0 +1,20 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+<qresource>
+    <file>xbm/clear_clip.xbm</file>
+    <file>xbm/clear_in.xbm</file>
+    <file>xbm/clear_out.xbm</file>
+    <file>xbm/goto_mark_in.xbm</file>
+    <file>xbm/goto_mark_out.xbm</file>
+    <file>xbm/goto_next_edit.xbm</file>
+    <file>xbm/goto_prev_edit.xbm</file>
+    <file>xbm/mark_clip.xbm</file>
+    <file>xbm/mark_in.xbm</file>
+    <file>xbm/mark_out.xbm</file>
+    <file>xbm/pause.xbm</file>
+    <file>xbm/play_fwd.xbm</file>
+    <file>xbm/play_rev.xbm</file>
+    <file>xbm/step_fwd.xbm</file>
+    <file>xbm/step_rev.xbm</file>
+</qresource>
+</RCC>

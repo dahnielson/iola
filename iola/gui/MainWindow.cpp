@@ -31,6 +31,8 @@
 #include <iola/model/isource.h>
 
 #include "MainWindow.h"
+#include "SourceMonitor.h"
+#include "ProgramMonitor.h"
 
 namespace iola
 {
@@ -73,10 +75,29 @@ MainWindow::MainWindow(QWidget* parent) :
 	m_pkFileMenu->addAction(m_pkSequenceSettingsAction);
 	m_pkFileMenu->addSeparator();
 	m_pkFileMenu->addAction(m_pkQuitAction);
+
+	// Create monitors
+	m_pkSourceMonitor = new SourceMonitor();
+	m_pkProgramMonitor = new ProgramMonitor();
+
+	QHBoxLayout* pkMonitorLayout = new QHBoxLayout;
+	pkMonitorLayout->addWidget(m_pkSourceMonitor);
+	pkMonitorLayout->addWidget(m_pkProgramMonitor);
+
+	// Set layout
+	setCentralWidget(new QWidget);
+	centralWidget()->setLayout(pkMonitorLayout);
+
+	// Set statusbar
+	statusBar();
+
+	rDebug("%s: Application window constructed", __PRETTY_FUNCTION__);
 }
 
 MainWindow::~MainWindow()
 {
+	on_source_alert_connection.disconnect();
+	on_program_alert_connection.disconnect();
 	rDebug("%s: Application window destructed", __PRETTY_FUNCTION__);
 }
 
@@ -89,6 +110,8 @@ void MainWindow::connect_to(iola::model::imodel* model)
 	}
 
 	m_pkModel = model;
+	m_pkSourceMonitor->connect_to(m_pkModel);
+	m_pkProgramMonitor->connect_to(m_pkModel);
 
 	iola::model::isource* pkSource = m_pkModel->source();
 	iola::model::iprogram* pkProgram = m_pkModel->program();

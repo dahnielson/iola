@@ -40,6 +40,9 @@ namespace iola
 namespace gui
 {
 
+class ProgramMonitor;
+class SourceMonitor;
+
 ////////////////////////////////////////////////////////////////////////////
 // class iola::gui::MainWindow
 
@@ -70,6 +73,9 @@ private:
 	QAction* m_pkQuitAction;
 
 	QMenu* m_pkFileMenu;
+
+	SourceMonitor* m_pkSourceMonitor;
+	ProgramMonitor* m_pkProgramMonitor;
 
 	iola::model::imodel* m_pkModel;
 	boost::filesystem::path m_kProjectPath;

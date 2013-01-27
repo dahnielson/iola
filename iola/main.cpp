@@ -116,7 +116,9 @@ int main(int argc, char **argv)
 		pkModel->program()->load_sequence(pkSequence);
 
 		// Instance GUI and enter main loop
+		QApplication::setAttribute(Qt::AA_X11InitThreads);
 		QApplication application(argc, argv);
+		Q_INIT_RESOURCE(icons);
 		iola::gui::MainWindow kMainWindow;
 		kMainWindow.connect_to(pkModel);
 		kMainWindow.showMaximized();
