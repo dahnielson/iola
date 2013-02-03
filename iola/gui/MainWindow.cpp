@@ -85,8 +85,12 @@ MainWindow::MainWindow(QWidget* parent) :
 	pkMonitorLayout->addWidget(m_pkProgramMonitor);
 
 	// Set layout
+	QVBoxLayout* pkLayout = new QVBoxLayout;
+	pkLayout->addLayout(pkMonitorLayout);
+	pkLayout->addStretch();
+
 	setCentralWidget(new QWidget);
-	centralWidget()->setLayout(pkMonitorLayout);
+	centralWidget()->setLayout(pkLayout);
 
 	// Set statusbar
 	statusBar();
