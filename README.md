@@ -1,7 +1,8 @@
 Iola NLE
+========
 
 Terminology
-===========
+-----------
 
 The user interface is split up into three panels: source monitor,
 program monitor and timeline. There are two types of assets: clips and
@@ -13,64 +14,60 @@ an oveview of the sequence and to edit clips into it.
 
 
 Editing
-=======
+-------
 
-Keyboard shortcuts
-------------------
+### Keyboard shortcuts #
 
- Q	goto mark in
- W	goto mark out
+Iola NLE support the most common keyboard shortcuts for editing.
 
- E	set mark in
- R	set mark out
- T	mark clip / cut
+    Q     goto mark in
+    W     goto mark out
 
- I  	set mark in
- O  	set mark out
+    E     set mark in
+    R     set mark out
+    T     mark clip / cut
 
- A	goto previous edit
- S	goto next edit
+    I     set mark in
+    O     set mark out
 
- D	clear mark in
- F	clear mark out
- G	clear mark in and out
+    A     goto previous edit
+    S     goto next edit
 
- J	play backward
- K  	stop
- L  	play forward
+    D     clear mark in
+    F     clear mark out
+    G     clear mark in and out
 
- Z	lift
- X	extract
- V	insert
- B	overwrite
+    J     play backward
+    K     stop
+    L     play forward
 
- Home	goto start
- End	goto end
+    Z     lift
+    X     extract
+    V     insert
+    B     overwrite
 
+    Home  goto start
+    End   goto end
 
-Lift
-----
+### Lift #
 
 When you edit a sequence using lift edit, all sequence clips in all
 unlocked tracks are removed and is replaced with a black filler to
 fill the gap.
 
-Extract
--------
+### Extract #
 
 When you edit a sequence using extract edit, all sequence clips in all
 unlocked tracks are removed and the gap left by the removal is closed.
 
-Insert
-------
+### Insert #
 
 When you edit a clip into a sequence using insert edit, all sequence
 clips in all unlocked tracks are cut at the In point of your edit and
 pushed forward in the edited sequence by the duration of your source
 clip.
 
-Overwrite
----------
+### Overwrite #
 
 When you edit a clip into a sequence using overwrite edit, any
 portions of clips that are already in the destination tracks are
@@ -78,22 +75,20 @@ replaced by the source clip.
 
 
 Container & codec
-=================
+-----------------
 
 Iola NLE use FFMPEG to read and write video files and is only limited
 by what FFMPEG can handle. But not all containers and video codecs are
 suitable for editing and video production.
 
-Containers
-----------
+### Containers #
           
  - AVI       Audio Video Interleave
  - GFX       General eXchange Format, SMPTE 360M
  - MOV       QuickTime
  - MXF       Material eXchange Format, SMPTE 377M
 
-Video codecs
-------------
+### Video codecs #
 
 For editing:
 
@@ -108,7 +103,7 @@ For aquiring media:
 
 
 Conforming
-==========
+----------
 
 To conform a sequence with another application it must be exported to
 an interchangable format.

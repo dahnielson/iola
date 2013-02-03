@@ -1,7 +1,8 @@
 MLT++ Quick Reference
+=====================
 
 Mlt::Producer
-=============
+-------------
 
 `int seek(int position)`
 Seek to a specified position. Parameter position set the "play head"
@@ -76,7 +77,7 @@ containers.
 
 
 Mlt::Playlist
-=============
+-------------
 
 `int count()`
 Get number of clips in the playlist. Returns the number of playlist
